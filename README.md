@@ -1,7 +1,7 @@
 # Just Summit Landing Site
 
 A production-ready Next.js 14 landing site for Just Summit - an AI tool that summarizes audiobooks & podcasts and boosts retention.
-
+-lets commit
 ## 🚀 Features
 
 - **Modern Stack**: Next.js 14, React 18, TypeScript, Tailwind CSS
