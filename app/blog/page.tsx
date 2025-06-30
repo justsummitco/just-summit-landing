@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { getAllPosts } from '@/lib/mdx'
+import { getAllPosts } from '../../lib/mdx'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 

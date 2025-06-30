@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { getAllPostSlugs, getPostBySlug } from '@/lib/mdx'
+import { getAllPostSlugs, getPostBySlug } from '../../../lib/mdx'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 

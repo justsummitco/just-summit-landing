@@ -69,7 +69,7 @@ export default function Hero() {
 
             {/* Main Headline */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-              TIRED OF FORGETTING-TEST DIPLOY EVERYTHING YOU{' '}
+              TIRED OF FORGETTING EVERYTHING YOU{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
                 JUST LEARNED?
               </span>

@@ -34,6 +34,12 @@ export default function Header() {
               Pricing
             </Link>
             <Link 
+              href="/blog" 
+              className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
+            >
+              Blog
+            </Link>
+            <Link 
               href="#story" 
               className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
             >
