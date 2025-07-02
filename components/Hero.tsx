@@ -69,17 +69,15 @@ export default function Hero() {
 
             {/* Main Headline */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-              TIRED OF FORGETTING EVERYTHING YOU{' '}
+              INSTANTLY REMEMBER WHAT YOU{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
-                JUST LEARNED?
+                HEAR
               </span>
             </h1>
 
             {/* Sub-headline */}
             <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Turn any podcast or audiobook into{' '}
-              <span className="font-semibold text-yellow-400">15-second summaries</span>{' '}
-              that your ADHD brain can actually remember. Built by people who had to relearn how to learn.
+              Capture, summarise, and revisit key insights from audiobooks & podcasts — built with our early-adopter community.
             </p>
 
             {/* Founder credibility */}
@@ -88,7 +86,7 @@ export default function Hero() {
                 "In 2014, a car accident left me in a coma with severe memory loss. During recovery, I discovered what ADHD brains have always known: 
                 traditional learning doesn't work for us. Summit uses the exact techniques that helped me rebuild my memory."
               </p>
-              <p className="text-white font-semibold text-lg mt-3">— Tom, Summit Founder & Survivor</p>
+              <p className="text-white font-semibold text-lg mt-3">— Tom, Summit Co-Founder</p>
             </div>
 
             {/* Email Capture Form */}
@@ -121,7 +119,7 @@ export default function Hero() {
                         Joining...
                       </div>
                     ) : (
-                      'Get Early Access (Save 40%)'
+                      'Pre-Order Now — Limited Spots'
                     )}
                   </button>
                 </form>

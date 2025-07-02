@@ -10,7 +10,7 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
-    "@headlessui/react": "^1.7.17",
+    "@headlessui/react": "^1.7.19",
     "@heroicons/react": "^2.0.18",
     "clsx": "^2.0.0",
     "gray-matter": "^4.0.3",

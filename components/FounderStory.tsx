@@ -71,7 +71,7 @@ export default function FounderStory() {
                   you just need a system that works with your brain, not against it."
                 </p>
                 <footer className="text-sm text-gray-600">
-                  — Tom, Founder & Survivor
+                  — Tom, Co-Founder
                 </footer>
               </blockquote>
             </div>
@@ -90,7 +90,7 @@ export default function FounderStory() {
                       </svg>
                     </div>
                     <p className="text-lg font-medium">Tom</p>
-                    <p className="text-sm">Founder & Survivor</p>
+                    <p className="text-sm">Co-Founder</p>
                   </div>
                 </div>
               </div>
@@ -103,7 +103,7 @@ export default function FounderStory() {
               <div className="absolute top-4 left-4 bg-white rounded-lg shadow-lg p-3">
                 <div className="flex items-center space-x-2">
                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-xs font-medium text-gray-700">Survivor & Advocate</span>
+                  <span className="text-xs font-medium text-gray-700">Co-Founder</span>
                 </div>
               </div>
 
