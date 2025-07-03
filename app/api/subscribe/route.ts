@@ -4,10 +4,9 @@ export async function POST(request: NextRequest) {
   try {
     const { email, name } = await request.json()
 
-    // Validate input
-    if (!email || !name) {
+    if (!email) {
       return NextResponse.json(
-        { error: 'Email and name are required' },
+        { error: 'Email is required' },
         { status: 400 }
       )
     }
@@ -21,79 +20,124 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get ActiveCampaign credentials from environment
-    const acUrl = process.env.NEXT_PUBLIC_AC_URL
-    const acKey = process.env.NEXT_PUBLIC_AC_KEY
+    // Brevo API configuration
+    const BREVO_API_KEY = process.env.BREVO_API_KEY || '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'
+    const BREVO_API_URL = 'https://api.brevo.com/v3/contacts'
 
-    if (!acUrl || !acKey) {
-      console.error('ActiveCampaign credentials not configured')
-      return NextResponse.json(
-        { error: 'Email service not configured. Please try again later.' },
-        { status: 500 }
-      )
-    }
-
-    // Prepare contact data for ActiveCampaign
+    // Create contact in Brevo - using correct format from documentation
     const contactData = {
-      contact: {
-        email: email.toLowerCase().trim(),
-        firstName: name.trim(),
-        tags: ['landing-page-signup', 'pre-launch'],
-        fieldValues: [
-          {
-            field: '1', // Assuming field 1 is for source
-            value: 'Landing Page'
-          }
-        ]
-      }
+      email: email.toLowerCase().trim(),
+      attributes: {
+        FIRSTNAME: name || email.split('@')[0],
+        SOURCE: 'Summit Website',
+        SIGNUP_DATE: new Date().toISOString(),
+      },
+      // Remove listIds to avoid list ID errors - contact will be added to default list
+      updateEnabled: true, // Update if contact already exists
     }
 
-    // Send to ActiveCampaign
-    const acResponse = await fetch(`${acUrl}/api/3/contacts`, {
+    const brevoResponse = await fetch(BREVO_API_URL, {
       method: 'POST',
       headers: {
+        'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Api-Token': acKey,
+        'api-key': BREVO_API_KEY,
       },
       body: JSON.stringify(contactData),
     })
 
-    if (!acResponse.ok) {
-      const errorData = await acResponse.json().catch(() => ({}))
-      console.error('ActiveCampaign API error:', errorData)
+    const responseData = await brevoResponse.json()
+
+    if (!brevoResponse.ok) {
+      console.error('Brevo API error:', responseData)
       
-      // Check if it's a duplicate email (usually returns 422)
-      if (acResponse.status === 422) {
-        return NextResponse.json(
-          { error: 'This email is already subscribed to our newsletter.' },
-          { status: 400 }
-        )
+      // Handle duplicate email (not really an error)
+      if (responseData.code === 'duplicate_parameter' || brevoResponse.status === 400) {
+        return NextResponse.json({
+          success: true,
+          message: 'Email already subscribed! You\'re all set for early access.',
+        })
       }
       
       return NextResponse.json(
-        { error: 'Failed to subscribe. Please try again later.' },
+        { error: 'Failed to subscribe. Please try again.' },
         { status: 500 }
       )
     }
 
-    const responseData = await acResponse.json()
-    
-    // Log successful subscription (remove in production)
-    console.log('Successfully subscribed:', email)
+    console.log('Brevo subscription successful:', responseData)
 
-    return NextResponse.json(
-      { 
-        success: true, 
-        message: 'Successfully subscribed!',
-        contactId: responseData.contact?.id 
-      },
-      { status: 200 }
-    )
+    // Send welcome email using Brevo transactional email API
+    try {
+      const emailResponse = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'api-key': BREVO_API_KEY,
+        },
+        body: JSON.stringify({
+          sender: {
+            name: 'Summit Team',
+            email: 'hello@justsummit.co',
+          },
+          to: [
+            {
+              email: email,
+              name: name || email.split('@')[0],
+            },
+          ],
+          subject: 'Welcome to Summit Early Access! 🎉',
+          htmlContent: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #2F5B9A;">Welcome to Summit Early Access!</h2>
+              <p>Hi ${name || 'there'},</p>
+              <p>Thanks for joining our early-adopter community! You're now part of an exclusive group helping shape the future of audio learning.</p>
+              
+              <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3 style="color: #2F5B9A; margin-top: 0;">What happens next?</h3>
+                <ul style="margin: 0; padding-left: 20px;">
+                  <li>🎯 You'll get first access to Summit when we launch</li>
+                  <li>💰 Exclusive early-adopter pricing (save up to 40%)</li>
+                  <li>📧 Behind-the-scenes updates on our progress</li>
+                  <li>🧠 ADHD-friendly learning tips and strategies</li>
+                </ul>
+              </div>
+              
+              <p>Ready to secure your spot? <a href="https://justsummit.co/#pricing" style="color: #2F5B9A; text-decoration: none; font-weight: bold;">Check out our early-adopter pre-orders →</a></p>
+              
+              <p style="margin-top: 30px;">Best,<br>Tom & the Summit Team</p>
+              
+              <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+              <p style="font-size: 12px; color: #666;">
+                You're receiving this because you signed up for Summit early access at justsummit.co
+              </p>
+            </div>
+          `,
+        }),
+      })
+
+      if (!emailResponse.ok) {
+        const emailError = await emailResponse.json()
+        console.error('Welcome email failed:', emailError)
+      } else {
+        console.log('Welcome email sent successfully')
+      }
+    } catch (emailError) {
+      console.error('Welcome email error:', emailError)
+      // Don't fail the signup if welcome email fails
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: 'Successfully subscribed! Check your email for next steps.',
+      contactId: responseData.id,
+    })
 
   } catch (error) {
     console.error('Subscription error:', error)
     return NextResponse.json(
-      { error: 'An unexpected error occurred. Please try again.' },
+      { error: 'Internal server error. Please try again.' },
       { status: 500 }
     )
   }
