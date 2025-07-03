@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'api-key': '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'
+        'api-key': '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'
       },
       body: JSON.stringify({
         email: email,
