@@ -12,13 +12,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Add contact to Brevo
+    // Get API key from environment variables (secure)
+    const apiKey = process.env.BREVO_API_KEY;
+    
+    if (!apiKey) {
+      console.error('BREVO_API_KEY environment variable not set');
+      return NextResponse.json(
+        { error: 'Email service not configured. Please try again later.' },
+        { status: 500 }
+      );
+    }
+
+    console.log('Attempting to add contact to Brevo:', email);
+
+    // Add contact to Brevo using official API format
     const brevoResponse = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'api-key': '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'
+        'accept': 'application/json',
+        'content-type': 'application/json',
+        'api-key': apiKey
       },
       body: JSON.stringify({
         email: email,
@@ -26,20 +39,44 @@ export async function POST(request: NextRequest) {
       })
     });
 
-    // Handle response
-    if (brevoResponse.ok) {
+    const responseData = await brevoResponse.text();
+    console.log('Brevo response status:', brevoResponse.status);
+    console.log('Brevo response:', responseData);
+
+    // Handle successful responses
+    if (brevoResponse.status === 201) {
+      // Contact created successfully
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Successfully subscribed!' 
+      });
+    } else if (brevoResponse.status === 204) {
+      // Contact updated successfully
       return NextResponse.json({ 
         success: true, 
         message: 'Successfully subscribed!' 
       });
     } else if (brevoResponse.status === 400) {
-      // Contact already exists - that's okay
-      return NextResponse.json({ 
-        success: true, 
-        message: 'Successfully subscribed!' 
-      });
+      // Check if it's a duplicate contact error
+      try {
+        const errorData = JSON.parse(responseData);
+        if (errorData.message && errorData.message.includes('Contact already exist')) {
+          return NextResponse.json({ 
+            success: true, 
+            message: 'Successfully subscribed!' 
+          });
+        }
+      } catch (e) {
+        // If we can't parse the error, treat as general error
+      }
+      
+      console.error('Brevo API 400 error:', responseData);
+      return NextResponse.json(
+        { error: 'Failed to subscribe. Please try again.' },
+        { status: 500 }
+      );
     } else {
-      console.error('Brevo API error:', await brevoResponse.text());
+      console.error('Brevo API error:', brevoResponse.status, responseData);
       return NextResponse.json(
         { error: 'Failed to subscribe. Please try again.' },
         { status: 500 }
