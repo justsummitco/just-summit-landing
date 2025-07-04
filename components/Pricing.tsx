@@ -79,7 +79,7 @@ export default function Pricing() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid gap-8 lg:grid-cols-3 lg:gap-6">
+        <div className="grid gap-8 lg:grid-cols-3 lg:gap-6 mt-8">
           {pricingTiers.map((tier) => (
             <div
               key={tier.name}
