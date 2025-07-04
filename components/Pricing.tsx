@@ -2,6 +2,7 @@
 
 import { CheckIcon } from '@heroicons/react/24/outline'
 import { StarIcon } from '@heroicons/react/24/solid'
+import { useState } from 'react'
 
 const pricingTiers = [
   {
@@ -14,7 +15,6 @@ const pricingTiers = [
       'Exclusive Early-Adopter Community',
       'Early Supporter Recognition',
     ],
-    stripeLink: process.env.NEXT_PUBLIC_STRIPE_LINK_BASIC || '#',
   },
   {
     name: 'Advanced Pre-Order',
@@ -28,7 +28,6 @@ const pricingTiers = [
       'Priority Email Support (24 h)',
       'Advanced Early-Adopter Recognition',
     ],
-    stripeLink: process.env.NEXT_PUBLIC_STRIPE_LINK_ADVANCED || '#',
     popular: true,
   },
   {
@@ -44,23 +43,63 @@ const pricingTiers = [
       'Founder Welcome Video Onboarding',
       'Professional Early-Adopter Recognition',
     ],
-    stripeLink: process.env.NEXT_PUBLIC_STRIPE_LINK_PRO || '#',
   },
 ]
 
 export default function Pricing() {
-  const handlePurchase = (stripeLink: string, tierName: string) => {
-    // Track the purchase attempt
-    if (typeof window !== 'undefined' && (window as any).posthog) {
-      (window as any).posthog.capture('pricing_tier_clicked', {
-        tier: tierName,
-        price: tierName === 'Basic Pre-Order' ? 25 : tierName === 'Advanced Pre-Order' ? 49 : 99
-      })
-    }
-    
-    // Open Stripe link
-    if (stripeLink && stripeLink !== '#') {
-      window.open(stripeLink, '_blank')
+  const [loading, setLoading] = useState<string | null>(null);
+
+  const handlePurchase = async (tierName: string) => {
+    setLoading(tierName);
+
+    try {
+      // Track the purchase attempt
+      if (typeof window !== 'undefined' && (window as any).posthog) {
+        (window as any).posthog.capture('pricing_tier_clicked', {
+          tier: tierName,
+          price: tierName === 'Basic Pre-Order' ? 25 : tierName === 'Advanced Pre-Order' ? 49 : 99
+        })
+      }
+
+      // Create Stripe checkout session
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tierName: tierName,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session');
+      }
+
+      const { sessionId } = await response.json();
+
+      // Load Stripe.js dynamically
+      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+      
+      if (!stripe) {
+        throw new Error('Stripe failed to load');
+      }
+
+      // Redirect to Stripe Checkout
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: sessionId,
+      });
+
+      if (error) {
+        console.error('Stripe redirect error:', error);
+        alert('Payment failed. Please try again.');
+      }
+
+    } catch (error) {
+      console.error('Purchase error:', error);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setLoading(null);
     }
   }
 
@@ -78,7 +117,7 @@ export default function Pricing() {
           </p>
         </div>
 
-        {/* Pricing Cards - FIXED: Added mt-16 to give proper space for the badge */}
+        {/* Pricing Cards */}
         <div className="grid gap-8 lg:grid-cols-3 lg:gap-6 mt-16">
           {pricingTiers.map((tier) => (
             <div
@@ -131,14 +170,15 @@ export default function Pricing() {
 
                 {/* CTA Button */}
                 <button
-                  onClick={() => handlePurchase(tier.stripeLink, tier.name)}
+                  onClick={() => handlePurchase(tier.name)}
+                  disabled={loading === tier.name}
                   className={`w-full py-4 px-6 rounded-lg font-semibold text-lg transition-all duration-200 ${
                     tier.popular
                       ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl'
                       : 'bg-gray-900 hover:bg-gray-800 text-white'
-                  }`}
+                  } ${loading === tier.name ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  Pre-Order Now — Limited Spots
+                  {loading === tier.name ? 'Processing...' : 'Pre-Order Now — Limited Spots'}
                 </button>
 
                 {/* Guarantee */}
@@ -167,5 +207,11 @@ export default function Pricing() {
       </div>
     </section>
   )
+}
+
+// Helper function to load Stripe
+async function loadStripe(publishableKey: string) {
+  const { loadStripe } = await import('@stripe/stripe-js');
+  return loadStripe(publishableKey);
 }
 
