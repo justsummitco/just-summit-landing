@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         email: email,
+        listIds: [2], // "Summit Early Adopters" ID
         updateEnabled: true
       })
     });
