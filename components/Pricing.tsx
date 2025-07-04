@@ -78,20 +78,20 @@ export default function Pricing() {
           </p>
         </div>
 
-        {/* Pricing Cards - FIXED: Added pt-12 for badge space */}
-        <div className="grid gap-8 lg:grid-cols-3 lg:gap-6 pt-12">
+        {/* Pricing Cards - FIXED: Added mt-16 to give proper space for the badge */}
+        <div className="grid gap-8 lg:grid-cols-3 lg:gap-6 mt-16">
           {pricingTiers.map((tier) => (
             <div
               key={tier.name}
-              className={`relative bg-white rounded-2xl shadow-lg overflow-hidden ${
+              className={`relative bg-white rounded-2xl shadow-lg overflow-visible ${
                 tier.popular 
                   ? 'border-2 border-blue-600 ring-2 ring-blue-600 ring-opacity-50' 
                   : 'border border-gray-200'
               }`}
             >
               {tier.popular && (
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  <div className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium flex items-center">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <div className="bg-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium flex items-center whitespace-nowrap">
                     <StarIcon className="w-4 h-4 mr-1" />
                     Most Popular
                   </div>
