@@ -5,24 +5,28 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline'
 
 const faqs = [
   {
-    question: "When does Summit launch?",
-    answer: "Summit is currently in development with a planned launch in Q2 2025. Early-adopter pre-order customers will get beta access 2-3 months before the public launch, giving you first access to test and provide feedback."
+    question: "What is Genesis 50?",
+    answer: "Genesis 50 is our founding pre-sale group. Only 50 will ever exist, with a 20% lifetime software discount and exclusive perks. No future cohort—including Kickstarter backers—will ever get these benefits."
   },
   {
-    question: "How will I access my included subscription time?",
-    answer: "Once Summit launches, your account will automatically be upgraded to Premium for the duration included in your pre-order (1, 6, or 12 months). You'll receive an email with login instructions and your premium features will be immediately available."
+    question: "How do I keep my discount?",
+    answer: "Your account is tagged as genesis_50. The system automatically applies your discount on every renewal."
   },
   {
-    question: "What happens after my included months end?",
-    answer: "After your included premium time expires, you can continue using Summit with our standard pricing (approximately £12.99/month for premium features). There's no obligation to continue, and you'll always have access to basic features."
+    question: "What happens when Genesis 50 slots sell out?",
+    answer: "The offer is removed site-wide and new visitors see a 'Sold Out – join wait-list' page. Future cohorts will have different pricing and perks."
   },
   {
-    question: "Is there a refund policy?",
-    answer: "Yes! We offer a 30-day no-risk guarantee. If Summit doesn't improve your learning experience within 30 days of launch, we'll provide a full refund of your pre-order. No questions asked, no hassle."
+    question: "Why not use Notion or Otter?",
+    answer: "Notion stores; Summit remembers. Auto‑tagging and recall speed mean zero manual filing."
   },
   {
-    question: "How can I influence the roadmap?",
-    answer: "Early-adopters get exclusive access to our product development process. Advanced and Professional pre-order customers can join monthly product-shaping calls where you'll directly influence features, priorities, and the overall direction of Summit. Your feedback shapes the product."
+    question: "When will the app launch?",
+    answer: "Private beta in Q4 2025; public launch to follow."
+  },
+  {
+    question: "What platforms are supported?",
+    answer: "Mobile (Android/iOS) and in-car integrations at launch."
   }
 ]
 
@@ -36,7 +40,7 @@ export default function FAQ() {
             Frequently Asked Questions
           </h2>
           <p className="text-xl text-gray-600">
-            Everything you need to know about Summit's early-adopter program
+            Everything you need to know about the Genesis 50 program
           </p>
         </div>
 
@@ -79,4 +83,3 @@ export default function FAQ() {
     </section>
   )
 }
-
