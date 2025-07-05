@@ -33,12 +33,12 @@ export default function Hero() {
 
       if (response.ok) {
         setStatus('success')
-        setMessage('Welcome to early access! Check your email for next steps.')
+        setMessage('Welcome to Genesis 50! Check your email for next steps.')
         setEmail('')
         
         // Track successful signup
         if (typeof window !== 'undefined' && (window as any).posthog) {
-          (window as any).posthog.capture('hero_email_signup_success', {
+          (window as any).posthog.capture('genesis_50_email_signup_success', {
             email,
             source: 'hero_section'
           })
@@ -64,139 +64,101 @@ export default function Hero() {
             {/* Badge */}
             <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm font-medium mb-6 border border-white/20">
               <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-              Built by people who understand memory struggles
+              🥇 Genesis 50 Early Access Program
             </div>
 
             {/* Main Headline */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-              INSTANTLY REMEMBER WHAT YOU{' '}
+              Capture every{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
-                HEAR
+                insight.
               </span>
             </h1>
 
             {/* Sub-headline */}
             <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Capture, summarise, and revisit key insights from audiobooks & podcasts — built with our early-adopter community.
+              Just Summit auto‑tags your notes by interest so you can recall knowledge in seconds—not hours.
             </p>
 
-            {/* Founder credibility */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8 border border-white/20 max-w-3xl mx-auto">
-              <p className="text-white/90 text-lg italic">
-                "In 2014, a car accident left me in a coma with severe memory loss. During recovery, I discovered what ADHD brains have always known: 
-                traditional learning doesn't work for us. Summit uses the exact techniques that helped me rebuild my memory."
-              </p>
-              <p className="text-white font-semibold text-lg mt-3">— Tom, Summit Co-Founder</p>
-            </div>
-
-            {/* Email Capture Form */}
-            <div className="max-w-md mx-auto mb-8 animate-slide-up">
-              <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2 text-center">
-                  Join 1,000+ People Taking Control of Their Learning
-                </h3>
-                <p className="text-gray-600 text-sm mb-4 text-center">
-                  Get early access + save 40% on pre-order pricing
-                </p>
-                <form onSubmit={handleEmailSubmit} className="space-y-4">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email address"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors text-center"
-                    required
-                    disabled={status === 'loading'}
-                  />
-                  <button
-                    type="submit"
-                    disabled={status === 'loading'}
-                    className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-primary-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-                  >
-                    {status === 'loading' ? (
-                      <div className="flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        Joining...
-                      </div>
-                    ) : (
-                      'Pre-Order Now — Limited Spots'
-                    )}
-                  </button>
-                </form>
-                
-                {/* Status Messages */}
-                {status === 'success' && (
-                  <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <p className="text-green-700 text-sm text-center font-medium">
-                      {message}
-                    </p>
-                  </div>
-                )}
-                
-                {status === 'error' && (
-                  <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-red-700 text-sm text-center">
-                      {message}
-                    </p>
-                  </div>
-                )}
-                
-                <p className="text-xs text-gray-500 text-center mt-3">
-                  ✓ No spam ✓ ADHD-friendly tips ✓ Exclusive pre-order pricing
-                </p>
+            {/* Social Proof Logos */}
+            <div className="flex justify-center items-center space-x-8 mb-8 opacity-70">
+              <div className="text-white/80 text-sm font-medium px-4 py-2 bg-white/10 rounded-lg border border-white/20">
+                Product Hunt Upcoming
+              </div>
+              <div className="text-white/80 text-sm font-medium px-4 py-2 bg-white/10 rounded-lg border border-white/20">
+                London AI Hub
+              </div>
+              <div className="text-white/80 text-sm font-medium px-4 py-2 bg-white/10 rounded-lg border border-white/20">
+                Techstars Mentor Network
               </div>
             </div>
 
-            {/* Secondary CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 animate-slide-up">
+            {/* Problem Statement */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mb-8 border border-white/20 max-w-3xl mx-auto">
+              <p className="text-white/90 text-lg">
+                Most notes disappear into forgotten folders. When you finally need that quote or idea, it's faster to re‑search the web than your own vault.
+              </p>
+            </div>
+
+            {/* Solution Highlights */}
+            <div className="grid md:grid-cols-3 gap-4 mb-8 max-w-2xl mx-auto">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                <div className="text-white font-semibold mb-2">Auto‑tags by topic</div>
+                <div className="text-white/80 text-sm">AI categorizes your notes automatically</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                <div className="text-white font-semibold mb-2">One‑tap contextual recall</div>
+                <div className="text-white/80 text-sm">Find exactly what you need instantly</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                <div className="text-white font-semibold mb-2">Learns what you value</div>
+                <div className="text-white/80 text-sm">Gets smarter with every note you save</div>
+              </div>
+            </div>
+
+            {/* Primary CTA */}
+            <div className="max-w-md mx-auto mb-8 animate-slide-up">
               <button
                 onClick={scrollToPricing}
-                className="btn-secondary text-lg px-8 py-4 inline-flex items-center group"
+                className="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold py-4 px-8 rounded-xl text-lg transition-all duration-200 transform hover:scale-105 shadow-xl"
               >
-                View Pricing
-                <ChevronRightIcon className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                Pre-Order Genesis 50
               </button>
-              
-              <button className="text-primary-600 hover:text-primary-700 font-medium text-lg px-4 py-2 underline">
-                Watch demo
-              </button>
+              <p className="text-white/70 text-sm mt-3">
+                Only 50 slots available • 20% lifetime discount • Exclusive perks
+              </p>
             </div>
 
-            {/* Social Proof */}
-            <div className="text-center text-gray-500 animate-fade-in">
-              <p className="text-sm mb-4">Trusted by 1,000+ people who struggle with information overload</p>
-              <div className="flex justify-center items-center space-x-8 opacity-60">
-                <div className="text-xs font-medium">★★★★★ 4.9/5</div>
-                <div className="text-xs">•</div>
-                <div className="text-xs font-medium">500+ pre-orders</div>
-                <div className="text-xs">•</div>
-                <div className="text-xs font-medium">ADHD-tested</div>
-              </div>
+            {/* Credibility Statement */}
+            <div className="text-center text-white/80 animate-fade-in">
+              <p className="text-sm mb-4">Trained on 12M+ public documents • GDPR-ready • SOC 2 in progress</p>
             </div>
           </div>
 
-          {/* Hero Image/Video Placeholder */}
-          <div className="mt-16 max-w-5xl mx-auto animate-slide-up">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-gray-900 to-gray-800">
-              <div className="aspect-video bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
-                <div className="text-white text-center">
-                  <div className="w-20 h-20 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center">
-                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z"/>
-                    </svg>
-                  </div>
-                  <p className="text-lg font-medium">Watch Just Summit in Action</p>
-                  <p className="text-sm opacity-80 mt-1">See how AI summaries boost retention</p>
+          {/* How It Works */}
+          <div className="mt-16 max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-white text-center mb-8">How It Works</h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                  1
                 </div>
+                <h3 className="text-white font-semibold text-lg mb-2">Save any text, audio, or web snippet</h3>
+                <p className="text-white/80">Capture insights from any source</p>
               </div>
-              
-              {/* Play button overlay */}
-              <div className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors cursor-pointer">
-                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
-                  <svg className="w-6 h-6 text-primary-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z"/>
-                  </svg>
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                  2
                 </div>
+                <h3 className="text-white font-semibold text-lg mb-2">Summit AI tags, summarizes, and links it to your interests</h3>
+                <p className="text-white/80">Automatic organization and connections</p>
+              </div>
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                  3
+                </div>
+                <h3 className="text-white font-semibold text-lg mb-2">Search or ask and get instant answers—context included</h3>
+                <p className="text-white/80">Knowledge at your fingertips</p>
               </div>
             </div>
           </div>
@@ -205,4 +167,3 @@ export default function Hero() {
     </section>
   )
 }
-
