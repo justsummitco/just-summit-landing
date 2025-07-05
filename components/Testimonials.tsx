@@ -5,7 +5,7 @@ import { StarIcon } from '@heroicons/react/24/solid'
 const testimonials = [
   {
     content: "It's great to see a data-driven approach to solving this problem. The potential to help people with memory challenges, including those with Alzheimer's, is significant. This could be a real step forward.",
-    author: "Dr. Tom Richardson",
+    author: "Dr. Tom Richarson",
     role: "PhD in Alzheimer's Research, Advisor",
     rating: 5,
   },
