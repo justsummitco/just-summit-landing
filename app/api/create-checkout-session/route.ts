@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
       customer_creation: 'always',
       billing_address_collection: 'required',
       // Set session to expire in 15 minutes to prevent slot hoarding
-      expires_at: Math.floor(Date.now() / 1000) + (15 * 60),
+      expires_at: Math.floor(Date.now() / 1000) + (30 * 60),
     });
 
     return NextResponse.json({ 
