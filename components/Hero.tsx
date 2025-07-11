@@ -69,15 +69,16 @@ export default function Hero() {
 
             {/* Main Headline */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-              Capture every{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
-                insight.
-              </span>
+              Did you know 90% of what we hear is{' '}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-500">
+                forgotten
+              </span>{' '}
+              in less than a week?
             </h1>
 
             {/* Sub-headline */}
             <p className="text-xl md:text-2xl text-white/90 mb-8 leading-relaxed max-w-3xl mx-auto">
-              Just Summit auto‑tags your notes by interest so you can recall knowledge in seconds—not hours.
+              Summit ensures you're part of the 10% who put it to use. Auto-tag insights from podcasts and audiobooks—recall them instantly.
             </p>
 
             {/* Social Proof Logos */}
@@ -143,21 +144,21 @@ export default function Hero() {
                 <div className="w-16 h-16 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-xl">
                   1
                 </div>
-                <h3 className="text-white font-semibold text-lg mb-2">Save any text, audio, or web snippet</h3>
-                <p className="text-white/80">Capture insights from any source</p>
+                <h3 className="text-white font-semibold text-lg mb-2">Press the Summit button while listening</h3>
+                <p className="text-white/80">Capture insights from podcasts and audiobooks</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-xl">
                   2
                 </div>
-                <h3 className="text-white font-semibold text-lg mb-2">Summit AI tags, summarizes, and links it to your interests</h3>
-                <p className="text-white/80">Automatic organization and connections</p>
+                <h3 className="text-white font-semibold text-lg mb-2">Summit AI captures, tags, and organizes key insights</h3>
+                <p className="text-white/80">Automatic organization by your interests</p>
               </div>
               <div className="text-center">
                 <div className="w-16 h-16 mx-auto mb-4 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-xl">
                   3
                 </div>
-                <h3 className="text-white font-semibold text-lg mb-2">Search or ask and get instant answers—context included</h3>
+                <h3 className="text-white font-semibold text-lg mb-2">Search and get instant answers with full context</h3>
                 <p className="text-white/80">Knowledge at your fingertips</p>
               </div>
             </div>
@@ -167,3 +168,4 @@ export default function Hero() {
     </section>
   )
 }
+

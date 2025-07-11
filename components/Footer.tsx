@@ -76,10 +76,7 @@ export default function Footer() {
             <h3 className="font-semibold mb-4">Product</h3>
             <ul className="space-y-3 text-gray-400">
               <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
-              <li><a href="/features" className="hover:text-white transition-colors">Features</a></li>
-              <li><a href="/demo" className="hover:text-white transition-colors">Demo</a></li>
-              <li><a href="/roadmap" className="hover:text-white transition-colors">Roadmap</a></li>
-              <li><a href="/changelog" className="hover:text-white transition-colors">Changelog</a></li>
+              <li><a href="#about" className="hover:text-white transition-colors">About</a></li>
             </ul>
           </div>
 
@@ -87,9 +84,6 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold mb-4">Support</h3>
             <ul className="space-y-3 text-gray-400">
-              <li><a href="/help" className="hover:text-white transition-colors">Help Center</a></li>
-              <li><a href="/docs" className="hover:text-white transition-colors">Documentation</a></li>
-              <li><a href="/community" className="hover:text-white transition-colors">Community</a></li>
               <li>
                 <a 
                   href="mailto:hello@justsummit.co" 
@@ -98,7 +92,6 @@ export default function Footer() {
                   Contact Us
                 </a>
               </li>
-              <li><a href="/status" className="hover:text-white transition-colors">System Status</a></li>
             </ul>
           </div>
         </div>
@@ -109,9 +102,8 @@ export default function Footer() {
             {/* Legal Links */}
             <div className="flex flex-wrap justify-center md:justify-start space-x-6 text-sm text-gray-400 mb-4 md:mb-0">
               <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-              <a href="/terms" className="hover:text-white transition-colors">Terms of Service</a>
-              <a href="/cookies" className="hover:text-white transition-colors">Cookie Policy</a>
-              <a href="/accessibility" className="hover:text-white transition-colors">Accessibility</a>
+              <a href="/terms" className="hover:text-white transition-colors">Terms & Conditions</a>
+              <a href="/refunds" className="hover:text-white transition-colors">Refund Policy</a>
             </div>
 
             {/* Copyright */}

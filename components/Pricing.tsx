@@ -206,7 +206,7 @@ export default function Pricing() {
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
                     <div className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium flex items-center shadow-lg">
                       <StarIcon className="w-4 h-4 mr-1" />
-                      Most Popular
+                      Best Value
                     </div>
                   </div>
                 )}
@@ -329,3 +329,4 @@ export default function Pricing() {
     </section>
   )
 }
+

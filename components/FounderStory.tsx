@@ -2,7 +2,7 @@
 
 export default function FounderStory() {
   return (
-    <section className="section-padding bg-white">
+    <section id="about" className="section-padding bg-white">
       <div className="container-max">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Story Content */}
