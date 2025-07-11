@@ -118,7 +118,7 @@ async function sendGenesis50WelcomeEmail(email: string, firstName: string, tier:
 
 export async function POST(request: NextRequest) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2023-10-16.basil', 
+    apiVersion: '2023-10-16 ', 
   });
   
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
