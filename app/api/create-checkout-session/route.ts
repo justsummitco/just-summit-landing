@@ -4,11 +4,9 @@ import { getSlotData, reserveSlot, isSlotAvailable } from '@/lib/slots';
 
 export async function POST(request: NextRequest) {
   try {
-
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16',  // ← Use this instead
-});
-
+      apiVersion: '2025-06-30.basil',
+    });
     
     const { tierName } = await request.json();
 
@@ -57,7 +55,7 @@ export async function POST(request: NextRequest) {
 
     // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ['card', 'klarna', 'afterpay_clearpay'],
       line_items: [
         {
           price_data: {
@@ -84,7 +82,7 @@ export async function POST(request: NextRequest) {
       customer_creation: 'always',
       billing_address_collection: 'required',
       // Set session to expire in 15 minutes to prevent slot hoarding
-      expires_at: Math.floor(Date.now() / 1000) + (30 * 60),
+      expires_at: Math.floor(Date.now() / 1000) + (15 * 60),
     });
 
     return NextResponse.json({ 
@@ -110,3 +108,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

@@ -108,7 +108,7 @@ export default function Footer() {
 
             {/* Copyright */}
             <div className="text-sm text-gray-400">
-              © {currentYear} Just Summit. All rights reserved.
+              Patent pending • © 2025 Just Summit Ltd. All rights reserved.
             </div>
           </div>
 

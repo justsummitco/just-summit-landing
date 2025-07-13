@@ -260,6 +260,18 @@ export default function Pricing() {
                       <span className="line-through">{tier.originalPrice} value</span>
                       <span className="text-green-600 font-semibold ml-2">Save {Math.round(((parseFloat(tier.originalPrice.replace('£', '')) - parseFloat(tier.price.replace('£', ''))) / parseFloat(tier.originalPrice.replace('£', ''))) * 100)}%</span>
                     </div>
+                    {/* BNPL Options */}
+                    <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                      <div className="text-sm text-blue-800 font-medium">
+                        Or 4 payments of £{(parseFloat(tier.price.replace('£', '')) / 4).toFixed(2)}
+                      </div>
+                      <div className="flex items-center mt-1 space-x-2">
+                        <span className="text-xs text-blue-600">with</span>
+                        <span className="text-xs font-bold text-pink-600 bg-pink-100 px-2 py-1 rounded">Klarna</span>
+                        <span className="text-xs text-blue-600">or</span>
+                        <span className="text-xs font-bold text-green-600 bg-green-100 px-2 py-1 rounded">Clearpay</span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Features */}
