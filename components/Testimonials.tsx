@@ -5,7 +5,7 @@ import { StarIcon } from '@heroicons/react/24/solid'
 const testimonials = [
   {
     content: "It's great to see a data-driven approach to solving this problem. The potential to help people with memory challenges, including those with Alzheimer's, is significant. This could be a real step forward.",
-    author: "Dr. Tom s",
+    author: "Dr. Tom s P",
     role: "PhD in Alzheimer's Research, Advisor",
     rating: 5,
   },
@@ -33,7 +33,7 @@ export default function Testimonials() {
             What Early Users Say
           </h2>
           <p className="text-xl text-gray-600">
-            Feedback from researchers, advisors, and early adopters
+            Feedback from researchers, advisors, and early adopters 👀...
           </p>
         </div>
 
