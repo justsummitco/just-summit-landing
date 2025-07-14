@@ -100,6 +100,7 @@ export default function EmailSignup() {
               <button
                 type="submit"
                 disabled={status === 'loading'}
+                data-testid="main-cta"
                 className="w-full bg-primary-600 hover:bg-primary-700 disabled:bg-primary-400 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
               >
                 {status === 'loading' ? (

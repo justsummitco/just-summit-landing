@@ -28,7 +28,7 @@ export default function Header() {
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link 
-              href="#pricing" 
+              href="/#pricing" 
               className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
             >
               Pricing
@@ -40,13 +40,13 @@ export default function Header() {
               Blog
             </Link>
             <Link 
-              href="#story" 
+              href="/#story" 
               className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
             >
               Our Story
             </Link>
             <Link 
-              href="#testimonials" 
+              href="/#testimonials" 
               className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
             >
               Reviews
@@ -67,4 +67,3 @@ export default function Header() {
     </header>
   )
 }
-
