@@ -46,7 +46,7 @@ export default function Header() {
               Our Story
             </Link>
             <Link 
-              href="/#testimonials" 
+              href="/#reviews" 
               className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
             >
               Reviews
