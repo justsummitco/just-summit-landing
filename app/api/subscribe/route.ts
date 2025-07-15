@@ -29,21 +29,28 @@ export async function POST(request: NextRequest) {
       }),
     });
 
+    const responseText = await brevoResponse.text();
+    let parsedResponse = null;
+
+    try {
+      parsedResponse = responseText ? JSON.parse(responseText) : null;
+    } catch (err) {
+      console.warn('Failed to parse Brevo response as JSON:', responseText);
+    }
+
     if (brevoResponse.ok) {
-      const result = await brevoResponse.json();
-      console.log('Contact added to Brevo:', result);
+      console.log('Contact added to Brevo:', parsedResponse);
 
       return NextResponse.json({
         success: true,
         message: 'Successfully subscribed!',
       });
     } else {
-      const errorData = await brevoResponse.json();
-      console.error('Brevo API error:', errorData);
+      console.error('Brevo API error:', parsedResponse);
 
       if (
         brevoResponse.status === 400 &&
-        errorData.code === 'duplicate_parameter'
+        parsedResponse?.code === 'duplicate_parameter'
       ) {
         return NextResponse.json({
           success: true,
