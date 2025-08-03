@@ -2,23 +2,8 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 
 export default function Header() {
-  const [showScrollTop, setShowScrollTop] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 300)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
   return (
     <header className="bg-white/95 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
       <div className="container-max">
@@ -43,7 +28,7 @@ export default function Header() {
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link 
-              href="/#pricing" 
+              href="#pricing" 
               className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
             >
               Pricing
@@ -55,22 +40,16 @@ export default function Header() {
               Blog
             </Link>
             <Link 
-              href="/#story" 
+              href="#story" 
               className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
             >
               Our Story
             </Link>
             <Link 
-              href="/#testimonials" 
+              href="#testimonials" 
               className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
             >
               Reviews
-            </Link>
-            <Link 
-              href="/#email-signup" 
-              className="text-gray-600 hover:text-primary-600 font-medium transition-colors"
-            >
-              Stay in Loop
             </Link>
           </nav>
 
@@ -85,17 +64,7 @@ export default function Header() {
           </div>
         </div>
       </div>
-
-      {/* Back to Top Button */}
-      {showScrollTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-6 right-6 bg-primary-600 hover:bg-primary-700 text-white p-3 rounded-full shadow-lg transition-all z-50"
-          aria-label="Back to top"
-        >
-          ↑
-        </button>
-      )}
     </header>
   )
 }
+
