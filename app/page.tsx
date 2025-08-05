@@ -1,4 +1,5 @@
 import Header from '@/components/Header'
+import HeadphonesSection from '@/components/HeadphonesSection'
 import Hero from '@/components/Hero'
 import UrgencyBanner from '@/components/UrgencyBanner'
 import Pricing from '@/components/Pricing'
@@ -14,6 +15,7 @@ export default function Home() {
     <main className="min-h-screen">
       <Header />
       <Hero />
+      <HeadphonesSection />
       <UrgencyBanner />
       <Pricing />
       <GuaranteeBanner />
@@ -24,5 +26,7 @@ export default function Home() {
       <Footer />
     </main>
   )
+
+
 }
 
