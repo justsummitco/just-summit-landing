@@ -2,159 +2,111 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getSlotData, reserveSlot, isSlotAvailable } from '@/lib/slots';
 
-// Add this logic to your existing route.ts
-export async function POST(request: Request) {
-  try {
-    const { productType, tier, price, depositAmount, successUrl, cancelUrl } = await request.json()
-
-    let lineItems = []
-    let metadata = {}
-
-    // Handle headphones products
-    if (productType === 'headphones') {
-      lineItems = [{
-        price_data: {
-          currency: 'gbp',
-          product_data: {
-            name: 'AI Headphones Pre-Order',
-            description: 'Secure your AI Headphones with £49 deposit. Balance charged 30 days before shipping.',
-            images: ['https://justsummit.co/headphones-hero.png'],
-          },
-          unit_amount: depositAmount || 4900, // £49 deposit
-        },
-        quantity: 1,
-      }]
-      
-      metadata = {
-        product_type: 'headphones',
-        full_price: price || 29900, // £299 full price
-        deposit_amount: depositAmount || 4900,
-        shipping_date: 'Q2 2026'
-      }
-    }
-    
-    // Handle software products (your existing logic)
-    else if (productType === 'software') {
-      // Your existing Genesis 50 logic here
-    }
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      mode: 'payment',
-      success_url: successUrl,
-      cancel_url: cancelUrl,
-      metadata: metadata,
-    })
-
-    return NextResponse.json({ url: session.url })
-  } catch (error) {
-    console.error('Error creating checkout session:', error)
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
-  }
-}
 export async function POST(request: NextRequest) {
   try {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: '2023-10-16',
     });
+
+    const body = await request.json();
     
-    const { tierName } = await request.json();
-
-    // Check slot availability first
-    const slots = await getSlotData();
-    
-    if (!isSlotAvailable(tierName, slots)) {
-      return NextResponse.json(
-        { error: 'No slots available for this tier' },
-        { status: 400 }
-      );
-    }
-
-    // Define your pricing tiers
-    const pricingTiers = {
-      'Advanced Pre-Order': {
-        amount: 4900, // £49.00 in pence
-        name: 'Genesis 50 Advanced',
-        description: '6 months free + 20% lifetime software discount'
-      },
-      'Professional Pre-Order': {
-        amount: 9900, // £99.00 in pence
-        name: 'Genesis 50 Pro',
-        description: '12 months free + 20% lifetime software discount'
-      }
-    };
-
-    const tier = pricingTiers[tierName as keyof typeof pricingTiers];
-    
-    if (!tier) {
-      return NextResponse.json(
-        { error: 'Invalid pricing tier' },
-        { status: 400 }
-      );
-    }
-
-    // Reserve the slot temporarily (will be confirmed on successful payment)
-    const slotReserved = await reserveSlot(tierName);
-    
-    if (!slotReserved) {
-      return NextResponse.json(
-        { error: 'Failed to reserve slot - may have been taken by another user' },
-        { status: 400 }
-      );
-    }
-
-    // Create Stripe checkout session
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card', 'klarna', 'afterpay_clearpay'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'gbp',
-            product_data: {
-              name: tier.name,
-              description: tier.description,
-            },
-            unit_amount: tier.amount,
+    // Handle headphones products
+    if (body.productType === 'headphones') {
+      const { tier, price, depositAmount, successUrl, cancelUrl } = body;
+      
+      const lineItems = [{
+        price_data: {
+          currency: 'gbp',
+          product_data: {
+            name: 'AI Headphones Pre-Order',
+            description: 'Secure your AI Headphones with £49 deposit. Balance charged 30 days before shipping in Q2 2026.',
+            images: ['https://justsummit.co/headphones-hero.png'],
           },
-          quantity: 1,
+          unit_amount: depositAmount || 4900, // £49 deposit
         },
-      ],
-      mode: 'payment',
-      success_url: `${request.nextUrl.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${request.nextUrl.origin}/#pricing`,
-      metadata: {
-        tier: tierName,
-        amount: tier.amount.toString(),
-        genesis_50: 'true', // Tag for Genesis 50 cohort
-        cohort: 'genesis_50',
-        slot_type: tierName === 'Advanced Pre-Order' ? 'advanced' : 'pro'
-      },
-      customer_creation: 'always',
-      billing_address_collection: 'required',
-      // Set session to expire in 15 minutes to prevent slot hoarding
-      expires_at: Math.floor(Date.now() / 1000) + (30 * 60),
-    });
+        quantity: 1,
+      }];
+      
+      const metadata = {
+        product_type: 'headphones',
+        tier: tier || 'standard',
+        full_price: price || 29900, // £299 full price
+        deposit_amount: depositAmount || 4900,
+        shipping_date: 'Q2 2026'
+      };
 
-    return NextResponse.json({ 
-      sessionId: session.id,
-      slotReserved: true 
-    });
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: lineItems,
+        mode: 'payment',
+        success_url: successUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/headphones-success`,
+        cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_BASE_URL}/headphones-cancel`,
+        metadata: metadata,
+        billing_address_collection: 'required',
+        expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // 30 minutes
+      });
+
+      return NextResponse.json({ url: session.url });
+    }
+    
+    // Handle software products (existing Genesis 50 logic)
+    else if (body.tierName) {
+      const { tierName } = body;
+      
+      // Check slot availability
+      const slotData = await getSlotData();
+      if (!isSlotAvailable(tierName, slotData)) {
+        return NextResponse.json({ error: 'This tier is currently full' }, { status: 400 });
+      }
+
+      let priceId: string;
+      let productName: string;
+      
+      if (tierName === 'Advanced Pre-Order') {
+        priceId = process.env.STRIPE_ADVANCED_PRICE_ID!;
+        productName = 'Genesis 50 Advanced Pre-Order';
+      } else if (tierName === 'Professional Pre-Order') {
+        priceId = process.env.STRIPE_PROFESSIONAL_PRICE_ID!;
+        productName = 'Genesis 50 Professional Pre-Order';
+      } else {
+        return NextResponse.json({ error: 'Invalid tier' }, { status: 400 });
+      }
+
+      // Reserve slot temporarily
+      await reserveSlot(tierName);
+
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price: priceId,
+            quantity: 1,
+          },
+        ],
+        mode: 'subscription',
+        success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
+        metadata: {
+          product_type: 'software',
+          tier: tierName,
+          product_name: productName,
+        },
+        billing_address_collection: 'required',
+        expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // 30 minutes
+      });
+
+      return NextResponse.json({ url: session.url });
+    }
+    
+    // Invalid request
+    else {
+      return NextResponse.json({ error: 'Invalid product type' }, { status: 400 });
+    }
 
   } catch (error) {
-    console.error('Stripe checkout error:', error);
-    
-    // If there was an error, try to release the slot
-    try {
-      const { tierName } = await request.json();
-      // Note: In production, you'd want more sophisticated slot management
-      // to handle race conditions and ensure data consistency
-    } catch (releaseError) {
-      console.error('Error releasing slot after checkout failure:', releaseError);
-    }
-    
+    console.error('Error creating checkout session:', error);
     return NextResponse.json(
-      { error: 'Failed to create checkout session' },
+      { error: 'Internal Server Error', details: error instanceof Error ? error.message : 'Unknown error' }, 
       { status: 500 }
     );
   }
