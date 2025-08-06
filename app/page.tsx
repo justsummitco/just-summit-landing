@@ -72,6 +72,7 @@ export default function HomePage() {
         <Clock className="w-4 h-4 mr-2" />
         Early Bird Pricing: Save £100 - Limited Time Only
       </div>
+
       {/* Hero Section */}
       <section className="relative pt-8 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-teal-600 via-teal-700 to-cyan-800">
         <div className="max-w-7xl mx-auto">
@@ -80,14 +81,26 @@ export default function HomePage() {
               <Award className="w-4 h-4 mr-2" />
               Patent Pending Technology
             </div>
-            {/* HERO IMAGE - replace path if needed */}
-            <img 
-              src="/summit-hero.png" 
-              alt="On-device AI Summarization Headphones" 
-              className="mx-auto mb-6 rounded-xl shadow-lg max-w-3xl w-full object-cover"
-              style={{ maxHeight: 380 }}
-            />
-            {/* Supporting Text */}
+             {/* Product Hero Image */}
+          <div className="relative max-w-2xl mx-auto">
+            <div className="product-hero-image">
+              <img 
+                src="/headphones-hero.png" 
+                alt="AI Summarization Headphones" 
+                className="w-full h-auto"
+              />
+              <div className="absolute top-4 left-4 bg-white/95 px-3 py-1 rounded-full text-sm font-medium text-gray-800 flex items-center">
+                <Brain className="w-4 h-4 mr-1 text-teal-600" />
+                AI Powered
+              </div>
+              <div className="absolute top-4 right-4 bg-white/95 px-3 py-1 rounded-full text-sm font-medium text-gray-800 flex items-center">
+                <Battery className="w-4 h-4 mr-1 text-green-600" />
+                All-day Battery*
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
             <p className="text-xl text-teal-100 mb-8 max-w-3xl mx-auto">
               Never miss important information again | Transform hours of audio into actionable insights
             </p>
@@ -140,78 +153,8 @@ export default function HomePage() {
               <span className="text-sm">Patent Pending</span>
             </div>
           </div>
-        </div>
-      </section>
-   
-            {/* Email Capture */}
-            <div className="max-w-md mx-auto mb-8">
-              {!isSubmitted ? (
-                <form onSubmit={handleEmailSubmit} className="flex gap-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    className="flex-1 px-4 py-3 rounded-lg border border-white/20 bg-white/10 text-white placeholder-teal-200 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
-                    style={{ color: '#1f2937' }}
-                    required
-                  />
-                  <button
-                    type="submit"
-                    className="px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition-colors"
-                  >
-                    Get Early Access
-                  </button>
-                </form>
-              ) : (
-                <div className="bg-green-500/20 border border-green-400/30 rounded-lg p-4 text-green-100">
-                  <CheckCircle className="w-5 h-5 inline mr-2" />
-                  Thank you! You&apos;ll be among the first to know when we launch.
-                </div>
-              )}
-            </div>
 
-            <p className="text-teal-200 text-sm">
-              Join 1,000+ innovators securing their spot. Early bird pricing ends soon.
-            </p>
-          </div>
-
-          {/* Trust Indicators */}
-          <div className="flex justify-center items-center space-x-8 mb-12 text-teal-200">
-            <div className="flex items-center">
-              <Shield className="w-5 h-5 mr-2" />
-              <span className="text-sm">Privacy-First</span>
-            </div>
-            <div className="flex items-center">
-              <Zap className="w-5 h-5 mr-2" />
-              <span className="text-sm">On-Device Processing</span>
-            </div>
-            <div className="flex items-center">
-              <Award className="w-5 h-5 mr-2" />
-              <span className="text-sm">Patent Pending</span>
-            </div>
-          </div>
-
-          {/* Product Hero Image */}
-          <div className="relative max-w-2xl mx-auto">
-            <div className="product-hero-image">
-              <img 
-                src="/headphones-hero.png" 
-                alt="AI Summarization Headphones" 
-                className="w-full h-auto"
-              />
-              <div className="absolute top-4 left-4 bg-white/95 px-3 py-1 rounded-full text-sm font-medium text-gray-800 flex items-center">
-                <Brain className="w-4 h-4 mr-1 text-teal-600" />
-                AI Powered
-              </div>
-              <div className="absolute top-4 right-4 bg-white/95 px-3 py-1 rounded-full text-sm font-medium text-gray-800 flex items-center">
-                <Battery className="w-4 h-4 mr-1 text-green-600" />
-                All-day Battery*
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+         
 
       {/* Video Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
