@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap' );
 
 @layer base {
   html {
@@ -31,6 +31,7 @@
     @apply max-w-7xl mx-auto;
   }
 }
+
 /* Conversion Optimization Styles */
 .urgency-banner {
   display: flex;
@@ -89,4 +90,3 @@
   color: #6b7280;
   font-weight: 500;
 }
-
