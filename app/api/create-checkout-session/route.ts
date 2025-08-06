@@ -2,6 +2,57 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getSlotData, reserveSlot, isSlotAvailable } from '@/lib/slots';
 
+// Add this logic to your existing route.ts
+export async function POST(request: Request) {
+  try {
+    const { productType, tier, price, depositAmount, successUrl, cancelUrl } = await request.json()
+
+    let lineItems = []
+    let metadata = {}
+
+    // Handle headphones products
+    if (productType === 'headphones') {
+      lineItems = [{
+        price_data: {
+          currency: 'gbp',
+          product_data: {
+            name: 'AI Headphones Pre-Order',
+            description: 'Secure your AI Headphones with £49 deposit. Balance charged 30 days before shipping.',
+            images: ['https://justsummit.co/headphones-hero.png'],
+          },
+          unit_amount: depositAmount || 4900, // £49 deposit
+        },
+        quantity: 1,
+      }]
+      
+      metadata = {
+        product_type: 'headphones',
+        full_price: price || 29900, // £299 full price
+        deposit_amount: depositAmount || 4900,
+        shipping_date: 'Q2 2026'
+      }
+    }
+    
+    // Handle software products (your existing logic)
+    else if (productType === 'software') {
+      // Your existing Genesis 50 logic here
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: lineItems,
+      mode: 'payment',
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      metadata: metadata,
+    })
+
+    return NextResponse.json({ url: session.url })
+  } catch (error) {
+    console.error('Error creating checkout session:', error)
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+  }
+}
 export async function POST(request: NextRequest) {
   try {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {

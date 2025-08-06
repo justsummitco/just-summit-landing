@@ -24,16 +24,22 @@ export default function StripeCheckout({ productType, tier, price, depositAmount
         }),
       })
 
-      const { url } = await response.json()
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
       
-      if (url) {
-        window.location.href = url
+      if (data.url) {
+        window.location.href = data.url
+      } else if (data.error) {
+        throw new Error(data.error)
       } else {
         throw new Error('No checkout URL received')
       }
     } catch (error) {
       console.error('Error creating checkout session:', error)
-      alert('Something went wrong. Please try again.')
+      alert(`Something went wrong: ${error.message}. Please try again.`)
     } finally {
       setLoading(false)
     }
@@ -53,9 +59,10 @@ export default function StripeCheckout({ productType, tier, price, depositAmount
           </svg>
           Processing...
         </div>
-       ) : (
+      ) : (
         `Pre-Order Now - £${(depositAmount / 100).toFixed(0)} Deposit`
       )}
     </button>
   )
 }
+
