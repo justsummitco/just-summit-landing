@@ -31,4 +31,62 @@
     @apply max-w-7xl mx-auto;
   }
 }
+/* Conversion Optimization Styles */
+.urgency-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ff6b35, #f7931e);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  margin: 16px 0;
+  animation: pulse 2s infinite;
+}
+
+.urgency-indicator {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+  padding: 6px 12px;
+  background: #fef3cd;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Enhanced CTA buttons */
+.pre-order-button.large {
+  font-size: 18px;
+  padding: 16px 32px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+  transition: all 0.3s ease;
+}
+
+.pre-order-button.large:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+}
+
+/* Social proof enhancements */
+.social-proof-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #3b82f6;
+  line-height: 1;
+}
+
+.social-proof-label {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+}
 
