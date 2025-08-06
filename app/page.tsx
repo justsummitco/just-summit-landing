@@ -143,7 +143,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Product Showcase with Real Images */}
+          {/* Product Showcase with Clean White Background */}
           <div className="product-showcase">
             <div className="product-hero-image">
               <img 
@@ -636,12 +636,15 @@ export default function HomePage() {
           margin-bottom: 12px;
         }
 
+        /* FIXED: Email input text color - now black instead of white */
         .email-input {
           flex: 1;
           padding: 16px;
           border: none;
           border-radius: 8px;
           font-size: 16px;
+          color: #1f2937;
+          background: white;
         }
 
         .cta-button {
@@ -694,6 +697,11 @@ export default function HomePage() {
         .product-hero-image {
           position: relative;
           display: inline-block;
+          /* FIXED: Clean white background instead of dark gradient */
+          background: white;
+          padding: 40px;
+          border-radius: 20px;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         .hero-product-image {
@@ -705,7 +713,7 @@ export default function HomePage() {
         .feature-badge {
           position: absolute;
           top: 20px;
-          background: rgba(255, 255, 255, 0.9);
+          background: rgba(255, 255, 255, 0.95);
           color: #374151;
           padding: 8px 12px;
           border-radius: 20px;
@@ -714,6 +722,7 @@ export default function HomePage() {
           display: flex;
           align-items: center;
           gap: 4px;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         .feature-badge.left {
@@ -1074,12 +1083,15 @@ export default function HomePage() {
           gap: 12px;
         }
 
+        /* FIXED: Inline email input text color - now black */
         .email-input-inline {
           padding: 12px 16px;
           border: none;
           border-radius: 8px;
           font-size: 16px;
           min-width: 250px;
+          color: #1f2937;
+          background: white;
         }
 
         .cta-button-secondary {
