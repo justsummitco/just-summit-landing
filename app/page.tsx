@@ -81,26 +81,10 @@ export default function HomePage() {
               <Award className="w-4 h-4 mr-2" />
               Patent Pending Technology
             </div>
-             {/* Product Hero Image */}
-          <div className="relative max-w-2xl mx-auto">
-            <div className="product-hero-image">
-              <img 
-                src="/headphones-hero.png" 
-                alt="AI Summarization Headphones" 
-                className="w-full h-auto"
-              />
-              <div className="absolute top-4 left-4 bg-white/95 px-3 py-1 rounded-full text-sm font-medium text-gray-800 flex items-center">
-                <Brain className="w-4 h-4 mr-1 text-teal-600" />
-                AI Powered
-              </div>
-              <div className="absolute top-4 right-4 bg-white/95 px-3 py-1 rounded-full text-sm font-medium text-gray-800 flex items-center">
-                <Battery className="w-4 h-4 mr-1 text-green-600" />
-                All-day Battery*
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              World&apos;s First <span className="text-orange-400">On-device AI</span><br />
+              Summarization Headphones
+            </h1>
             <p className="text-xl text-teal-100 mb-8 max-w-3xl mx-auto">
               Never miss important information again | Transform hours of audio into actionable insights
             </p>
@@ -154,7 +138,26 @@ export default function HomePage() {
             </div>
           </div>
 
-         
+          {/* Product Hero Image */}
+          <div className="relative max-w-2xl mx-auto">
+            <div className="product-hero-image">
+              <img 
+                src="/headphones-hero.png" 
+                alt="AI Summarization Headphones" 
+                className="w-full h-auto"
+              />
+              <div className="absolute top-4 left-4 bg-white/95 px-3 py-1 rounded-full text-sm font-medium text-gray-800 flex items-center">
+                <Brain className="w-4 h-4 mr-1 text-teal-600" />
+                AI Powered
+              </div>
+              <div className="absolute top-4 right-4 bg-white/95 px-3 py-1 rounded-full text-sm font-medium text-gray-800 flex items-center">
+                <Battery className="w-4 h-4 mr-1 text-green-600" />
+                All-day Battery*
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Video Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
@@ -629,3 +632,4 @@ export default function HomePage() {
     </div>
   );
 }
+
