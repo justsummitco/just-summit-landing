@@ -73,88 +73,38 @@ export default function HomePage() {
         Early Bird Pricing: Save £100 - Limited Time Only
       </div>
 
-      {/* NEW FULL-BLEED HERO SECTION */}
+      {/* NEW FULL-BLEED HERO SECTION WITH EDGE-TO-EDGE IMAGE */}
       <section className="relative w-full h-screen min-h-[520px] overflow-hidden">
-        {/* Full-screen background image */}
-        <div className="absolute inset-0">
-          <img 
-            src="/headphones-hero.png" 
-            alt="Just Summit AI Headphones" 
-            className="w-full h-full object-cover object-center"
-            style={{ objectPosition: '60% center' }}
-          />
-          
-          {/* Gradient overlay for text contrast - left side only */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent"></div>
-          
-          {/* Teal overlay to maintain brand colors */}
-          <div className="absolute inset-0 bg-gradient-to-r from-teal-900/40 via-teal-800/20 to-transparent"></div>
-        </div>
+        {/* Hero Background Image */}
+        <div 
+          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: 'url(/final_hero_image_complete.png)'
+          }}
+        />
+        
+        {/* Optional overlay for better text contrast if needed */}
+        <div className="absolute inset-0 bg-black/5" />
 
-        {/* Patent Pending Badge */}
-        <div className="absolute top-8 left-1/2 transform -translate-x-1/2 z-20">
-          <div className="bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30">
-            <div className="flex items-center gap-2 text-white text-sm font-medium">
-              <Award className="w-4 h-4" />
-              Patent Pending Technology
-            </div>
-          </div>
-        </div>
-
-        {/* Main content - positioned on left side */}
+        {/* Content positioned over the image - Hidden since it's in the image */}
         <div className="relative z-10 h-full flex items-center">
-          <div className="max-w-7xl mx-auto px-6 w-full">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
             <div className="max-w-2xl">
-              {/* Main Headline */}
-              <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight">
-                Capture every insight.
-              </h1>
-              
-              {/* Supporting Subheadline */}
-              <p className="text-xl md:text-2xl text-white/90 mb-8 font-light max-w-lg">
-                AI-summarised on device — privacy-first.
-              </p>
-              
-              {/* Primary CTA */}
-              <button 
-                onClick={handlePreOrder}
-                className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-lg text-lg transition-all duration-200 transform hover:scale-105 shadow-xl mb-8"
-              >
-                Pre-Order Headphones
-              </button>
-              
-              {/* Trust Indicators Row */}
-              <div className="flex flex-wrap items-center gap-6 text-white/80 text-sm">
-                <div className="flex items-center gap-2">
-                  <Shield className="w-5 h-5" />
-                  <span>Privacy-First</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Zap className="w-5 h-5" />
-                  <span>On-Device Processing</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Award className="w-5 h-5" />
-                  <span>Patent Pending</span>
-                </div>
+              {/* Screen reader content only */}
+              <div className="sr-only">
+                <h1>Capture every insight.</h1>
+                <p>AI-summarised on device — privacy-first</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Product badges - positioned over the headphones */}
-        <div className="absolute top-1/4 right-12 z-20 hidden lg:block">
-          <div className="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-gray-800 text-sm font-medium flex items-center gap-2 mb-4">
-            <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
-            AI Powered
-          </div>
-        </div>
-        <div className="absolute top-1/3 right-12 z-20 hidden lg:block">
-          <div className="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-gray-800 text-sm font-medium flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            All-day Battery*
-          </div>
-        </div>
+        {/* Clickable area for the CTA button (positioned over the button in the image) */}
+        <button
+          onClick={handlePreOrder}
+          className="absolute bottom-[25%] left-[3%] w-[280px] h-[60px] bg-transparent hover:bg-white/10 transition-all duration-200 rounded-lg z-20"
+          aria-label="Pre-order Just Summit AI Headphones"
+        />
       </section>
 
       {/* Video Section */}
@@ -361,16 +311,26 @@ export default function HomePage() {
                   <p className="text-gray-600 text-sm">Bluetooth 5.3, USB-C, 3.5mm jack compatibility</p>
                 </div>
               </div>
-            </div>
 
-            <div className="space-y-6">
               <div className="flex items-start space-x-4">
                 <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Volume2 className="w-5 h-5 text-teal-600" />
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">Audio Quality</h3>
-                  <p className="text-gray-600 text-sm">Premium drivers with adaptive noise cancellation*</p>
+                  <p className="text-gray-600 text-sm">High-fidelity drivers with noise cancellation</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex items-start space-x-4">
+                <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Shield className="w-5 h-5 text-teal-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Privacy & Security</h3>
+                  <p className="text-gray-600 text-sm">End-to-end encryption with local processing</p>
                 </div>
               </div>
 
@@ -380,211 +340,169 @@ export default function HomePage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900">App Integration</h3>
-                  <p className="text-gray-600 text-sm">iOS and Android companion app with cloud sync</p>
+                  <p className="text-gray-600 text-sm">iOS and Android companion apps included</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-4">
                 <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Headphones className="w-5 h-5 text-teal-600" />
+                  <Award className="w-5 h-5 text-teal-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">Comfort Design</h3>
-                  <p className="text-gray-600 text-sm">Lightweight materials, adjustable fit, memory foam padding</p>
+                  <h3 className="font-semibold text-gray-900">Build Quality</h3>
+                  <p className="text-gray-600 text-sm">Premium materials with durable construction</p>
                 </div>
               </div>
-            </div>
-          </div>
 
-          <div className="mt-12 text-center">
-            <p className="text-sm text-gray-500">
-              *Specifications subject to final testing and optimization. Patent pending technology.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Join the Innovation</h2>
-            <p className="text-xl text-gray-600">Be Among the First - Founding Members</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-teal-600 mb-2">1,000+</div>
-              <div className="text-gray-600">Early Supporters</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-teal-600 mb-2">95%</div>
-              <div className="text-gray-600">Target Accuracy Rate*</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-teal-600 mb-2">Q2 2026</div>
-              <div className="text-gray-600">Expected Delivery</div>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <div className="flex items-center mb-4">
-                <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center mr-3">
+              <div className="flex items-start space-x-4">
+                <div className="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center flex-shrink-0">
                   <Users className="w-5 h-5 text-teal-600" />
                 </div>
                 <div>
-                  <div className="font-semibold text-gray-900">Early Supporter</div>
-                  <div className="text-sm text-gray-500">Sarah M., Knowledge Worker</div>
+                  <h3 className="font-semibold text-gray-900">Support</h3>
+                  <p className="text-gray-600 text-sm">Dedicated customer support and regular updates</p>
                 </div>
               </div>
-              <p className="text-gray-600 text-sm">
-                "Finally, a solution for my ADHD brain! The AI summaries help me retain information from long podcasts without getting overwhelmed."
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <div className="flex items-center mb-4">
-                <div className="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center mr-3">
-                  <Shield className="w-5 h-5 text-teal-600" />
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-900">Beta Tester</div>
-                  <div className="text-sm text-gray-500">David L., Executive</div>
-                </div>
-              </div>
-              <p className="text-gray-600 text-sm">
-                "The on-device processing gives me confidence that my private meetings stay private. Game-changing technology."
-              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Our Story */}
-      <section id="story" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section id="story" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Story</h2>
-            <p className="text-xl text-gray-600">Born from personal experience with memory challenges</p>
+            <p className="text-xl text-gray-600">
+              Building the future of intelligent audio
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <blockquote className="text-lg text-gray-700 mb-6">
-                "After my brain injury, I struggled to retain information from audio content. I knew there had to be a better way to capture and remember what matters most."
-              </blockquote>
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mr-4">
-                  <Users className="w-6 h-6 text-teal-600" />
-                </div>
-                <div>
-                  <div className="font-semibold text-gray-900">Tom Mitchell</div>
-                  <div className="text-gray-600">Founder & CEO</div>
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex items-center">
-                <Brain className="w-8 h-8 text-teal-600 mr-4" />
-                <div>
-                  <h3 className="font-semibold text-gray-900">Memory-Friendly</h3>
-                  <p className="text-gray-600 text-sm">Designed for cognitive accessibility</p>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <CheckCircle className="w-8 h-8 text-teal-600 mr-4" />
-                <div>
-                  <h3 className="font-semibold text-gray-900">ADHD-Tested</h3>
-                  <p className="text-gray-600 text-sm">Validated with neurodivergent users</p>
-                </div>
-              </div>
-              <div className="flex items-center">
-                <Shield className="w-8 h-8 text-teal-600 mr-4" />
-                <div>
-                  <h3 className="font-semibold text-gray-900">Privacy-First</h3>
-                  <p className="text-gray-600 text-sm">Your data stays on your device</p>
-                </div>
-              </div>
-            </div>
+          <div className="prose prose-lg mx-auto text-gray-600">
+            <p className="text-lg leading-relaxed mb-6">
+              At Just Summit, we believe that technology should enhance human capability, not replace it. 
+              Our team of audio engineers and AI researchers came together with a simple mission: to help 
+              people capture and retain the most important information from their daily audio experiences.
+            </p>
+            <p className="text-lg leading-relaxed mb-6">
+              After years of research and development, we've created the world's first headphones with 
+              built-in AI summarization. Our patent-pending technology processes audio locally on your 
+              device, ensuring your privacy while delivering unprecedented insights from meetings, 
+              podcasts, lectures, and calls.
+            </p>
+            <p className="text-lg leading-relaxed">
+              We're not just building headphones – we're creating a new category of intelligent audio 
+              devices that will transform how we learn, work, and communicate.
+            </p>
           </div>
+        </div>
+      </section>
+
+      {/* Email Signup Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Stay Updated</h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Get the latest updates on development progress and exclusive early access opportunities
+          </p>
+          
+          {!isSubmitted ? (
+            <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                required
+              />
+              <button
+                type="submit"
+                className="bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center"
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                Subscribe
+              </button>
+            </form>
+          ) : (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 max-w-md mx-auto">
+              <div className="flex items-center justify-center text-green-800">
+                <CheckCircle className="w-5 h-5 mr-2" />
+                Thanks for subscribing! We'll keep you updated.
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
       {/* Final CTA */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-teal-600 to-cyan-600">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Don&apos;t Miss Out on Revolutionary Audio Intelligence
-          </h2>
+          <h2 className="text-3xl font-bold text-white mb-4">Ready to Transform Your Audio Experience?</h2>
           <p className="text-xl text-teal-100 mb-8">
-            Join the founding members securing their AI headphones today
+            Join the revolution in intelligent audio technology
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button 
               onClick={handlePreOrder}
-              className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 px-8 rounded-lg transition-colors flex items-center"
+              className="bg-white text-teal-600 font-semibold px-8 py-4 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center"
             >
               <CreditCard className="w-5 h-5 mr-2" />
-              Reserve Now - £49 Deposit
+              Reserve Now - £49 Today
             </button>
-            
-            <div className="text-center">
-              {!isSubmitted ? (
-                <form onSubmit={handleEmailSubmit} className="flex gap-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    className="px-4 py-3 rounded-lg border border-white/20 bg-white/10 text-white placeholder-teal-200 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
-                    style={{ color: '#1f2937' }}
-                    required
-                  />
-                  <button
-                    type="submit"
-                    className="px-6 py-3 bg-white text-teal-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
-                  >
-                    Join Waitlist
-                  </button>
-                </form>
-              ) : (
-                <div className="bg-green-500/20 border border-green-400/30 rounded-lg p-4 text-green-100">
-                  <CheckCircle className="w-5 h-5 inline mr-2" />
-                  You&apos;re on the list! We&apos;ll be in touch soon.
-                </div>
-              )}
-            </div>
+            <button 
+              onClick={handlePreOrder}
+              className="bg-orange-500 text-white font-semibold px-8 py-4 rounded-lg hover:bg-orange-600 transition-colors"
+            >
+              Full Payment - £299
+            </button>
           </div>
-
-          <div className="mt-8 text-teal-200 text-sm">
-            30-day money-back guarantee • Expected delivery Q2 2026 • Patent pending technology
-          </div>
+          
+          <p className="text-teal-200 text-sm mt-6">
+            30-day money-back guarantee • Free worldwide shipping • Expected delivery Q2 2026*
+          </p>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8">
-            <h3 className="text-xl font-semibold mb-4">Questions? We&apos;re Here to Help</h3>
-            <p className="text-gray-400 mb-4">
-              Get in touch with our team for any questions about your AI headphones
-            </p>
-            <a 
-              href="mailto:hello@justsummit.co" 
-              className="text-teal-400 hover:text-teal-300 transition-colors flex items-center justify-center"
-            >
-              <Mail className="w-4 h-4 mr-2" />
-              hello@justsummit.co
-            </a>
-            <p className="text-gray-500 text-sm mt-2">We respond within 24 hours</p>
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <img src="/just-summit-logo.png" alt="Just Summit" className="h-8 w-auto mb-4" />
+              <p className="text-gray-400 text-sm">
+                The world's first AI-powered audio summarization headphones
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Product</h3>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><button onClick={() => scrollToSection('features')} className="hover:text-white transition-colors">Features</button></li>
+                <li><button onClick={() => scrollToSection('specs')} className="hover:text-white transition-colors">Specifications</button></li>
+                <li><a href="#" className="hover:text-white transition-colors">Support</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Company</h3>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><button onClick={() => scrollToSection('story')} className="hover:text-white transition-colors">About Us</button></li>
+                <li><a href="https://www.justsummit.co/blog" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4">Legal</h3>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Patents</a></li>
+              </ul>
+            </div>
           </div>
-          
-          <div className="border-t border-gray-800 pt-8 text-center text-gray-500 text-sm">
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
             <p>&copy; 2024 Just Summit. All rights reserved.</p>
+            <p className="mt-2">*Features and specifications subject to change. Expected delivery dates are estimates.</p>
           </div>
         </div>
       </footer>
