@@ -41,6 +41,16 @@ export default function HomePage() {
     window.open('https://buy.stripe.com/test_your_payment_link', '_blank');
   };
 
+  const handleFullPayment = () => {
+    // Replace with actual Stripe link for £249 full payment
+    window.open('STRIPE_LINK_FULLPAY', '_blank');
+  };
+
+  const handleDeposit = () => {
+    // Replace with actual Stripe link for £49 deposit
+    window.open('STRIPE_LINK_DEPOSIT', '_blank');
+  };
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -107,6 +117,136 @@ export default function HomePage() {
         />
       </section>
 
+      {/* NEW: Clean Two-Tier Pricing Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-5xl mx-auto">
+          {/* Two-Card Layout */}
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+            
+            {/* Card A - Full Payment (Dominant) */}
+            <div className="relative bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl p-8 border-2 border-teal-200 shadow-lg transform md:scale-105 order-1">
+              {/* Best Value Badge */}
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <div className="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                  Best Value
+                </div>
+              </div>
+
+              {/* Title */}
+              <div className="text-center mb-6 mt-2">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  Full Payment — Priority Shipping
+                </h3>
+                
+                {/* Price */}
+                <div className="mb-4">
+                  <div className="text-4xl font-bold text-teal-600 mb-2">£249 today</div>
+                  <div className="text-orange-600 font-semibold">
+                    Save £100 vs £349 retail
+                  </div>
+                </div>
+              </div>
+
+              {/* Bullets (max 3) */}
+              <div className="space-y-3 mb-8">
+                <div className="flex items-center text-gray-700">
+                  <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
+                  <span>Priority shipping — first batch allocation</span>
+                </div>
+                <div className="flex items-center text-gray-700">
+                  <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
+                  <span>Price locked at £249</span>
+                </div>
+                <div className="flex items-center text-gray-700">
+                  <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
+                  <span>30-day money-back guarantee</span>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <button
+                onClick={handleFullPayment}
+                data-id="cta_fullpay"
+                aria-label="Pre-Order for £249 — Full Payment"
+                className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-teal-300"
+              >
+                <CreditCard className="w-5 h-5 mr-2 inline" />
+                Pre-Order for £249
+              </button>
+            </div>
+
+            {/* Card B - Deposit (Secondary) */}
+            <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-md order-2">
+              {/* Title */}
+              <div className="text-center mb-6">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                  Reserve with Deposit
+                </h3>
+                
+                {/* Price */}
+                <div className="mb-4">
+                  <div className="text-4xl font-bold text-gray-900 mb-2">£49 today</div>
+                  <div className="text-gray-600 mb-1">+ £250 later</div>
+                  <div className="text-sm text-gray-500">
+                    £299 total; balance due 60 days pre-ship
+                  </div>
+                </div>
+              </div>
+
+              {/* Bullets (max 3) */}
+              <div className="space-y-3 mb-8">
+                <div className="flex items-center text-gray-700">
+                  <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
+                  <span>Reserve your place in the queue</span>
+                </div>
+                <div className="flex items-center text-gray-700">
+                  <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
+                  <span>Save £50 vs retail</span>
+                </div>
+                <div className="flex items-center text-gray-700">
+                  <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
+                  <span>30-day money-back on deposit</span>
+                </div>
+              </div>
+
+              {/* CTA */}
+              <button
+                onClick={handleDeposit}
+                data-id="cta_deposit"
+                aria-label="Reserve for £49 — Deposit Payment"
+                className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-gray-400"
+              >
+                <CreditCard className="w-5 h-5 mr-2 inline" />
+                Reserve for £49
+              </button>
+            </div>
+          </div>
+
+          {/* Micro-line under both cards */}
+          <div className="text-center mt-6 mb-4">
+            <p className="text-gray-600 text-sm">
+              No subscription required. Premium is optional.
+            </p>
+          </div>
+
+          {/* Trust row */}
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-gray-500">
+            <div className="flex items-center">
+              <Lock className="w-3 h-3 mr-1" />
+              <span>Secured by Stripe</span>
+            </div>
+            <div className="flex items-center">
+              <Shield className="w-3 h-3 mr-1" />
+              <span>30-day guarantee</span>
+            </div>
+            <div className="flex items-center">
+              <Clock className="w-3 h-3 mr-1" />
+              <span>Expected delivery Q2 2026</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Video Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-4xl mx-auto text-center">
@@ -132,7 +272,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Reserve Section */}
+      {/* Reserve Section - KEPT FOR BACKUP */}
       <section id="reserve" className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
@@ -445,17 +585,17 @@ export default function HomePage() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
-              onClick={handlePreOrder}
+              onClick={handleFullPayment}
               className="bg-white text-teal-600 font-semibold px-8 py-4 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center"
             >
               <CreditCard className="w-5 h-5 mr-2" />
-              Reserve Now - £49 Today
+              Pre-Order for £249 - Best Value
             </button>
             <button 
-              onClick={handlePreOrder}
+              onClick={handleDeposit}
               className="bg-orange-500 text-white font-semibold px-8 py-4 rounded-lg hover:bg-orange-600 transition-colors"
             >
-              Full Payment - £299
+              Reserve for £49
             </button>
           </div>
           
