@@ -117,120 +117,120 @@ export default function HomePage() {
         />
       </section>
 
-      {/* NEW: Clean Two-Tier Pricing Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-5xl mx-auto">
-          {/* Two-Card Layout */}
-          <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+      {/* MOBILE-OPTIMIZED Two-Tier Pricing Section */}
+      <section className="py-12 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          {/* Mobile-First Grid Layout */}
+          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 lg:gap-8">
             
-            {/* Card A - Full Payment (Dominant) */}
-            <div className="relative bg-gradient-to-br from-teal-50 to-cyan-50 rounded-2xl p-8 border-2 border-teal-200 shadow-lg transform md:scale-105 order-1">
-              {/* Best Value Badge */}
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <div className="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+            {/* Card A - Full Payment (Mobile-First, Desktop Dominant) */}
+            <div className="relative bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl lg:rounded-2xl p-6 lg:p-8 border-2 border-teal-200 shadow-lg lg:transform lg:scale-105 order-1">
+              {/* Best Value Badge - Mobile Optimized */}
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <div className="bg-orange-500 text-white px-3 py-1.5 lg:px-4 lg:py-2 rounded-full text-xs lg:text-sm font-bold shadow-lg">
                   Best Value
                 </div>
               </div>
 
-              {/* Title */}
-              <div className="text-center mb-6 mt-2">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              {/* Title - Mobile Optimized */}
+              <div className="text-center mb-4 lg:mb-6 mt-2">
+                <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3 lg:mb-4 leading-tight">
                   Full Payment — Priority Shipping
                 </h3>
                 
-                {/* Price */}
-                <div className="mb-4">
-                  <div className="text-4xl font-bold text-teal-600 mb-2">£249 today</div>
-                  <div className="text-orange-600 font-semibold">
+                {/* Price - Mobile Optimized */}
+                <div className="mb-3 lg:mb-4">
+                  <div className="text-3xl lg:text-4xl font-bold text-teal-600 mb-1 lg:mb-2">£249 today</div>
+                  <div className="text-orange-600 font-semibold text-sm lg:text-base">
                     Save £100 vs £349 retail
                   </div>
                 </div>
               </div>
 
-              {/* Bullets (max 3) */}
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center text-gray-700">
-                  <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
-                  <span>Priority shipping — first batch allocation</span>
+              {/* Bullets - Mobile Optimized */}
+              <div className="space-y-2.5 lg:space-y-3 mb-6 lg:mb-8">
+                <div className="flex items-start text-gray-700 text-sm lg:text-base">
+                  <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5 mr-2.5 lg:mr-3 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="leading-relaxed">Priority shipping — first batch allocation</span>
                 </div>
-                <div className="flex items-center text-gray-700">
-                  <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
-                  <span>Price locked at £249</span>
+                <div className="flex items-start text-gray-700 text-sm lg:text-base">
+                  <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5 mr-2.5 lg:mr-3 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="leading-relaxed">Price locked at £249</span>
                 </div>
-                <div className="flex items-center text-gray-700">
-                  <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
-                  <span>30-day money-back guarantee</span>
+                <div className="flex items-start text-gray-700 text-sm lg:text-base">
+                  <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5 mr-2.5 lg:mr-3 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="leading-relaxed">30-day money-back guarantee</span>
                 </div>
               </div>
 
-              {/* CTA */}
+              {/* CTA - Mobile Optimized */}
               <button
                 onClick={handleFullPayment}
                 data-id="cta_fullpay"
                 aria-label="Pre-Order for £249 — Full Payment"
-                className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-teal-300"
+                className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 active:from-teal-800 active:to-cyan-800 text-white font-bold py-4 lg:py-4 px-6 lg:px-8 rounded-lg lg:rounded-lg transition-all duration-200 lg:transform lg:hover:scale-105 shadow-lg focus:outline-none focus:ring-4 focus:ring-teal-300 text-base lg:text-lg"
               >
-                <CreditCard className="w-5 h-5 mr-2 inline" />
+                <CreditCard className="w-4 h-4 lg:w-5 lg:h-5 mr-2 inline" />
                 Pre-Order for £249
               </button>
             </div>
 
-            {/* Card B - Deposit (Secondary) */}
-            <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-md order-2">
-              {/* Title */}
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
+            {/* Card B - Deposit (Mobile-Optimized Secondary) */}
+            <div className="bg-white rounded-xl lg:rounded-2xl p-6 lg:p-8 border border-gray-200 shadow-md order-2">
+              {/* Title - Mobile Optimized */}
+              <div className="text-center mb-4 lg:mb-6">
+                <h3 className="text-xl lg:text-2xl font-bold text-gray-900 mb-3 lg:mb-4 leading-tight">
                   Reserve with Deposit
                 </h3>
                 
-                {/* Price */}
-                <div className="mb-4">
-                  <div className="text-4xl font-bold text-gray-900 mb-2">£49 today</div>
-                  <div className="text-gray-600 mb-1">+ £250 later</div>
-                  <div className="text-sm text-gray-500">
+                {/* Price - Mobile Optimized */}
+                <div className="mb-3 lg:mb-4">
+                  <div className="text-3xl lg:text-4xl font-bold text-gray-900 mb-1 lg:mb-2">£49 today</div>
+                  <div className="text-gray-600 mb-1 text-sm lg:text-base">+ £250 later</div>
+                  <div className="text-xs lg:text-sm text-gray-500 leading-relaxed">
                     £299 total; balance due 60 days pre-ship
                   </div>
                 </div>
               </div>
 
-              {/* Bullets (max 3) */}
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center text-gray-700">
-                  <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
-                  <span>Reserve your place in the queue</span>
+              {/* Bullets - Mobile Optimized */}
+              <div className="space-y-2.5 lg:space-y-3 mb-6 lg:mb-8">
+                <div className="flex items-start text-gray-700 text-sm lg:text-base">
+                  <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5 mr-2.5 lg:mr-3 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="leading-relaxed">Reserve your place in the queue</span>
                 </div>
-                <div className="flex items-center text-gray-700">
-                  <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
-                  <span>Save £50 vs retail</span>
+                <div className="flex items-start text-gray-700 text-sm lg:text-base">
+                  <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5 mr-2.5 lg:mr-3 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="leading-relaxed">Save £50 vs retail</span>
                 </div>
-                <div className="flex items-center text-gray-700">
-                  <CheckCircle className="w-5 h-5 mr-3 text-green-500 flex-shrink-0" />
-                  <span>30-day money-back on deposit</span>
+                <div className="flex items-start text-gray-700 text-sm lg:text-base">
+                  <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5 mr-2.5 lg:mr-3 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="leading-relaxed">30-day money-back on deposit</span>
                 </div>
               </div>
 
-              {/* CTA */}
+              {/* CTA - Mobile Optimized */}
               <button
                 onClick={handleDeposit}
                 data-id="cta_deposit"
                 aria-label="Reserve for £49 — Deposit Payment"
-                className="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-4 px-8 rounded-lg transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-gray-400"
+                className="w-full bg-gray-900 hover:bg-gray-800 active:bg-black text-white font-bold py-4 lg:py-4 px-6 lg:px-8 rounded-lg lg:rounded-lg transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-gray-400 text-base lg:text-lg"
               >
-                <CreditCard className="w-5 h-5 mr-2 inline" />
+                <CreditCard className="w-4 h-4 lg:w-5 lg:h-5 mr-2 inline" />
                 Reserve for £49
               </button>
             </div>
           </div>
 
-          {/* Micro-line under both cards */}
-          <div className="text-center mt-6 mb-4">
-            <p className="text-gray-600 text-sm">
+          {/* Micro-line - Mobile Optimized */}
+          <div className="text-center mt-4 lg:mt-6 mb-3 lg:mb-4">
+            <p className="text-gray-600 text-sm lg:text-sm">
               No subscription required. Premium is optional.
             </p>
           </div>
 
-          {/* Trust row */}
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-gray-500">
+          {/* Trust row - Mobile Optimized */}
+          <div className="flex flex-wrap items-center justify-center gap-3 lg:gap-4 text-xs text-gray-500">
             <div className="flex items-center">
               <Lock className="w-3 h-3 mr-1" />
               <span>Secured by Stripe</span>
