@@ -83,38 +83,54 @@ export default function HomePage() {
         Early Bird Pricing: Save £100 - Limited Time Only
       </div>
 
-      {/* NEW FULL-BLEED HERO SECTION WITH EDGE-TO-EDGE IMAGE */}
-      <section className="relative w-full h-screen min-h-[520px] overflow-hidden">
-        {/* Hero Background Image */}
-        <div 
-          className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: 'url(/final_hero_image_complete.png)'
-          }}
-        />
-        
-        {/* Optional overlay for better text contrast if needed */}
-        <div className="absolute inset-0 bg-black/5" />
+      {/* MOBILE-OPTIMIZED HERO SECTION */}
+      <section className="relative w-full overflow-hidden">
+        {/* Mobile-Optimized Hero Container */}
+        <div className="relative w-full h-[70vh] sm:h-[75vh] md:h-[80vh] lg:h-screen min-h-[500px] max-h-[800px]">
+          
+          {/* Hero Background Image - Desktop */}
+          <div 
+            className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat hidden sm:block"
+            style={{
+              backgroundImage: 'url(/final_hero_image_complete.png)',
+              backgroundPosition: 'center center',
+              backgroundSize: 'cover'
+            }}
+          />
+          
+          {/* Hero Background Image - Mobile Optimized */}
+          <div 
+            className="absolute inset-0 w-full h-full bg-cover bg-no-repeat sm:hidden"
+            style={{
+              backgroundImage: 'url(/final_hero_image_complete.png)',
+              backgroundPosition: 'center top',
+              backgroundSize: 'contain'
+            }}
+          />
+          
+          {/* Optional overlay for better text contrast */}
+          <div className="absolute inset-0 bg-black/5" />
 
-        {/* Content positioned over the image - Hidden since it's in the image */}
-        <div className="relative z-10 h-full flex items-center">
-          <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full">
-            <div className="max-w-2xl">
-              {/* Screen reader content only */}
-              <div className="sr-only">
-                <h1>Capture every insight.</h1>
-                <p>AI-summarised on device — privacy-first</p>
+          {/* Content positioned over the image */}
+          <div className="relative z-10 h-full flex items-center">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+              <div className="max-w-2xl">
+                {/* Screen reader content only */}
+                <div className="sr-only">
+                  <h1>Capture every insight.</h1>
+                  <p>AI-summarised on device — privacy-first</p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Clickable area for the CTA button (positioned over the button in the image) */}
-        <button
-          onClick={handlePreOrder}
-          className="absolute bottom-[25%] left-[3%] w-[280px] h-[60px] bg-transparent hover:bg-white/10 transition-all duration-200 rounded-lg z-20"
-          aria-label="Pre-order Just Summit AI Headphones"
-        />
+          {/* Clickable area for the CTA button - Mobile Optimized */}
+          <button
+            onClick={handlePreOrder}
+            className="absolute bottom-[15%] sm:bottom-[20%] md:bottom-[25%] left-[3%] w-[250px] sm:w-[280px] h-[50px] sm:h-[60px] bg-transparent hover:bg-white/10 transition-all duration-200 rounded-lg z-20"
+            aria-label="Pre-order Just Summit AI Headphones"
+          />
+        </div>
       </section>
 
       {/* MOBILE-OPTIMIZED Two-Tier Pricing Section */}
@@ -244,6 +260,47 @@ export default function HomePage() {
               <span>Expected delivery Q2 2026</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* EMAIL SIGNUP SECTION - MOVED TO TOP FOR BETTER CONVERSION */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-teal-50 to-cyan-50">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Stay Updated on Development</h2>
+          <p className="text-lg sm:text-xl text-gray-600 mb-8">
+            Get exclusive updates on progress and early access opportunities
+          </p>
+          
+          {!isSubmitted ? (
+            <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent text-gray-900"
+                required
+              />
+              <button
+                type="submit"
+                className="bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center font-semibold"
+              >
+                <Mail className="w-4 h-4 mr-2" />
+                Get Updates
+              </button>
+            </form>
+          ) : (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 max-w-md mx-auto">
+              <div className="flex items-center justify-center text-green-800">
+                <CheckCircle className="w-5 h-5 mr-2" />
+                Thanks for subscribing! We'll keep you updated.
+              </div>
+            </div>
+          )}
+          
+          <p className="text-sm text-gray-500 mt-4">
+            Join 1,000+ innovators securing their spot. Early bird pricing ends soon.
+          </p>
         </div>
       </section>
 
@@ -535,43 +592,6 @@ export default function HomePage() {
               devices that will transform how we learn, work, and communicate.
             </p>
           </div>
-        </div>
-      </section>
-
-      {/* Email Signup Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Stay Updated</h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Get the latest updates on development progress and exclusive early access opportunities
-          </p>
-          
-          {!isSubmitted ? (
-            <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent"
-                required
-              />
-              <button
-                type="submit"
-                className="bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 transition-colors flex items-center justify-center"
-              >
-                <Mail className="w-4 h-4 mr-2" />
-                Subscribe
-              </button>
-            </form>
-          ) : (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 max-w-md mx-auto">
-              <div className="flex items-center justify-center text-green-800">
-                <CheckCircle className="w-5 h-5 mr-2" />
-                Thanks for subscribing! We'll keep you updated.
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
