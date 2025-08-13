@@ -38,7 +38,7 @@ export default function HomePage() {
 
   const handlePreOrder = () => {
     // Replace with your actual Stripe payment link
-    window.open('https://buy.stripe.com/test_your_payment_link', '_blank');
+    window.open('https://buy.stripe.com/00w7sMbW6cBP76MfQN4ow0c', '_blank');
   };
 
   const handleFullPayment = () => {
