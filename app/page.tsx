@@ -43,7 +43,7 @@ export default function HomePage() {
 
   const handleFullPayment = () => {
     // Replace with actual Stripe link for £249 full payment
-    window.open('STRIPE_LINK_FULLPAY', '_blank');
+    window.open('https://buy.stripe.com/8x26oIaS2dFTgHm0VT4ow0d', '_blank');
   };
 
   const handleDeposit = () => {
