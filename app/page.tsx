@@ -48,7 +48,7 @@ export default function HomePage() {
 
   const handleDeposit = () => {
     // Replace with actual Stripe link for £49 deposit
-    window.open('STRIPE_LINK_DEPOSIT', '_blank');
+    window.open('https://buy.stripe.com/00w7sMbW6cBP76MfQN4ow0c', '_blank');
   };
 
   const scrollToSection = (sectionId: string) => {
