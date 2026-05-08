@@ -662,6 +662,7 @@ export default function HomePage() {
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
             <p>&copy; 2024 Just Summit. All rights reserved.</p>
+            <p className="mt-2 text-xs">Deployment check: 8 May 2026</p>
             <p className="mt-2">*Features and specifications subject to change. Expected delivery dates are estimates.</p>
           </div>
         </div>
