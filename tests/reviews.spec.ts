@@ -1,15 +1,15 @@
 import { test, expect } from '@playwright/test'
 
-test('Navigation › can go to Reviews section from Home', async ({ page }) => {
-  await page.goto('http://localhost:3000/')
+const baseUrl = (process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000').replace(/\/$/, '')
 
-  await page.click('text=Reviews') // Assuming this is your nav label
+test('FAQ section is reachable from the homepage', async ({ page }) => {
+  await page.goto(`${baseUrl}/`)
+  await page.waitForLoadState('networkidle')
 
-  // Wait for scroll animation if any
-  await page.waitForTimeout(500)
+  await page.getByRole('navigation').getByRole('link', { name: 'FAQ' }).click()
 
-  // Expect the heading inside the testimonials section to be visible
+  await expect(page.locator('#faq')).toBeInViewport()
   await expect(
-    page.getByRole('heading', { name: /What Early Users Say/i })
-  ).toBeVisible({ timeout: 5000 })
+    page.getByRole('heading', { name: /Presale questions, answered plainly/i })
+  ).toBeVisible()
 })

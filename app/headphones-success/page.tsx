@@ -1,107 +1,78 @@
-import Link from 'next/link'
+import Link from "next/link";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+
+export const metadata = {
+  title: "Preorder Confirmed",
+  description: "Your Just Summit AI Headphones preorder has been confirmed.",
+};
 
 export default function HeadphonesSuccess() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-2xl mx-auto text-center bg-white rounded-2xl shadow-xl p-8">
-        {/* Success Icon */}
-        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
+    <>
+      <Header />
+      <main className="bg-gray-50 px-4 py-16 sm:px-6 lg:px-8">
+        <section className="mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-sm">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+            <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+          </div>
 
-        {/* Success Message */}
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Pre-Order Confirmed! 🎉
-        </h1>
-        
-        <p className="text-lg text-gray-600 mb-8">
-          Thank you for pre-ordering your AI Headphones. Your £49 deposit has been secured.
-        </p>
+          <div className="mt-8 text-center">
+            <h1 className="text-4xl font-semibold tracking-tight text-gray-950">
+              Preorder confirmed
+            </h1>
+            <p className="mt-4 text-lg leading-8 text-gray-600">
+              Thank you for securing your Just Summit AI Headphones. Stripe has processed your payment and will send a receipt to the email used at checkout.
+            </p>
+          </div>
 
-        {/* Order Details */}
-        <div className="bg-gray-50 rounded-lg p-6 mb-8 text-left">
-          <h3 className="font-semibold text-gray-900 mb-4">What happens next:</h3>
-          <div className="space-y-3">
-            <div className="flex items-start">
-              <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mr-3 mt-0.5">1</span>
-              <div>
-                <p className="font-medium text-gray-900">Confirmation Email</p>
-                <p className="text-gray-600 text-sm">You'll receive a detailed confirmation email within 5 minutes</p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mr-3 mt-0.5">2</span>
-              <div>
-                <p className="font-medium text-gray-900">Development Updates</p>
-                <p className="text-gray-600 text-sm">Monthly progress updates on hardware development and features</p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full mr-3 mt-0.5">3</span>
-              <div>
-                <p className="font-medium text-gray-900">Final Payment</p>
-                <p className="text-gray-600 text-sm">Remaining £250 charged 30 days before shipping</p>
-              </div>
-            </div>
-            <div className="flex items-start">
-              <span className="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full mr-3 mt-0.5">4</span>
-              <div>
-                <p className="font-medium text-gray-900">Delivery</p>
-                <p className="text-gray-600 text-sm">Expected delivery: Q2 2026</p>
-              </div>
+          <div className="mt-10 rounded-lg border border-gray-200 bg-gray-50 p-6">
+            <h2 className="text-lg font-semibold text-gray-950">What happens next</h2>
+            <div className="mt-6 grid gap-5">
+              {[
+                ["Confirmation", "You will receive payment confirmation from Stripe."],
+                ["Production updates", "We will share development and production milestones by email."],
+                ["Delivery window", "Estimated first-batch delivery window: Q4 2026."],
+                ["Deposit balance", "Deposit customers pay the remaining £250 60 days before shipping."],
+              ].map(([title, body]) => (
+                <div key={title} className="flex gap-4">
+                  <div className="mt-1 h-2 w-2 rounded-full bg-emerald-600" />
+                  <div>
+                    <h3 className="font-medium text-gray-950">{title}</h3>
+                    <p className="mt-1 text-sm leading-6 text-gray-600">{body}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
 
-        {/* Product Summary */}
-        <div className="bg-blue-50 rounded-lg p-6 mb-8">
-          <h3 className="font-semibold text-blue-900 mb-3">Your Pre-Order</h3>
-          <div className="flex items-center justify-between">
-            <div className="text-left">
-              <p className="font-medium text-blue-900">AI Headphones</p>
-              <p className="text-blue-700 text-sm">Privacy-first AI processing</p>
-            </div>
-            <div className="text-right">
-              <p className="font-bold text-blue-900">£299</p>
-              <p className="text-blue-700 text-sm">£49 paid today</p>
-            </div>
+          <div className="mt-6 rounded-lg border border-teal-100 bg-teal-50 p-5 text-sm leading-6 text-teal-900">
+            Your preorder is covered by a 30-day money-back guarantee. To request help, email{" "}
+            <a href="mailto:hello@justsummit.co" className="font-semibold underline">
+              hello@justsummit.co
+            </a>
+            .
           </div>
-        </div>
 
-        {/* Refund Policy */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
-          <p className="text-yellow-800 text-sm">
-            <strong>Full Refund Available:</strong> You can request a complete refund anytime before production begins. 
-            No questions asked. Simply email us at support@justsummit.co
-          </p>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link 
-            href="/"
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-          >
-            Return to Homepage
-          </Link>
-          <Link 
-            href="/#headphones"
-            className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition-colors"
-          >
-            View Product Details
-          </Link>
-        </div>
-
-        {/* Contact Support */}
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <p className="text-gray-600 text-sm">
-            Have questions? <Link href="mailto:support@justsummit.co" className="text-blue-600 hover:underline">Contact our support team</Link>
-          </p>
-        </div>
-      </div>
-    </div>
-  )
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Link
+              href="/#product"
+              className="inline-flex min-h-12 items-center justify-center rounded-md bg-gray-950 px-5 text-sm font-semibold text-white transition hover:bg-gray-800"
+            >
+              View product details
+            </Link>
+            <Link
+              href="/"
+              className="inline-flex min-h-12 items-center justify-center rounded-md border border-gray-300 px-5 text-sm font-semibold text-gray-950 transition hover:bg-gray-50"
+            >
+              Return home
+            </Link>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
 }
-

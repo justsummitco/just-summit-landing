@@ -1,25 +1,33 @@
 import { test, expect } from '@playwright/test'
 
-test('Newsletter › CTA submits with valid data', async ({ page }) => {
-  await page.route('**/api/subscribe', (route) => {
-    route.fulfill({
+const baseUrl = (process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000').replace(/\/$/, '')
+
+test('Waitlist form submits with valid data', async ({ page }) => {
+  await page.route('**/api/subscribe', async (route) => {
+    await route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ message: 'ok' }),
+      body: JSON.stringify({
+        success: true,
+        message: "You're on the Just Summit updates list.",
+      }),
     })
   })
 
-  await page.goto('http://localhost:3000/')
+  await page.goto(`${baseUrl}/`)
+  await page.waitForLoadState('networkidle')
+  await page.getByLabel('First name').fill('Tom')
+  await page.getByLabel('Email address').fill('tom@example.com')
+  const subscribeRequest = page.waitForRequest('**/api/subscribe')
+  await page.getByTestId('waitlist-submit').click()
+  const subscribePayload = (await subscribeRequest).postDataJSON()
 
-  const nameInput = page.getByLabel('First Name')
-  const emailInput = page.getByLabel('Email Address')
-  const cta = page.getByTestId('main-cta')
-
-  await nameInput.fill('Tom')
-  await emailInput.fill('tom@example.com')
-  await cta.click()
-
+  expect(subscribePayload).toEqual({
+    name: 'Tom',
+    email: 'tom@example.com',
+    source: 'homepage_waitlist',
+  })
   await expect(
-    page.getByText('Welcome to the Just Summit community!', { exact: false })
-  ).toBeVisible({ timeout: 10000 })
+    page.getByText(/You're on the Just Summit updates list/i)
+  ).toBeVisible()
 })

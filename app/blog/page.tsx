@@ -1,58 +1,57 @@
-import { Metadata } from 'next'
-import Link from 'next/link'
-import { getAllPosts } from '../../lib/mdx'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+import { Metadata } from "next";
+import Link from "next/link";
+import { getAllPosts } from "../../lib/mdx";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: 'Summit Blog: Purposeful Learning | Just Summit',
-  description: 'Learn how to master audio learning with ADHD-friendly techniques, spaced repetition, and intentional listening strategies.',
+  title: "Just Summit Blog",
+  description:
+    "Notes on audio learning, recall, privacy-first AI, and the Just Summit AI Headphones journey.",
   openGraph: {
-    title: 'Summit Blog: Purposeful Learning',
-    description: 'Learn how to master audio learning with ADHD-friendly techniques, spaced repetition, and intentional listening strategies.',
-    images: ['/og-blog.png'],
+    title: "Just Summit Blog",
+    description:
+      "Notes on audio learning, recall, privacy-first AI, and the Just Summit AI Headphones journey.",
+    images: ["/hero-headphones-clean.png"],
   },
-}
+};
 
 function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-GB", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }
 
 export default function BlogIndex() {
-  const posts = getAllPosts()
+  const posts = getAllPosts();
 
   return (
     <>
       <Header />
       <main className="min-h-screen bg-white">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Summit Blog: Purposeful Learning
+        <section className="bg-gray-50 py-16">
+          <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+            <h1 className="mb-6 text-4xl font-semibold tracking-tight text-gray-950 md:text-5xl">
+              Just Summit Blog
             </h1>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Master audio learning with ADHD-friendly techniques, spaced repetition strategies, 
-              and intentional listening methods that actually work.
+            <p className="mx-auto max-w-2xl text-xl leading-8 text-gray-600">
+              Notes on better listening, recall, privacy-first AI, and the hardware journey behind Just Summit AI Headphones.
             </p>
           </div>
         </section>
 
-        {/* Blog Posts Grid */}
         <section className="py-16">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             {posts.length === 0 ? (
-              <div className="text-center py-12">
-                <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-                  Coming Soon
+              <div className="py-12 text-center">
+                <h2 className="mb-4 text-2xl font-semibold text-gray-900">
+                  Coming soon
                 </h2>
                 <p className="text-gray-600">
-                  We're preparing valuable content about purposeful audio learning. Check back soon!
+                  We are preparing useful notes on audio learning and product development.
                 </p>
               </div>
             ) : (
@@ -60,16 +59,15 @@ export default function BlogIndex() {
                 {posts.map((post) => (
                   <article
                     key={post.slug}
-                    className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-200"
+                    className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition hover:shadow-md"
                   >
                     <div className="p-6">
-                      {/* Tags */}
                       {post.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-3">
+                        <div className="mb-3 flex flex-wrap gap-2">
                           {post.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full font-medium"
+                              className="inline-block rounded-full bg-teal-50 px-2 py-1 text-xs font-medium text-teal-800"
                             >
                               {tag}
                             </span>
@@ -77,47 +75,31 @@ export default function BlogIndex() {
                         </div>
                       )}
 
-                      {/* Title */}
-                      <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
-                        <Link 
+                      <h2 className="mb-3 text-xl font-semibold text-gray-950">
+                        <Link
                           href={`/blog/${post.slug}`}
-                          className="hover:text-blue-600 transition-colors"
+                          className="transition hover:text-teal-700"
                         >
                           {post.title}
                         </Link>
                       </h2>
 
-                      {/* Excerpt */}
-                      <p className="text-gray-600 mb-4 line-clamp-3">
+                      <p className="mb-4 line-clamp-3 text-gray-600">
                         {post.excerpt}
                       </p>
 
-                      {/* Meta */}
-                      <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                        <time dateTime={post.date}>
-                          {formatDate(post.date)}
-                        </time>
+                      <div className="mb-4 flex items-center justify-between text-sm text-gray-500">
+                        <time dateTime={post.date}>{formatDate(post.date)}</time>
                         <span>{post.readingTime}</span>
                       </div>
 
-                      {/* Read More */}
                       <Link
                         href={`/blog/${post.slug}`}
-                        className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                        className="inline-flex items-center font-medium text-teal-700 transition hover:text-teal-900"
                       >
                         Read more
-                        <svg
-                          className="ml-1 w-4 h-4"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
+                        <svg className="ml-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </Link>
                     </div>
@@ -128,39 +110,24 @@ export default function BlogIndex() {
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="bg-gradient-to-r from-blue-600 to-blue-800 py-16">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Ready to Transform Your Audio Learning?
+        <section className="bg-gray-950 py-16">
+          <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+            <h2 className="mb-4 text-3xl font-semibold text-white">
+              Ready to turn listening into recall?
             </h2>
-            <p className="text-xl text-blue-100 mb-8">
-              Join thousands who've discovered the power of purposeful listening with Summit.
+            <p className="mb-8 text-xl text-white/70">
+              Just Summit AI Headphones are available for presale with full-payment and deposit options.
             </p>
             <Link
               href="/#pricing"
-              className="inline-flex items-center px-8 py-3 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-colors"
+              className="inline-flex min-h-12 items-center rounded-md bg-white px-6 text-sm font-semibold text-gray-950 transition hover:bg-gray-100"
             >
-              Pre-order Summit from £25
-              <svg
-                className="ml-2 w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                />
-              </svg>
+              Preorder the AI Headphones
             </Link>
           </div>
         </section>
       </main>
       <Footer />
     </>
-  )
+  );
 }
-

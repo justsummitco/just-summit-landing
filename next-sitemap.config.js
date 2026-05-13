@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://justsummit.co',
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://www.justsummit.co',
   generateRobotsTxt: true,
   generateIndexSitemap: false,
   robotsTxtOptions: {
@@ -11,7 +11,7 @@ module.exports = {
       },
     ],
     additionalSitemaps: [
-      `${process.env.NEXT_PUBLIC_SITE_URL || 'https://justsummit.co'}/sitemap.xml`,
+      `${process.env.NEXT_PUBLIC_SITE_URL || 'https://www.justsummit.co'}/sitemap.xml`,
     ],
   },
   exclude: ['/api/*'],
