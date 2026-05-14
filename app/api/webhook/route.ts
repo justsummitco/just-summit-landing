@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { syncBrevoWaitlistContact } from "@/lib/brevo-contacts";
 import { sendPreorderConfirmationEmail } from "@/lib/brevo-email";
 import { isPresaleOfferId } from "@/lib/presale";
 
@@ -8,44 +9,26 @@ export const runtime = "nodejs";
 async function addHeadphonesBuyerToBrevo(session: Stripe.Checkout.Session) {
   const email = session.customer_details?.email;
 
-  if (!email || !process.env.BREVO_API_KEY || !process.env.BREVO_WAITLIST_LIST_ID) {
-    return;
-  }
-
-  const waitlistId = Number.parseInt(process.env.BREVO_WAITLIST_LIST_ID, 10);
-
-  if (!Number.isInteger(waitlistId)) {
-    console.warn("BREVO_WAITLIST_LIST_ID is not a valid list ID");
+  if (!email) {
     return;
   }
 
   const firstName =
     session.customer_details?.name?.split(" ")[0] || email.split("@")[0];
-
-  const response = await fetch("https://api.brevo.com/v3/contacts", {
-    method: "POST",
-    headers: {
-      accept: "application/json",
-      "content-type": "application/json",
-      "api-key": process.env.BREVO_API_KEY,
+  const contactResult = await syncBrevoWaitlistContact({
+    email,
+    firstName,
+    attributes: {
+      PRODUCT_INTEREST: "Just Summit AI Headphones",
+      PRESALE_CUSTOMER: true,
+      PRESALE_OFFER_ID: session.metadata?.offer_id || "",
+      PRESALE_PAYMENT_TYPE: session.metadata?.payment_type || "",
+      PRESALE_PURCHASE_DATE: new Date().toISOString(),
     },
-    body: JSON.stringify({
-      email,
-      attributes: {
-        FIRSTNAME: firstName,
-        PRODUCT_INTEREST: "Just Summit AI Headphones",
-        PRESALE_CUSTOMER: true,
-        PRESALE_OFFER_ID: session.metadata?.offer_id || "",
-        PRESALE_PAYMENT_TYPE: session.metadata?.payment_type || "",
-        PRESALE_PURCHASE_DATE: new Date().toISOString(),
-      },
-      listIds: [waitlistId],
-      updateEnabled: true,
-    }),
   });
 
-  if (!response.ok) {
-    console.error("Failed to sync presale buyer to Brevo:", await response.text());
+  if (!contactResult.ok) {
+    console.error("Failed to sync presale buyer to Brevo:", contactResult.error);
   }
 }
 
@@ -60,11 +43,15 @@ async function sendHeadphonesBuyerEmail(session: Stripe.Checkout.Session) {
   const firstName =
     session.customer_details?.name?.split(" ")[0] || email.split("@")[0];
 
-  await sendPreorderConfirmationEmail({
+  const emailResult = await sendPreorderConfirmationEmail({
     email,
     firstName,
     offerId,
   });
+
+  if (!emailResult.ok) {
+    console.error("Preorder confirmation email failed:", emailResult.error);
+  }
 }
 
 export async function POST(request: NextRequest) {

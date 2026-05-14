@@ -142,4 +142,45 @@ describe("Stripe webhook API", () => {
     expect(global.fetch).toHaveBeenCalledTimes(2);
     consoleSpy.mockRestore();
   });
+
+  test("still sends the preorder email if Brevo contact sync fails", async () => {
+    mockConstructEvent.mockReturnValueOnce(makeCheckoutEvent("full"));
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        text: async () =>
+          JSON.stringify({
+            code: "invalid_parameter",
+            message: "Unknown contact attribute",
+          }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 400,
+        text: async () => "List sync failed",
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => JSON.stringify({ messageId: "message_123" }),
+      });
+    const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+    const warnSpy = jest.spyOn(console, "warn").mockImplementation(() => {});
+
+    const response = await POST(makeRequest());
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json.received).toBe(true);
+    expect(global.fetch).toHaveBeenCalledTimes(3);
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      3,
+      "https://api.brevo.com/v3/smtp/email",
+      expect.objectContaining({
+        method: "POST",
+      })
+    );
+    errorSpy.mockRestore();
+    warnSpy.mockRestore();
+  });
 });
