@@ -40,35 +40,44 @@ describe("HomePage", () => {
     global.fetch = jest.fn();
   });
 
-  test("shows the canonical headphones presale offer", () => {
-    render(<HomePage />);
+  test("shows the trust-focused headphones presale offer", () => {
+    const { container } = render(<HomePage />);
 
     expect(
       screen.getByRole("heading", {
-        name: /AI headphones that turn listening into recall/i,
+        name: /Don't lose the best things you only hear once/i,
       })
     ).toBeInTheDocument();
+    expect(screen.getByTestId("checkout-headphones-deposit-hero")).toHaveTextContent(
+      /Reserve your place/i
+    );
     expect(screen.getAllByText(/Preorder for £249/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText("£49").length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/£49/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText("today").length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Balance due 60 days pre-ship/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Estimated delivery Q4 2026/i).length).toBeGreaterThan(0);
+    expect(container.querySelector("#roadmap")).toHaveTextContent(/Prototype build/i);
+    expect(screen.getByText(/An honest note about the funding model/i)).toBeInTheDocument();
+    expect(screen.getByText(/Best value for first batch/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/Planned capture, transcription, and structured summaries/i)
+      screen.getByText(/Just Summit Ltd · Registered in England · Company no\. 15449136/i)
     ).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: /About/i }).length).toBeGreaterThan(0);
+    expect(screen.getByText(/Record a full meeting/i)).toBeInTheDocument();
     expect(
       screen.getByAltText(/Studio product view of the Just Summit headphones/i)
     ).toBeInTheDocument();
-    expect(
-      screen.getByAltText(/Three-quarter view of the Just Summit headphones/i)
-    ).toBeInTheDocument();
-    expect(
-      screen.getByAltText(/Close-up detail of the Just Summit headphones/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Real photo coming soon/i)).toBeInTheDocument();
+    expect(screen.getByText(/Real app preview coming soon/i)).toBeInTheDocument();
     expect(screen.queryByText(/investor/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/brevo/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/Presale now open/i)).toBeInTheDocument();
-    expect(screen.getByText(/Clear product details\. Clear preorder terms\./i)).toBeInTheDocument();
+    expect(screen.getByText(/Founding edition/i)).toBeInTheDocument();
+    expect(screen.getByText(/The target spec, stated plainly\./i)).toBeInTheDocument();
+
+    const pricingText = container.querySelector("#pricing")?.textContent ?? "";
+    expect(pricingText.indexOf("Save £100 vs retail")).toBeLessThan(
+      pricingText.indexOf("Reserve with deposit")
+    );
   });
 
   test("opens mobile navigation for smaller-screen wayfinding", () => {
@@ -80,10 +89,12 @@ describe("HomePage", () => {
 
     expect(mobileNav).toBeInTheDocument();
     expect(mobileNav).toHaveTextContent("Product");
+    expect(mobileNav).toHaveTextContent("Roadmap");
+    expect(mobileNav).toHaveTextContent("About");
     expect(mobileNav).toHaveTextContent("Blog");
   });
 
-  test("posts only the offer ID when starting full-payment checkout", async () => {
+  test("posts only the offer ID when starting deposit checkout from the hero", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       json: async () => ({ error: "Stripe price is not configured" }),
@@ -91,7 +102,7 @@ describe("HomePage", () => {
     const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 
     render(<HomePage />);
-    fireEvent.click(screen.getByTestId("checkout-headphones-full-hero"));
+    fireEvent.click(screen.getByTestId("checkout-headphones-deposit-hero"));
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
@@ -99,7 +110,7 @@ describe("HomePage", () => {
         expect.objectContaining({
           method: "POST",
           body: JSON.stringify({
-            offerId: "headphones-full",
+            offerId: "headphones-deposit",
             source: "hero_primary",
           }),
         })

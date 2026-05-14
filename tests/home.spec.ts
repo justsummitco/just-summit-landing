@@ -2,33 +2,28 @@ import { test, expect } from '@playwright/test'
 
 const baseUrl = (process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3000').replace(/\/$/, '')
 
-test('Home Page shows the hardware presale funnel', async ({ page }) => {
+test('Home Page shows the trust-focused hardware presale funnel', async ({ page }) => {
   await page.goto(`${baseUrl}/`)
   await page.waitForLoadState('networkidle')
 
   await expect(page).toHaveTitle(/Just Summit AI Headphones/i)
   await expect(
-    page.getByRole('heading', { name: /AI headphones that turn listening into recall/i })
+    page.getByRole('heading', { name: /Don't lose the best things you only hear once/i })
   ).toBeVisible()
-  await expect(page.getByTestId('checkout-headphones-full-hero')).toBeVisible()
-  await expect(page.getByTestId('checkout-headphones-full-pricing')).toBeVisible()
+  await expect(page.getByTestId('checkout-headphones-deposit-hero')).toBeVisible()
+  await expect(page.getByText(/Founding edition/i)).toBeVisible()
+  await expect(page.locator('#roadmap')).toContainText('Prototype build')
+  await expect(page.locator('#how-this-works')).toContainText('An honest note about the funding model')
+  await expect(page.getByText(/Best value for first batch/i)).toBeVisible()
   await expect(page.getByTestId('checkout-headphones-deposit-pricing')).toBeVisible()
-  await expect(page.getByText(/Estimated delivery Q4 2026/i)).toBeVisible()
-  await expect(
-    page.getByText(/Planned capture, transcription, and structured summaries/i)
-  ).toBeVisible()
-  await expect(
-    page.getByAltText(/Studio product view of the Just Summit headphones/i)
-  ).toBeVisible()
-  await expect(
-    page.getByAltText(/Three-quarter view of the Just Summit headphones/i)
-  ).toBeVisible()
-  await expect(
-    page.getByAltText(/Close-up detail of the Just Summit headphones/i)
-  ).toBeVisible()
+  await expect(page.getByTestId('checkout-headphones-full-pricing')).toBeVisible()
+  await expect(page.getByText(/Concept render/i)).toBeVisible()
+  await expect(page.getByText(/Real photo coming soon/i)).toBeVisible()
+  await expect(page.getByText(/Real app preview coming soon/i)).toBeVisible()
+  await expect(page.getByText(/Just Summit Ltd · Registered in England · Company no\. 15449136/i)).toBeVisible()
 })
 
-test('Home Page sends the expected checkout payload', async ({ page }) => {
+test('Home Page sends the expected deposit checkout payload', async ({ page }) => {
   await page.route('**/api/create-checkout-session', async (route) => {
     await route.fulfill({
       status: 500,
@@ -40,11 +35,11 @@ test('Home Page sends the expected checkout payload', async ({ page }) => {
   await page.goto(`${baseUrl}/`)
   await page.waitForLoadState('networkidle')
   const checkoutRequest = page.waitForRequest('**/api/create-checkout-session')
-  await page.getByTestId('checkout-headphones-full-hero').click()
+  await page.getByTestId('checkout-headphones-deposit-hero').click()
   const checkoutPayload = (await checkoutRequest).postDataJSON()
 
   expect(checkoutPayload).toEqual({
-    offerId: 'headphones-full',
+    offerId: 'headphones-deposit',
     source: 'hero_primary',
   })
   await expect(

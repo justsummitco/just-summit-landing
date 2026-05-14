@@ -11,15 +11,23 @@ export default function Footer() {
       <div className="container-max px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-[1.5fr_1fr_1fr]">
           <div>
-            <Image
-              src="/just-summit-logo.png"
-              alt="Just Summit"
-              width={140}
-              height={36}
-              className="h-9 w-auto brightness-0 invert"
-            />
+            <Link href="/" className="inline-flex items-center gap-2" aria-label="Just Summit home">
+              <Image
+                src="/Summit-Icon.svg"
+                alt=""
+                width={36}
+                height={36}
+                aria-hidden="true"
+              />
+              <span className="text-xl font-semibold tracking-tight text-white">
+                Summit
+              </span>
+            </Link>
             <p className="mt-5 max-w-md text-sm leading-6 text-white/62">
-              AI headphones for people who listen to learn. Preorders are secured by Stripe and covered by a 30-day money-back guarantee.
+              Headphones built to save the ideas worth keeping. Preorders are secured by Stripe and covered by a 30-day money-back guarantee.
+            </p>
+            <p className="mt-3 text-xs leading-5 text-white/42">
+              Just Summit Ltd · Registered in England · Company no. 15449136
             </p>
           </div>
 
@@ -52,6 +60,11 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-semibold">Company</h3>
             <ul className="mt-4 space-y-3 text-sm text-white/62">
+              <li>
+                <Link href="/about" className="transition hover:text-white">
+                  About
+                </Link>
+              </li>
               <li>
                 <a href="mailto:hello@justsummit.co" className="transition hover:text-white">
                   Contact
