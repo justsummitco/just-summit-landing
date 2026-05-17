@@ -54,6 +54,13 @@ async function sendHeadphonesBuyerEmail(session: Stripe.Checkout.Session) {
   }
 }
 
+function isHeadphonesPresaleSession(session: Stripe.Checkout.Session) {
+  return (
+    session.metadata?.product_type === "headphones" &&
+    isPresaleOfferId(session.metadata.offer_id)
+  );
+}
+
 export async function POST(request: NextRequest) {
   if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
     return NextResponse.json(
@@ -62,9 +69,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: "2023-10-16",
-  });
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
   const body = await request.text();
   const signature = request.headers.get("stripe-signature");
@@ -96,7 +101,7 @@ export async function POST(request: NextRequest) {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
 
-      if (session.metadata?.product_type === "headphones") {
+      if (isHeadphonesPresaleSession(session)) {
         await addHeadphonesBuyerToBrevo(session);
         await sendHeadphonesBuyerEmail(session);
       }

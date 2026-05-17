@@ -24,6 +24,10 @@ function getSiteUrl(request: NextRequest): string {
   return request.nextUrl.origin;
 }
 
+function isStripePriceId(value: string): boolean {
+  return value.startsWith("price_");
+}
+
 export async function POST(request: NextRequest) {
   try {
     if (!process.env.STRIPE_SECRET_KEY) {
@@ -54,10 +58,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!isStripePriceId(priceId)) {
+      return NextResponse.json(
+        { error: "Stripe price is invalid" },
+        { status: 500 }
+      );
+    }
+
     const siteUrl = getSiteUrl(request);
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: "2023-10-16",
-    });
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    const metadata = {
+      product_type: "headphones",
+      product_name: HEADPHONES_PRODUCT_NAME,
+      offer_id: offer.id,
+      payment_type: offer.paymentType,
+      amount_due_now: String(offer.amountDueNow),
+      full_price: String(offer.fullPrice),
+      balance_due: String(offer.balanceDue),
+      balance_due_timing: BALANCE_DUE_TIMING,
+      shipping_date: SHIPPING_DATE,
+      source: typeof body.source === "string" ? body.source : "website",
+    };
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -71,18 +92,10 @@ export async function POST(request: NextRequest) {
       success_url: `${siteUrl}/headphones-success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/headphones-cancel`,
       billing_address_collection: "required",
-      customer_creation: "if_required",
-      metadata: {
-        product_type: "headphones",
-        product_name: HEADPHONES_PRODUCT_NAME,
-        offer_id: offer.id,
-        payment_type: offer.paymentType,
-        amount_due_now: String(offer.amountDueNow),
-        full_price: String(offer.fullPrice),
-        balance_due: String(offer.balanceDue),
-        balance_due_timing: BALANCE_DUE_TIMING,
-        shipping_date: SHIPPING_DATE,
-        source: typeof body.source === "string" ? body.source : "website",
+      customer_creation: "always",
+      metadata,
+      payment_intent_data: {
+        metadata,
       },
     });
 
