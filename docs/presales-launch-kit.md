@@ -169,6 +169,287 @@ If you have questions or want to tell me what you most want Summit to capture we
 
 Tom
 
+## Warm Prospect Email Sequence
+
+Use this manually for the first 40-60 warm leads. Stop if the person buys, gives a clear no, or asks not to be contacted again.
+
+### Day 0: Personal Founder Ask
+
+Subject: A small favour: I am looking for the first 10 Summit buyers
+
+Hi [First name],
+
+I am opening the first presale for Just Summit, the headphones I am building to help people save the useful things they hear in meetings, calls, lectures, podcasts, and courses.
+
+The honest version: it is early-stage hardware. It is not sitting in a warehouse yet. The current first-batch estimate is Q4 2026, checkout is handled by Stripe, and there is a 30-day money-back guarantee.
+
+I am looking for the first 10 people who genuinely want this enough to reserve one now.
+
+There are two options:
+
+- GBP 49 deposit to reserve a first-batch place
+- GBP 249 full payment for the lowest total price and priority shipping
+
+Here is the page:
+https://www.justsummit.co/?utm_source=email&utm_medium=founder&utm_campaign=first_10_presales
+
+If it is not for you, no pressure at all. But if you know someone who spends a lot of time in calls, lectures, podcasts, or meetings and hates losing useful ideas, I would really appreciate an intro.
+
+Tom
+
+### Day 2: Problem / Fit
+
+Subject: Do you ever lose useful things from calls or podcasts?
+
+Hi [First name],
+
+A quick follow-up because I am trying to understand who Summit is most useful for.
+
+The problem I keep coming back to is this: useful things are said once, then vanish. A good point in a meeting. A line from a podcast. Something in a lecture. A decision on a call. You know it mattered, but you cannot find it again later.
+
+Summit is being built around that moment: headphones that help you keep the useful things you hear and find them again later.
+
+Does that problem show up in your week?
+
+If yes, the presale page is here:
+https://www.justsummit.co/?utm_source=email&utm_medium=founder&utm_content=day2&utm_campaign=first_10_presales
+
+If no, a blunt reply is useful too.
+
+Tom
+
+### Day 5: Trust / Risk
+
+Subject: The honest version of where Summit is
+
+Hi [First name],
+
+The biggest thing I want to be clear about is stage.
+
+Summit is an early-stage hardware presale. The product direction is set, the design target is clear, and the next milestone is the working prototype/build phase. The current first-batch estimate is Q4 2026, but hardware timelines can move as testing and manufacturing work reveals what needs changing.
+
+That is why the presale is deliberately simple:
+
+- GBP 49 deposit if you want lower commitment
+- GBP 249 full payment if you want the lowest total price
+- 30-day money-back guarantee
+- Stripe checkout
+- production updates by email
+
+If you like the idea but want the least-risk way to back it, I would choose the GBP 49 deposit.
+
+https://www.justsummit.co/?utm_source=email&utm_medium=founder&utm_content=day5&utm_campaign=first_10_presales
+
+Tom
+
+### Day 8: Referral / Social
+
+Subject: Could you think of one person this is for?
+
+Hi [First name],
+
+If Summit is not something you would preorder yourself, no problem.
+
+Could you think of one person who might genuinely care about it? The best fit is probably someone who spends a lot of time in meetings, podcasts, lectures, courses, research calls, or client conversations and wants to keep the useful bits.
+
+If someone comes to mind, an intro would help more than a like or a share.
+
+The page is here if useful:
+https://www.justsummit.co/?utm_source=email&utm_medium=founder&utm_content=day8&utm_campaign=first_10_presales
+
+Tom
+
+### Day 12: Close The Loop
+
+Subject: Should I close the loop on Summit?
+
+Hi [First name],
+
+Last nudge from me on this.
+
+I am trying to find the first 10 people who want Summit enough to reserve a first-batch place while it is still early. If it is not for you, that is completely fine.
+
+If there is one thing holding you back, is it:
+
+- price;
+- delivery timing;
+- trust because it is early-stage hardware;
+- not needing the product;
+- something else?
+
+A short reply would help me sharpen this.
+
+And if you do want to reserve one, the page is here:
+https://www.justsummit.co/?utm_source=email&utm_medium=founder&utm_content=day12&utm_campaign=first_10_presales
+
+Tom
+
+## Brevo Waitlist Sequence Plan
+
+Keep the immediate welcome email automated. Build the remaining emails in Brevo as a founder build-diary sequence for contacts tagged as waitlist leads. Do not send these to paid buyers once they have converted.
+
+### Immediate: Welcome
+
+Subject: You're on the Summit Headphones list
+
+Goal: confirm the signup, explain preorder options, and invite a reply.
+
+CTA:
+https://www.justsummit.co/?utm_source=email&utm_medium=waitlist&utm_campaign=first_10_presales#pricing
+
+### +1 Day: Problem Story
+
+Subject: The moment that made me build Summit
+
+Hi [First name],
+
+The first version of Summit came from a simple frustration: I would hear something useful, know I wanted to keep it, and then lose it the moment the audio ended.
+
+Meetings, calls, lectures, and podcasts are full of moments like that. They are not always worth recording in full, but the useful parts should not disappear.
+
+That is the job Summit is being built for: helping you keep the useful things you hear and find them again later.
+
+If there is one listening situation you would want Summit to handle well, reply and tell me. Those replies help shape the build.
+
+Tom
+
+### +3 Days: Product Promise
+
+Subject: What Summit is being built to do
+
+Hi [First name],
+
+The target experience is simple:
+
+- listen as normal;
+- capture the useful moments;
+- turn them into structured notes and summaries;
+- find them again later without replaying hours of audio.
+
+We are building around a privacy-first, on-device direction, with encrypted sync planned for the companion app. Final specs may move as prototype work progresses, but the principle is fixed: useful listening should become useful memory.
+
+If you already know you want a first-batch place, the lowest-friction option is the GBP 49 deposit:
+https://www.justsummit.co/?utm_source=email&utm_medium=waitlist&utm_content=day3&utm_campaign=first_10_presales#pricing
+
+Tom
+
+### +6 Days: Risk / Reassurance
+
+Subject: The honest presale terms
+
+Hi [First name],
+
+I do not want the presale to feel vague.
+
+Here are the terms plainly:
+
+- Summit is early-stage hardware.
+- Estimated first-batch delivery is Q4 2026.
+- GBP 49 reserves a first-batch place.
+- GBP 249 pays in full and locks in the lowest total price.
+- Deposit customers pay the remaining GBP 250 later.
+- Every preorder has a 30-day money-back guarantee.
+- Stripe handles checkout and card details.
+
+If you like the idea but are cautious, the deposit is the sensible option:
+https://www.justsummit.co/?utm_source=email&utm_medium=waitlist&utm_content=day6&utm_campaign=first_10_presales#pricing
+
+Tom
+
+### +10 Days: First-10 Push
+
+Subject: I am looking for the first 10 buyers
+
+Hi [First name],
+
+I am trying to find the first 10 people who want Summit enough to back the first batch early.
+
+Those first buyers matter because they prove whether this is only an interesting idea or something people care about enough to pay for. They also help shape what gets prioritised as the build moves forward.
+
+If you want one, you can reserve a place here:
+https://www.justsummit.co/?utm_source=email&utm_medium=waitlist&utm_content=day10&utm_campaign=first_10_presales#pricing
+
+If you are not ready to buy but know someone who would get it immediately, an intro would be genuinely useful.
+
+Tom
+
+## Buyer Update Sequence
+
+Send these after the Stripe/Brevo confirmation email. These are reassurance emails, not hard-sell emails.
+
+### +2 Days: Founder Thank-You
+
+Subject: You're one of the first Summit buyers
+
+Hi [First name],
+
+Thank you again for reserving Summit.
+
+Being one of the first buyers is different from buying a finished product off a shelf. You are backing the first batch while the product is still being built, and I do not take that lightly.
+
+What you can expect from me:
+
+- clear production updates;
+- honest language if timelines move;
+- no pretending that early-stage hardware is risk-free;
+- a direct reply path if you have questions.
+
+If there is one thing you most want Summit to capture well, reply and tell me.
+
+Tom
+
+### Weekly / Milestone: Build Update
+
+Subject: Summit build update: [milestone]
+
+Hi [First name],
+
+Here is the latest on Summit.
+
+[Plain-English milestone update.]
+
+What changed:
+
+- [point 1]
+- [point 2]
+- [point 3]
+
+What happens next:
+
+- [next step]
+
+Thanks again for backing this early. I will keep these updates useful and honest.
+
+Tom
+
+### After 3-5 Buyers: Momentum Update
+
+Subject: A small first-batch update
+
+Hi [First name],
+
+A small update: the first few Summit buyers are now in.
+
+That is a small number, but it matters. It means this is starting to move from an idea people say is interesting to something people are willing to back.
+
+If one person comes to mind who would understand why Summit should exist, I would really appreciate an intro.
+
+Tom
+
+### Before Refund Window Ends: Reassurance
+
+Subject: Any questions before your refund window closes?
+
+Hi [First name],
+
+Your 30-day money-back guarantee window is coming up.
+
+I am not sending this to pressure you. I am sending it because early hardware should be handled clearly. If you have questions about timeline, product direction, refunds, or what happens next, reply and I will answer directly.
+
+If you still feel good about backing Summit, there is nothing you need to do.
+
+Tom
+
 ## Support Replies
 
 ### Refund Question

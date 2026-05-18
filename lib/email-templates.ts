@@ -38,8 +38,18 @@ function getSiteUrl(): string {
   return (process.env.NEXT_PUBLIC_SITE_URL || "https://www.justsummit.co").replace(/\/$/, "");
 }
 
-function getPreorderUrl(): string {
-  return `${getSiteUrl()}/#pricing`;
+function getEmailSectionUrl(section: "pricing" | "product", medium: string): string {
+  const params = new URLSearchParams({
+    utm_source: "email",
+    utm_medium: medium,
+    utm_campaign: "first_10_presales",
+  });
+
+  return `${getSiteUrl()}/?${params.toString()}#${section}`;
+}
+
+function getPreorderUrl(medium: string): string {
+  return getEmailSectionUrl("pricing", medium);
 }
 
 function getSupportEmail(): string {
@@ -240,7 +250,7 @@ export function buildWaitlistWelcomeEmail(firstName: string): EmailContent {
     ],
     cta: {
       label: "View preorder options",
-      href: getPreorderUrl(),
+      href: getPreorderUrl("waitlist"),
     },
     note: "Preorders are covered by a 30-day money-back guarantee. If you have a question before ordering, reply and it will come straight to us.",
     reason: "You are receiving this because you joined the Summit Headphones updates list.",
@@ -291,7 +301,7 @@ export function buildFullPaymentConfirmationEmail(firstName: string): EmailConte
     ],
     cta: {
       label: "View product details",
-      href: `${getSiteUrl()}/#product`,
+      href: getEmailSectionUrl("product", "buyer_update"),
     },
     note: "Thank you again for trusting us this early. We will treat that seriously.",
     reason: "You are receiving this because you completed a Summit Headphones preorder.",
@@ -349,7 +359,7 @@ export function buildDepositConfirmationEmail(firstName: string): EmailContent {
     ],
     cta: {
       label: "View product details",
-      href: `${getSiteUrl()}/#product`,
+      href: getEmailSectionUrl("product", "buyer_update"),
     },
     note: "Thank you again for trusting us this early. We will treat that seriously.",
     reason: "You are receiving this because you completed a Summit Headphones deposit reservation.",
@@ -374,7 +384,7 @@ export function buildProductionUpdateEmail(updateBody: string): EmailContent {
     ],
     cta: {
       label: "View preorder options",
-      href: getPreorderUrl(),
+      href: getPreorderUrl("buyer_update"),
     },
     reason: "You are receiving this because you joined or preordered Summit Headphones updates.",
     marketing: true,
