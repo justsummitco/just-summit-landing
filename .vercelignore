@@ -1,0 +1,9 @@
+.codex-review/
+.env
+.env*.local
+.next/
+.vercel/
+AGENTS.md
+CODEX_WORKFLOW.md
+current-website.png
+gcm-diagnose.log
