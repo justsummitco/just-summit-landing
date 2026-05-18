@@ -50,9 +50,25 @@
 - Goal: 10 paid preorders by 2026-06-27.
 - Practical warm-outreach target: 40-60 qualified people if the close rate is around 15-25%.
 - Conservative target: 100 qualified asks if the close rate is around 10%.
+- Safety target: 200 qualified asks if the close rate is closer to 5%.
 - First wave target by 2026-06-07: 4 paid preorders.
 - Second wave target by 2026-06-20: 8 paid preorders total.
 - Final push target by 2026-06-27: 10 paid preorders total.
+
+## The Closest Thing To A Guarantee
+
+We cannot guarantee 10 paid preorders because the market decides. We can guarantee the operating system:
+
+- Ask enough qualified people that the maths is not fragile.
+- Track every ask, reply, checkout start, paid preorder, and objection every day.
+- Rewrite the pitch when objections repeat.
+- Escalate from posts to direct messages, then to calls and voice notes if the numbers lag.
+
+Decision rules:
+
+- If fewer than 2 paid preorders after 30 direct asks, rewrite the pitch around the top objection.
+- If fewer than 4 paid preorders by 2026-06-07, double outreach volume and ask every warm supporter for 2 intros.
+- If fewer than 8 paid preorders by 2026-06-20, switch from passive posting to direct founder calls, voice notes, and referral asks.
 
 ## Daily Report Format
 
@@ -150,5 +166,47 @@ What happens next:
 - Your preorder is covered by the 30-day money-back guarantee.
 
 If you have questions or want to tell me what you most want Summit to capture well, reply to this email. Early buyer feedback will shape the build.
+
+Tom
+
+## Support Replies
+
+### Refund Question
+
+Hi [First name],
+
+Yes. Every Just Summit preorder is covered by the 30-day money-back guarantee. If you want a refund, reply with the email address used at checkout and I will process it back to the original payment method through Stripe.
+
+Stripe and bank timings can vary, but refunds usually appear within 5-10 business days after processing.
+
+Tom
+
+### Timeline Risk
+
+Hi [First name],
+
+Totally fair question. This is early-stage hardware, not a finished product sitting in a warehouse. The current first-batch estimate is Q4 2026, and that can move if prototype testing, tooling, or manufacturing work reveals something that needs changing.
+
+The promise I can make is clear communication: buyers will get meaningful production updates, and the preorder is covered by the 30-day money-back guarantee.
+
+Tom
+
+### Is It Built Yet?
+
+Hi [First name],
+
+Not fully yet. Just Summit is in an early presale stage. The product direction is set, the design target is clear, and the next milestone is the working prototype/build phase.
+
+That is why I am being upfront about the Q4 2026 first-batch estimate and the 30-day money-back guarantee. You would be backing the first batch early, not buying a finished item from stock.
+
+Tom
+
+### Why Pay Now?
+
+Hi [First name],
+
+The simple reason is to reserve an early place and help fund the first-batch build. The deposit option is GBP 49 if you want lower commitment. The full-payment option is GBP 249 if you want the lowest total price and priority shipping.
+
+If you are unsure, the safest path is the deposit because it reserves your place while keeping the upfront commitment lower.
 
 Tom
