@@ -134,6 +134,46 @@ describe("create checkout session API", () => {
     );
   });
 
+  test("adds campaign attribution metadata when present", async () => {
+    mockCheckoutCreate.mockResolvedValueOnce({
+      url: "https://checkout.stripe.com/attributed-session",
+    });
+    const longPageUrl = `https://www.justsummit.co/?${"x".repeat(600)}`;
+
+    const response = await POST(
+      makeRequest({
+        offerId: "headphones-deposit",
+        source: "founder_email",
+        utm_source: "linkedin",
+        utm_medium: "dm",
+        utm_campaign: "first_10_presales",
+        referrer: "https://www.linkedin.com/",
+        page_url: longPageUrl,
+      })
+    );
+
+    expect(response.status).toBe(200);
+    expect(mockCheckoutCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        metadata: expect.objectContaining({
+          source: "founder_email",
+          utm_source: "linkedin",
+          utm_medium: "dm",
+          utm_campaign: "first_10_presales",
+          referrer: "https://www.linkedin.com/",
+          page_url: longPageUrl.slice(0, 500),
+        }),
+        payment_intent_data: {
+          metadata: expect.objectContaining({
+            source: "founder_email",
+            utm_source: "linkedin",
+            utm_campaign: "first_10_presales",
+          }),
+        },
+      })
+    );
+  });
+
   test("returns an error when Stripe is not configured", async () => {
     delete process.env.STRIPE_SECRET_KEY;
 

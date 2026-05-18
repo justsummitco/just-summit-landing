@@ -28,6 +28,47 @@ function isStripePriceId(value: string): boolean {
   return value.startsWith("price_");
 }
 
+const OPTIONAL_ATTRIBUTION_FIELDS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+  "referrer",
+  "page_url",
+] as const;
+
+const STRIPE_METADATA_VALUE_LIMIT = 500;
+
+function getMetadataValue(value: unknown, fallback?: string): string | undefined {
+  if (typeof value !== "string") {
+    return fallback;
+  }
+
+  const trimmedValue = value.trim();
+
+  if (!trimmedValue) {
+    return fallback;
+  }
+
+  return trimmedValue.slice(0, STRIPE_METADATA_VALUE_LIMIT);
+}
+
+function getAttributionMetadata(body: Record<string, unknown>) {
+  return OPTIONAL_ATTRIBUTION_FIELDS.reduce<Record<string, string>>(
+    (metadata, fieldName) => {
+      const value = getMetadataValue(body[fieldName]);
+
+      if (value) {
+        metadata[fieldName] = value;
+      }
+
+      return metadata;
+    },
+    {}
+  );
+}
+
 export async function POST(request: NextRequest) {
   try {
     if (!process.env.STRIPE_SECRET_KEY) {
@@ -38,8 +79,10 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    const requestBody =
+      body && typeof body === "object" ? (body as Record<string, unknown>) : {};
 
-    const offerId = body?.offerId;
+    const offerId = requestBody.offerId;
 
     if (!isPresaleOfferId(offerId)) {
       return NextResponse.json(
@@ -77,7 +120,8 @@ export async function POST(request: NextRequest) {
       balance_due: String(offer.balanceDue),
       balance_due_timing: BALANCE_DUE_TIMING,
       shipping_date: SHIPPING_DATE,
-      source: typeof body.source === "string" ? body.source : "website",
+      source: getMetadataValue(requestBody.source, "website") || "website",
+      ...getAttributionMetadata(requestBody),
     };
 
     const session = await stripe.checkout.sessions.create({

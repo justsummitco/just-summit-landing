@@ -60,6 +60,51 @@ const proofPoints = [
   `Estimated delivery ${SHIPPING_DATE}`,
 ];
 
+const attributionParamNames = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+] as const;
+
+type CheckoutAttribution = Record<string, string>;
+
+function getCheckoutAttribution(source: string): CheckoutAttribution {
+  const attribution: CheckoutAttribution = { source };
+
+  if (typeof window === "undefined") {
+    return attribution;
+  }
+
+  const searchParams = new URLSearchParams(window.location.search);
+
+  attribution.page_url = window.location.href;
+
+  if (document.referrer) {
+    attribution.referrer = document.referrer;
+  }
+
+  attributionParamNames.forEach((paramName) => {
+    const value = searchParams.get(paramName);
+
+    if (value) {
+      attribution[paramName] = value;
+    }
+  });
+
+  return attribution;
+}
+
+function capturePresaleEvent(
+  eventName: string,
+  properties: Record<string, unknown>
+) {
+  if (typeof window !== "undefined" && (window as any).posthog) {
+    (window as any).posthog.capture(eventName, properties);
+  }
+}
+
 const specs = [
   ["AI workflow", "Planned capture, transcription, and structured summaries"],
   ["Privacy", "On-device-first architecture with encrypted app sync planned"],
@@ -118,6 +163,12 @@ function CheckoutButton({
 
   const startCheckout = async () => {
     setStatus("loading");
+    const attribution = getCheckoutAttribution(source);
+
+    capturePresaleEvent("presale_checkout_clicked", {
+      offer_id: offerId,
+      ...attribution,
+    });
 
     try {
       const response = await fetch("/api/create-checkout-session", {
@@ -125,7 +176,7 @@ function CheckoutButton({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ offerId, source }),
+        body: JSON.stringify({ offerId, ...attribution }),
       });
       const data = await response.json();
 
@@ -133,16 +184,20 @@ function CheckoutButton({
         throw new Error(data.error || "Checkout is unavailable");
       }
 
-      if (typeof window !== "undefined" && (window as any).posthog) {
-        (window as any).posthog.capture("presale_checkout_started", {
-          offer_id: offerId,
-          source,
-        });
-      }
+      capturePresaleEvent("presale_checkout_started", {
+        offer_id: offerId,
+        ...attribution,
+      });
 
       window.location.assign(data.url);
     } catch (error) {
       console.error("Checkout failed:", error);
+      capturePresaleEvent("presale_checkout_failed", {
+        offer_id: offerId,
+        error_message:
+          error instanceof Error ? error.message : "Unknown checkout error",
+        ...attribution,
+      });
       setStatus("error");
     }
   };
@@ -205,11 +260,9 @@ function WaitlistForm() {
         throw new Error(data.error || "Unable to join the updates list");
       }
 
-      if (typeof window !== "undefined" && (window as any).posthog) {
-        (window as any).posthog.capture("headphones_waitlist_signup", {
-          source: "homepage_waitlist",
-        });
-      }
+      capturePresaleEvent("headphones_waitlist_signup", {
+        ...getCheckoutAttribution("homepage_waitlist"),
+      });
 
       setStatus("success");
       setMessage(data.message || "You're on the Just Summit updates list.");

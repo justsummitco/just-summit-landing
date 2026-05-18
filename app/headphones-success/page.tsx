@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PresaleSuccessTracker from "@/components/PresaleSuccessTracker";
 
 export const metadata = {
   title: "Preorder Confirmed",
@@ -10,6 +12,9 @@ export const metadata = {
 export default function HeadphonesSuccess() {
   return (
     <>
+      <Suspense fallback={null}>
+        <PresaleSuccessTracker />
+      </Suspense>
       <Header />
       <main className="bg-gray-50 px-4 py-16 sm:px-6 lg:px-8">
         <section className="mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-sm">

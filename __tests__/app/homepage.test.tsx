@@ -94,7 +94,7 @@ describe("HomePage", () => {
     expect(mobileNav).toHaveTextContent("Blog");
   });
 
-  test("posts only the offer ID when starting deposit checkout from the hero", async () => {
+  test("posts offer and attribution when starting deposit checkout from the hero", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       json: async () => ({ error: "Stripe price is not configured" }),
@@ -109,10 +109,16 @@ describe("HomePage", () => {
         "/api/create-checkout-session",
         expect.objectContaining({
           method: "POST",
-          body: JSON.stringify({
-            offerId: "headphones-deposit",
-            source: "hero_primary",
-          }),
+          body: expect.any(String),
+        })
+      );
+      const requestBody = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+
+      expect(requestBody).toEqual(
+        expect.objectContaining({
+          offerId: "headphones-deposit",
+          source: "hero_primary",
+          page_url: expect.any(String),
         })
       );
     });
