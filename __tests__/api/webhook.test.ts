@@ -3,6 +3,7 @@
  */
 
 const mockConstructEvent = jest.fn();
+const mockTrackPaidPreorder = jest.fn();
 
 jest.mock("stripe", () => {
   const StripeMock = jest.fn().mockImplementation(() => ({
@@ -17,6 +18,10 @@ jest.mock("stripe", () => {
     Stripe: StripeMock,
   };
 });
+
+jest.mock("@/lib/presales-sheets", () => ({
+  trackPaidPreorder: mockTrackPaidPreorder,
+}));
 
 const { POST } = require("@/app/api/webhook/route");
 
@@ -68,6 +73,11 @@ describe("Stripe webhook API", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockTrackPaidPreorder.mockResolvedValue({
+      ok: false,
+      skipped: true,
+      error: "Google Sheets is not configured",
+    });
     process.env = {
       ...originalEnv,
       STRIPE_SECRET_KEY: "sk_test_123",
@@ -111,14 +121,14 @@ describe("Stripe webhook API", () => {
     expect(contactBody.attributes).toEqual(
       expect.objectContaining({
         FIRSTNAME: "Tom",
-        PRODUCT_INTEREST: "Just Summit AI Headphones",
+        PRODUCT_INTEREST: "Just Summit Headphones",
         PRESALE_CUSTOMER: true,
         PRESALE_OFFER_ID: "headphones-full",
         PRESALE_PAYMENT_TYPE: "full",
         PRESALE_PURCHASE_DATE: expect.any(String),
       })
     );
-    expect(emailBody.subject).toBe("Your Summit Headphones preorder is confirmed");
+    expect(emailBody.subject).toBe("Your Just Summit Headphones preorder is confirmed");
     expect(emailBody.sender).toEqual({
       name: "Tom at Just Summit",
       email: "hello@justsummit.co",
@@ -130,6 +140,14 @@ describe("Stripe webhook API", () => {
     expect(emailBody.tags).toEqual(["headphones-presale", "headphones-full"]);
     expect(emailBody.textContent).toContain("You paid");
     expect(emailBody.textContent).toContain("Stripe will send your payment receipt");
+    expect(mockTrackPaidPreorder).toHaveBeenCalledWith({
+      session: expect.objectContaining({
+        metadata: expect.objectContaining({
+          offer_id: "headphones-full",
+          payment_type: "full",
+        }),
+      }),
+    });
   });
 
   test("sends a separate deposit reservation email", async () => {
@@ -144,10 +162,23 @@ describe("Stripe webhook API", () => {
 
     const emailBody = JSON.parse((global.fetch as jest.Mock).mock.calls[1][1].body);
 
-    expect(emailBody.subject).toBe("Your Summit Headphones reservation is confirmed");
+    expect(emailBody.subject).toBe("Your Just Summit Headphones reservation is confirmed");
     expect(emailBody.tags).toEqual(["headphones-presale", "headphones-deposit"]);
     expect(emailBody.textContent).toContain("The remaining");
-    expect(emailBody.textContent).toContain("60 days pre-ship");
+    expect(emailBody.textContent).toContain("60 days before shipping");
+  });
+
+  test("adds preorder buyers to the optional Brevo buyer list", async () => {
+    process.env.BREVO_BUYER_LIST_ID = "14";
+    mockConstructEvent.mockReturnValueOnce(makeCheckoutEvent("deposit"));
+
+    const response = await POST(makeRequest());
+
+    expect(response.status).toBe(200);
+
+    const contactBody = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+
+    expect(contactBody.listIds).toEqual([8, 14]);
   });
 
   test("rejects invalid Stripe webhook signatures", async () => {
@@ -248,6 +279,27 @@ describe("Stripe webhook API", () => {
     expect(response.status).toBe(200);
     expect(json.received).toBe(true);
     expect(global.fetch).toHaveBeenCalledTimes(2);
+    consoleSpy.mockRestore();
+  });
+
+  test("does not fail the webhook when presales sheet tracking fails", async () => {
+    mockConstructEvent.mockReturnValueOnce(makeCheckoutEvent("full"));
+    mockTrackPaidPreorder.mockResolvedValueOnce({
+      ok: false,
+      error: "Sheets API failed",
+    });
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+
+    const response = await POST(makeRequest());
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json.received).toBe(true);
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Google Sheets paid-preorder tracking failed:",
+      "Sheets API failed"
+    );
     consoleSpy.mockRestore();
   });
 

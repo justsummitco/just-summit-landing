@@ -215,10 +215,10 @@ export function buildWaitlistWelcomeEmail(firstName: string): EmailContent {
   const name = escapeHtml(firstName || "there");
   const fullOffer = PRESALE_OFFERS["headphones-full"];
   const depositOffer = PRESALE_OFFERS["headphones-deposit"];
-  const intro = `Hi ${name}, I am Tom, the founder of Just Summit. Thanks for joining the Summit Headphones list. You are on the list, and we will keep you close to the product as it moves toward production.`;
+  const intro = `Hi ${name}, I am Tom, the founder of Just Summit. Thanks for joining the Just Summit Headphones list. You are on the list, and we will keep you close to the product as it moves toward production.`;
   const options: BaseEmailOptions = {
-    preheader: "You are on the Summit Headphones list.",
-    title: "You're on the Summit Headphones list",
+    preheader: "You are on the Just Summit Headphones list.",
+    title: "You're on the Just Summit Headphones list",
     intro,
     summaryRows: [
       {
@@ -237,7 +237,7 @@ export function buildWaitlistWelcomeEmail(firstName: string): EmailContent {
     sections: [
       {
         heading: "Why we are building them",
-        body: "Useful things are said in meetings, lectures, calls, and podcasts every day, then disappear into memory. Summit Headphones are being built to help you capture those moments and find them again later.",
+        body: "Useful things are said in meetings, lectures, calls, and podcasts every day, then disappear into memory. Just Summit Headphones are being built to help you capture those moments and find them again later.",
       },
       {
         heading: "What happens next",
@@ -253,12 +253,12 @@ export function buildWaitlistWelcomeEmail(firstName: string): EmailContent {
       href: getPreorderUrl("waitlist"),
     },
     note: "Preorders are covered by a 30-day money-back guarantee. If you have a question before ordering, reply and it will come straight to us.",
-    reason: "You are receiving this because you joined the Summit Headphones updates list.",
+    reason: "You are receiving this because you joined the Just Summit Headphones updates list.",
     marketing: true,
   };
 
   return {
-    subject: "You're on the Summit Headphones list",
+    subject: "You're on the Just Summit Headphones list",
     htmlContent: renderBaseEmail(options),
     textContent: renderTextEmail(options),
   };
@@ -268,9 +268,9 @@ export function buildFullPaymentConfirmationEmail(firstName: string): EmailConte
   const name = escapeHtml(firstName || "there");
   const offer = PRESALE_OFFERS["headphones-full"];
   const options: BaseEmailOptions = {
-    preheader: "Your Summit Headphones preorder is confirmed.",
-    title: "Your Summit Headphones preorder is confirmed",
-    intro: `Hi ${name}, thank you for backing the first batch. Your full-payment preorder for the Just Summit AI Headphones is confirmed.`,
+    preheader: "Your Just Summit Headphones preorder is confirmed.",
+    title: "Your Just Summit Headphones preorder is confirmed",
+    intro: `Hi ${name}, thank you for backing the first batch. Your full-payment preorder for the Just Summit Headphones is confirmed.`,
     summaryRows: [
       {
         label: "Paid today",
@@ -304,11 +304,11 @@ export function buildFullPaymentConfirmationEmail(firstName: string): EmailConte
       href: getEmailSectionUrl("product", "buyer_update"),
     },
     note: "Thank you again for trusting us this early. We will treat that seriously.",
-    reason: "You are receiving this because you completed a Summit Headphones preorder.",
+    reason: "You are receiving this because you completed a Just Summit Headphones preorder.",
   };
 
   return {
-    subject: "Your Summit Headphones preorder is confirmed",
+    subject: "Your Just Summit Headphones preorder is confirmed",
     htmlContent: renderBaseEmail(options),
     textContent: renderTextEmail(options),
   };
@@ -318,9 +318,9 @@ export function buildDepositConfirmationEmail(firstName: string): EmailContent {
   const name = escapeHtml(firstName || "there");
   const offer = PRESALE_OFFERS["headphones-deposit"];
   const options: BaseEmailOptions = {
-    preheader: "Your Summit Headphones reservation is confirmed.",
-    title: "Your Summit Headphones reservation is confirmed",
-    intro: `Hi ${name}, thank you for reserving your place in the first batch. Your deposit reservation for the Just Summit AI Headphones is confirmed.`,
+    preheader: "Your Just Summit Headphones reservation is confirmed.",
+    title: "Your Just Summit Headphones reservation is confirmed",
+    intro: `Hi ${name}, thank you for reserving your place in the first batch. Your deposit reservation for the Just Summit Headphones is confirmed.`,
     summaryRows: [
       {
         label: "Paid today",
@@ -362,11 +362,11 @@ export function buildDepositConfirmationEmail(firstName: string): EmailContent {
       href: getEmailSectionUrl("product", "buyer_update"),
     },
     note: "Thank you again for trusting us this early. We will treat that seriously.",
-    reason: "You are receiving this because you completed a Summit Headphones deposit reservation.",
+    reason: "You are receiving this because you completed a Just Summit Headphones deposit reservation.",
   };
 
   return {
-    subject: "Your Summit Headphones reservation is confirmed",
+    subject: "Your Just Summit Headphones reservation is confirmed",
     htmlContent: renderBaseEmail(options),
     textContent: renderTextEmail(options),
   };
@@ -374,8 +374,8 @@ export function buildDepositConfirmationEmail(firstName: string): EmailContent {
 
 export function buildProductionUpdateEmail(updateBody: string): EmailContent {
   const options: BaseEmailOptions = {
-    preheader: "A short Summit Headphones production update.",
-    title: "Summit Headphones production update",
+    preheader: "A short Just Summit Headphones production update.",
+    title: "Just Summit Headphones production update",
     intro: "Hi, here is the latest production note from Just Summit.",
     sections: [
       {
@@ -386,12 +386,12 @@ export function buildProductionUpdateEmail(updateBody: string): EmailContent {
       label: "View preorder options",
       href: getPreorderUrl("buyer_update"),
     },
-    reason: "You are receiving this because you joined or preordered Summit Headphones updates.",
+    reason: "You are receiving this because you joined or preordered Just Summit Headphones updates.",
     marketing: true,
   };
 
   return {
-    subject: "Summit Headphones production update",
+    subject: "Just Summit Headphones production update",
     htmlContent: renderBaseEmail(options),
     textContent: renderTextEmail(options),
   };
@@ -399,15 +399,15 @@ export function buildProductionUpdateEmail(updateBody: string): EmailContent {
 
 export function buildShippingWindowUpdateEmail(updateBody: string): EmailContent {
   const options: BaseEmailOptions = {
-    preheader: "A quick update on your Summit Headphones delivery window.",
+    preheader: "A quick update on your Just Summit Headphones delivery window.",
     title: "A quick update on your delivery window",
-    intro: `Hi, I wanted to give you a clear update on the Summit Headphones delivery window. The current estimated first-batch delivery window is ${SHIPPING_DATE}.`,
+    intro: `Hi, I wanted to give you a clear update on the Just Summit Headphones delivery window. The current estimated first-batch delivery window is ${SHIPPING_DATE}.`,
     sections: [
       {
         body: escapeHtml(updateBody).replace(/\n/g, "<br>"),
       },
     ],
-    reason: "You are receiving this because you joined or preordered Summit Headphones updates.",
+    reason: "You are receiving this because you joined or preordered Just Summit Headphones updates.",
   };
 
   return {

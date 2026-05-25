@@ -58,7 +58,7 @@ export default function EmailSignup() {
           </h2>
           <p className="text-xl text-primary-100 mb-12 max-w-2xl mx-auto">
             Get early access to new features, learning tips, and exclusive content 
-            designed for ADHD brains and audio learners.
+            designed for ADHD-friendly workflows and audio learners.
           </p>
 
           {/* Form */}
@@ -148,7 +148,7 @@ export default function EmailSignup() {
           {/* Social Proof */}
           <div className="mt-12 text-center">
             <p className="text-primary-100 mb-4">
-              Join 2,500+ subscribers who get our weekly insights
+              Join the Just Summit updates list for practical build notes
             </p>
             <div className="flex justify-center items-center space-x-8 text-primary-200">
               <div className="text-sm">📧 Weekly newsletter</div>

@@ -49,16 +49,23 @@ describe("HomePage", () => {
       })
     ).toBeInTheDocument();
     expect(screen.getByTestId("checkout-headphones-deposit-hero")).toHaveTextContent(
-      /Reserve your place/i
+      /Reserve for £49/i
     );
-    expect(screen.getAllByText(/Preorder for £249/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Pay in full £249/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/£49/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText("today").length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Balance due 60 days pre-ship/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/Balance due 60 days before shipping/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Estimated delivery Q4 2026/i).length).toBeGreaterThan(0);
     expect(container.querySelector("#roadmap")).toHaveTextContent(/Prototype build/i);
     expect(screen.getByText(/An honest note about the funding model/i)).toBeInTheDocument();
-    expect(screen.getByText(/Best value for first batch/i)).toBeInTheDocument();
+    expect(screen.getByText(/Recommended reservation/i)).toBeInTheDocument();
+    expect(screen.getByText(/Secure checkout powered by Stripe/i)).toBeInTheDocument();
+    expect(screen.getByText(/Apple Pay, Link, or card where available/i)).toBeInTheDocument();
+    expect(screen.getByText(/Preorder updates sent by email/i)).toBeInTheDocument();
+    expect(screen.getByText(/Limited early reservation slots/i)).toBeInTheDocument();
+    expect(screen.getByText(/When do I pay the remaining balance/i)).toBeInTheDocument();
+    expect(screen.getByText(/Can I update my delivery address later/i)).toBeInTheDocument();
+    expect(screen.getByText(/Is shipping included/i)).toBeInTheDocument();
     expect(
       screen.getByText(/Just Summit Ltd · Registered in England · Company no\. 15449136/i)
     ).toBeInTheDocument();
@@ -67,16 +74,20 @@ describe("HomePage", () => {
     expect(
       screen.getByAltText(/Studio product view of the Just Summit headphones/i)
     ).toBeInTheDocument();
-    expect(screen.getByText(/Real photo coming soon/i)).toBeInTheDocument();
-    expect(screen.getByText(/Real app preview coming soon/i)).toBeInTheDocument();
+    expect(
+      screen.getByAltText(/Angled concept render of the Just Summit headphones/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByAltText(/Detailed concept render of the Just Summit headphones/i)
+    ).toBeInTheDocument();
     expect(screen.queryByText(/investor/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/brevo/i)).not.toBeInTheDocument();
     expect(screen.getByText(/Founding edition/i)).toBeInTheDocument();
     expect(screen.getByText(/The target spec, stated plainly\./i)).toBeInTheDocument();
 
     const pricingText = container.querySelector("#pricing")?.textContent ?? "";
-    expect(pricingText.indexOf("Save £100 vs retail")).toBeLessThan(
-      pricingText.indexOf("Reserve with deposit")
+    expect(pricingText.indexOf("Reserve with deposit")).toBeLessThan(
+      pricingText.indexOf("Pay in full")
     );
   });
 
@@ -155,6 +166,7 @@ describe("HomePage", () => {
             name: "Tom",
             email: "tom@example.com",
             source: "homepage_waitlist",
+            page_url: "http://localhost/",
           }),
         })
       );

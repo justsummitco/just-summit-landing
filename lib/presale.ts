@@ -11,14 +11,14 @@ export type PresaleOffer = {
   priceEnvVar: "STRIPE_HEADPHONES_FULL_PRICE_ID" | "STRIPE_HEADPHONES_DEPOSIT_PRICE_ID";
 };
 
-export const HEADPHONES_PRODUCT_NAME = "Just Summit AI Headphones";
+export const HEADPHONES_PRODUCT_NAME = "Just Summit Headphones";
 export const SHIPPING_DATE = "Q4 2026";
-export const BALANCE_DUE_TIMING = "60 days pre-ship";
+export const BALANCE_DUE_TIMING = "60 days before shipping";
 
 export const PRESALE_OFFERS: Record<PresaleOfferId, PresaleOffer> = {
   "headphones-full": {
     id: "headphones-full",
-    title: "Full Payment - Priority Shipping",
+    title: "Just Summit Headphones Preorder",
     shortTitle: "Full payment",
     paymentType: "full",
     amountDueNow: 24900,
@@ -28,7 +28,7 @@ export const PRESALE_OFFERS: Record<PresaleOfferId, PresaleOffer> = {
   },
   "headphones-deposit": {
     id: "headphones-deposit",
-    title: "Reserve with Deposit",
+    title: "Just Summit Headphones Reservation",
     shortTitle: "Deposit",
     paymentType: "deposit",
     amountDueNow: 4900,

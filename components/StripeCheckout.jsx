@@ -60,7 +60,7 @@ export default function StripeCheckout({ productType, tier, price, depositAmount
           Processing...
         </div>
       ) : (
-        `Pre-Order Now - £${(depositAmount / 100).toFixed(0)} Deposit`
+        `Preorder Now - £${(depositAmount / 100).toFixed(0)} Deposit`
       )}
     </button>
   )

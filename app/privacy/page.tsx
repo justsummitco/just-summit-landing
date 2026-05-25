@@ -4,7 +4,10 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "Privacy policy for the Just Summit website and AI Headphones presale.",
+  description: "Privacy policy for the Just Summit website and Just Summit Headphones presale.",
+  alternates: {
+    canonical: "/privacy",
+  },
 };
 
 export default function PrivacyPage() {
@@ -19,7 +22,7 @@ export default function PrivacyPage() {
 
             <h2>1. Overview</h2>
             <p>
-              Just Summit collects only the information needed to operate the website, manage AI Headphones presales, send product updates, provide support, and improve the customer experience.
+              Just Summit collects only the information needed to operate the website, manage Just Summit Headphones presales, send product updates, provide support, and improve the customer experience.
             </p>
 
             <h2>2. Information We Collect</h2>

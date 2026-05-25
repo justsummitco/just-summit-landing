@@ -7,6 +7,7 @@ import {
   SHIPPING_DATE,
   isPresaleOfferId,
 } from "@/lib/presale";
+import { trackCheckoutStart } from "@/lib/presales-sheets";
 
 export const runtime = "nodejs";
 
@@ -148,6 +149,15 @@ export async function POST(request: NextRequest) {
         { error: "Checkout session did not return a URL" },
         { status: 500 }
       );
+    }
+
+    const sheetResult = await trackCheckoutStart({
+      session,
+      metadata,
+    });
+
+    if (!sheetResult.ok && !sheetResult.skipped) {
+      console.error("Google Sheets checkout-start tracking failed:", sheetResult.error);
     }
 
     return NextResponse.json({ url: session.url });

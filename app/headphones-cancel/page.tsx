@@ -1,10 +1,22 @@
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import {
+  BALANCE_DUE_TIMING,
+  PRESALE_OFFERS,
+  formatGBP,
+} from "@/lib/presale";
+
+const fullOffer = PRESALE_OFFERS["headphones-full"];
+const depositOffer = PRESALE_OFFERS["headphones-deposit"];
 
 export const metadata = {
   title: "Checkout Cancelled",
-  description: "Your Just Summit AI Headphones preorder checkout was cancelled.",
+  description: "Your Just Summit Headphones preorder checkout was cancelled.",
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default function HeadphonesCancel() {
@@ -26,11 +38,12 @@ export default function HeadphonesCancel() {
             No payment was processed. You can return to the presale options or join the updates list if you want more product news first.
           </p>
 
-          <div className="mt-10 grid gap-4 text-left sm:grid-cols-3">
+          <div className="mt-10 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">
             {[
-              ["Full payment", "£249 today with priority allocation."],
-              ["Deposit", "£49 today and £250 due 60 days pre-ship."],
+              ["Deposit reservation", `${formatGBP(depositOffer.amountDueNow)} today and ${formatGBP(depositOffer.balanceDue)} due ${BALANCE_DUE_TIMING}.`],
+              ["Full payment", `${formatGBP(fullOffer.amountDueNow)} today with priority allocation.`],
               ["Guarantee", "30-day money-back guarantee."],
+              ["Shipping and address", "Shipping, taxes, and address details are confirmed before dispatch."],
             ].map(([title, body]) => (
               <div key={title} className="rounded-lg border border-gray-200 bg-gray-50 p-5">
                 <h2 className="font-semibold text-gray-950">{title}</h2>
@@ -44,7 +57,7 @@ export default function HeadphonesCancel() {
               href="/#pricing"
               className="inline-flex min-h-12 items-center justify-center rounded-md bg-gray-950 px-5 text-sm font-semibold text-white transition hover:bg-gray-800"
             >
-              Try preorder again
+              Reserve for £49
             </Link>
             <Link
               href="/#updates"

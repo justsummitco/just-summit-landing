@@ -3,10 +3,23 @@ import { Suspense } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PresaleSuccessTracker from "@/components/PresaleSuccessTracker";
+import {
+  BALANCE_DUE_TIMING,
+  PRESALE_OFFERS,
+  SHIPPING_DATE,
+  formatGBP,
+} from "@/lib/presale";
+
+const depositOffer = PRESALE_OFFERS["headphones-deposit"];
+const supportEmail = "hello@justsummit.co";
 
 export const metadata = {
   title: "Preorder Confirmed",
-  description: "Your Just Summit AI Headphones preorder has been confirmed.",
+  description: "Your Just Summit Headphones preorder has been confirmed.",
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default function HeadphonesSuccess() {
@@ -29,7 +42,7 @@ export default function HeadphonesSuccess() {
               Preorder confirmed
             </h1>
             <p className="mt-4 text-lg leading-8 text-gray-600">
-              Thank you for securing your Just Summit AI Headphones. Stripe has processed your payment and will send a receipt to the email used at checkout.
+              Thank you for securing your Just Summit Headphones. Stripe has processed your payment and will send a receipt to the email used at checkout.
             </p>
           </div>
 
@@ -39,8 +52,10 @@ export default function HeadphonesSuccess() {
               {[
                 ["Confirmation", "You will receive payment confirmation from Stripe."],
                 ["Production updates", "We will share development and production milestones by email."],
-                ["Delivery window", "Estimated first-batch delivery window: Q4 2026."],
-                ["Deposit balance", "Deposit customers pay the remaining £250 60 days before shipping."],
+                ["Delivery window", `Estimated first-batch delivery window: ${SHIPPING_DATE}.`],
+                ["Deposit balance", `Deposit customers pay the remaining ${formatGBP(depositOffer.balanceDue)} ${BALANCE_DUE_TIMING}.`],
+                ["Address changes", `Email ${supportEmail} before dispatch if your delivery address changes.`],
+                ["Shipping and taxes", "Shipping and any applicable taxes will be confirmed before dispatch."],
               ].map(([title, body]) => (
                 <div key={title} className="flex gap-4">
                   <div className="mt-1 h-2 w-2 rounded-full bg-emerald-600" />
@@ -55,8 +70,8 @@ export default function HeadphonesSuccess() {
 
           <div className="mt-6 rounded-lg border border-teal-100 bg-teal-50 p-5 text-sm leading-6 text-teal-900">
             Your preorder is covered by a 30-day money-back guarantee. To request help, email{" "}
-            <a href="mailto:hello@justsummit.co" className="font-semibold underline">
-              hello@justsummit.co
+            <a href={`mailto:${supportEmail}`} className="font-semibold underline">
+              {supportEmail}
             </a>
             .
           </div>

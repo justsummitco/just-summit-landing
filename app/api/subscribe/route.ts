@@ -1,20 +1,47 @@
 import { NextRequest, NextResponse } from "next/server";
 import { syncBrevoWaitlistContact } from "@/lib/brevo-contacts";
 import { sendWaitlistWelcomeEmail } from "@/lib/brevo-email";
+import { PresalesAttribution, trackPresalesLead } from "@/lib/presales-sheets";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const ATTRIBUTION_FIELDS = [
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_content",
+  "utm_term",
+  "referrer",
+  "page_url",
+] as const;
+
+function getAttribution(body: Record<string, unknown>): PresalesAttribution {
+  return ATTRIBUTION_FIELDS.reduce<PresalesAttribution>((attribution, field) => {
+    const value = body[field];
+
+    if (typeof value === "string" && value.trim()) {
+      attribution[field] = value.trim();
+    }
+
+    return attribution;
+  }, {});
+}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+    const requestBody =
+      body && typeof body === "object" ? (body as Record<string, unknown>) : {};
+    const email =
+      typeof requestBody.email === "string"
+        ? requestBody.email.trim().toLowerCase()
+        : "";
     const firstName =
-      typeof body.name === "string" && body.name.trim()
-        ? body.name.trim()
+      typeof requestBody.name === "string" && requestBody.name.trim()
+        ? requestBody.name.trim()
         : email.split("@")[0];
     const source =
-      typeof body.source === "string" && body.source.trim()
-        ? body.source.trim()
+      typeof requestBody.source === "string" && requestBody.source.trim()
+        ? requestBody.source.trim()
         : "website";
 
     if (!EMAIL_PATTERN.test(email)) {
@@ -35,7 +62,7 @@ export async function POST(request: NextRequest) {
       email,
       firstName,
       attributes: {
-        PRODUCT_INTEREST: "Just Summit AI Headphones",
+        PRODUCT_INTEREST: "Just Summit Headphones",
         LEAD_SOURCE: source,
         PRESALE_INTEREST: true,
       },
@@ -47,6 +74,17 @@ export async function POST(request: NextRequest) {
 
     if (!emailResult.ok) {
       console.error("Waitlist welcome email failed:", emailResult.error);
+    }
+
+    const sheetResult = await trackPresalesLead({
+      email,
+      firstName,
+      source,
+      attribution: getAttribution(requestBody),
+    });
+
+    if (!sheetResult.ok && !sheetResult.skipped) {
+      console.error("Google Sheets waitlist tracking failed:", sheetResult.error);
     }
 
     if (!contactResult.ok) {

@@ -4,7 +4,10 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Refund Policy",
-  description: "Refund policy for Just Summit AI Headphones presales.",
+  description: "Refund policy for Just Summit Headphones presales.",
+  alternates: {
+    canonical: "/refunds",
+  },
 };
 
 export default function RefundsPage() {
@@ -19,7 +22,7 @@ export default function RefundsPage() {
 
             <h2>30-Day Money-Back Guarantee</h2>
             <p>
-              Just Summit AI Headphones presales are covered by a 30-day money-back guarantee. If you are not satisfied with your preorder, you can request a refund within 30 days of your purchase date.
+              Just Summit Headphones presales are covered by a 30-day money-back guarantee. If you are not satisfied with your preorder, you can request a refund within 30 days of your purchase date.
             </p>
 
             <h2>Eligible Purchases</h2>

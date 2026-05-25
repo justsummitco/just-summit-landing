@@ -14,6 +14,7 @@ const navItems = [
   { label: "Product", href: "/#product" },
   { label: "How it works", href: "/#how-it-works" },
   { label: "Roadmap", href: "/#roadmap" },
+  { label: "ADHD notes", href: "/adhd-meeting-notes" },
   { label: "Preorder", href: "/#pricing" },
   { label: "FAQ", href: "/#faq" },
   { label: "About", href: "/about", active: "about" },

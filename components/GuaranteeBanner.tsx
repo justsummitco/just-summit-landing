@@ -11,11 +11,11 @@ export default function GuaranteeBanner() {
             <ShieldCheckIcon className="w-8 h-8 text-green-600 mr-4 flex-shrink-0" />
             <div className="text-center">
               <h3 className="text-lg font-semibold text-green-900 mb-1">
-                30-Day No-Risk Guarantee
+                30-Day Money-Back Guarantee
               </h3>
               <p className="text-green-800">
-                If Summit doesn't improve your learning experience within 30 days, 
-                we'll refund your pre-order. No hassle.
+                Every preorder is covered by a 30-day money-back guarantee.
+                If you change your mind within 30 days, email us for a refund.
               </p>
             </div>
           </div>

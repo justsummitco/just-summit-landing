@@ -32,9 +32,9 @@ export default function FounderStory() {
                 </p>
                 
                 <p className="text-primary-600 font-semibold bg-primary-50 p-4 rounded-lg border-l-4 border-primary-500">
-                  That's when I discovered something profound: My brain injury had given me the same challenges 
-                  that millions of people with ADHD face every day. The techniques I developed to overcome 
-                  my memory loss were exactly what ADHD brains had always needed.
+                  That's when I discovered something important: my recovery challenges overlapped with 
+                  problems many people with ADHD describe, especially losing useful spoken context after 
+                  the moment has passed.
                 </p>
 
                 <p>
@@ -46,8 +46,8 @@ export default function FounderStory() {
 
                 <p>
                   Summit isn't just an app—it's the culmination of a decade-long journey to understand 
-                  how memory actually works when your brain doesn't follow the "normal" rules. 
-                  Every feature exists because someone like us told me what they needed.
+                  how audio, capture, and review can support people whose working days do not fit a 
+                  perfect-notes workflow.
                 </p>
               </div>
 
@@ -135,7 +135,7 @@ export default function FounderStory() {
                 🧠 Memory-Friendly
               </span>
               <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm">
-                🎯 ADHD-Tested
+                🎯 ADHD-Friendly
               </span>
               <span className="px-4 py-2 bg-white rounded-full text-sm font-medium text-gray-700 shadow-sm">
                 ♿ Accessibility-First

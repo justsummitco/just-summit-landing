@@ -3,15 +3,21 @@ import Link from "next/link";
 import { getAllPosts } from "../../lib/mdx";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Just Summit Blog",
   description:
-    "Notes on audio learning, recall, privacy-first AI, and the Just Summit AI Headphones journey.",
+    "Notes on AI meeting recorders, private transcription, audio recall, and the Just Summit Headphones journey.",
+  alternates: {
+    canonical: "/blog",
+  },
   openGraph: {
     title: "Just Summit Blog",
     description:
-      "Notes on audio learning, recall, privacy-first AI, and the Just Summit AI Headphones journey.",
+      "Notes on AI meeting recorders, private transcription, audio recall, and the Just Summit Headphones journey.",
+    url: "/blog",
     images: ["/hero-headphones-clean.png"],
   },
 };
@@ -30,6 +36,12 @@ export default function BlogIndex() {
 
   return (
     <>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Blog", path: "/blog" },
+        ])}
+      />
       <Header />
       <main className="min-h-screen bg-white">
         <section className="bg-gray-50 py-16">
@@ -38,7 +50,7 @@ export default function BlogIndex() {
               Just Summit Blog
             </h1>
             <p className="mx-auto max-w-2xl text-xl leading-8 text-gray-600">
-              Notes on better listening, recall, privacy-first AI, and the hardware journey behind Just Summit AI Headphones.
+              Notes on better listening, AI meeting recorders, private transcription, and the hardware journey behind Just Summit Headphones.
             </p>
           </div>
         </section>
@@ -116,13 +128,13 @@ export default function BlogIndex() {
               Ready to turn listening into recall?
             </h2>
             <p className="mb-8 text-xl text-white/70">
-              Just Summit AI Headphones are available for presale with full-payment and deposit options.
+              Just Summit Headphones are available for presale with full-payment and deposit options.
             </p>
             <Link
               href="/#pricing"
               className="inline-flex min-h-12 items-center rounded-md bg-white px-6 text-sm font-semibold text-gray-950 transition hover:bg-gray-100"
             >
-              Preorder the AI Headphones
+              Preorder Just Summit Headphones
             </Link>
           </div>
         </section>

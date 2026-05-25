@@ -2,7 +2,14 @@
  * @jest-environment node
  */
 
+jest.mock("@/lib/presales-sheets", () => ({
+  trackPresalesLead: jest.fn(),
+}));
+
 import { POST } from "@/app/api/subscribe/route";
+import { trackPresalesLead } from "@/lib/presales-sheets";
+
+const mockTrackPresalesLead = trackPresalesLead as jest.Mock;
 
 function makeRequest(body: unknown) {
   return {
@@ -15,6 +22,11 @@ describe("subscribe API", () => {
 
   beforeEach(() => {
     jest.resetAllMocks();
+    mockTrackPresalesLead.mockResolvedValue({
+      ok: false,
+      skipped: true,
+      error: "Google Sheets is not configured",
+    });
     process.env = {
       ...originalEnv,
       BREVO_API_KEY: "brevo_test",
@@ -58,7 +70,7 @@ describe("subscribe API", () => {
           email: "tom@example.com",
           attributes: {
             FIRSTNAME: "Tom",
-            PRODUCT_INTEREST: "Just Summit AI Headphones",
+            PRODUCT_INTEREST: "Just Summit Headphones",
             LEAD_SOURCE: "test_source",
             PRESALE_INTEREST: true,
           },
@@ -78,7 +90,7 @@ describe("subscribe API", () => {
 
     const emailBody = JSON.parse((global.fetch as jest.Mock).mock.calls[1][1].body);
 
-    expect(emailBody.subject).toBe("You're on the Summit Headphones list");
+    expect(emailBody.subject).toBe("You're on the Just Summit Headphones list");
     expect(emailBody.to).toEqual([
       {
         email: "tom@example.com",
@@ -98,6 +110,58 @@ describe("subscribe API", () => {
     expect(emailBody.textContent).toContain(
       "If you would rather not receive these updates"
     );
+    expect(mockTrackPresalesLead).toHaveBeenCalledWith({
+      email: "tom@example.com",
+      firstName: "Tom",
+      source: "test_source",
+      attribution: {},
+    });
+  });
+
+  test("passes signup attribution to the presales tracker", async () => {
+    const response = await POST(
+      makeRequest({
+        email: "tom@example.com",
+        name: "Tom",
+        source: "homepage_waitlist",
+        utm_source: "linkedin",
+        utm_medium: "dm",
+        utm_campaign: "first_10_presales",
+        page_url: "https://www.justsummit.co/?utm_source=linkedin",
+      })
+    );
+
+    expect(response.status).toBe(200);
+    expect(mockTrackPresalesLead).toHaveBeenCalledWith({
+      email: "tom@example.com",
+      firstName: "Tom",
+      source: "homepage_waitlist",
+      attribution: {
+        utm_source: "linkedin",
+        utm_medium: "dm",
+        utm_campaign: "first_10_presales",
+        page_url: "https://www.justsummit.co/?utm_source=linkedin",
+      },
+    });
+  });
+
+  test("does not fail signup when presales sheet tracking fails", async () => {
+    mockTrackPresalesLead.mockResolvedValueOnce({
+      ok: false,
+      error: "Sheets API failed",
+    });
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+
+    const response = await POST(makeRequest({ email: "tom@example.com" }));
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json.success).toBe(true);
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Google Sheets waitlist tracking failed:",
+      "Sheets API failed"
+    );
+    consoleSpy.mockRestore();
   });
 
   test("still captures the lead if the welcome email fails", async () => {

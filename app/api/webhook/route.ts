@@ -3,8 +3,21 @@ import Stripe from "stripe";
 import { syncBrevoWaitlistContact } from "@/lib/brevo-contacts";
 import { sendPreorderConfirmationEmail } from "@/lib/brevo-email";
 import { isPresaleOfferId } from "@/lib/presale";
+import { trackPaidPreorder } from "@/lib/presales-sheets";
 
 export const runtime = "nodejs";
+
+function getBrevoBuyerListId() {
+  const configuredId = process.env.BREVO_BUYER_LIST_ID;
+
+  if (!configuredId) {
+    return null;
+  }
+
+  const buyerListId = Number.parseInt(configuredId, 10);
+
+  return Number.isInteger(buyerListId) ? buyerListId : null;
+}
 
 async function addHeadphonesBuyerToBrevo(session: Stripe.Checkout.Session) {
   const email = session.customer_details?.email;
@@ -15,11 +28,13 @@ async function addHeadphonesBuyerToBrevo(session: Stripe.Checkout.Session) {
 
   const firstName =
     session.customer_details?.name?.split(" ")[0] || email.split("@")[0];
+  const buyerListId = getBrevoBuyerListId();
   const contactResult = await syncBrevoWaitlistContact({
     email,
     firstName,
+    listIds: buyerListId ? [buyerListId] : [],
     attributes: {
-      PRODUCT_INTEREST: "Just Summit AI Headphones",
+      PRODUCT_INTEREST: "Just Summit Headphones",
       PRESALE_CUSTOMER: true,
       PRESALE_OFFER_ID: session.metadata?.offer_id || "",
       PRESALE_PAYMENT_TYPE: session.metadata?.payment_type || "",
@@ -102,6 +117,12 @@ export async function POST(request: NextRequest) {
       const session = event.data.object as Stripe.Checkout.Session;
 
       if (isHeadphonesPresaleSession(session)) {
+        const sheetResult = await trackPaidPreorder({ session });
+
+        if (!sheetResult.ok && !sheetResult.skipped) {
+          console.error("Google Sheets paid-preorder tracking failed:", sheetResult.error);
+        }
+
         await addHeadphonesBuyerToBrevo(session);
         await sendHeadphonesBuyerEmail(session);
       }

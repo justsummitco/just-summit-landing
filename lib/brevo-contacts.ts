@@ -6,6 +6,7 @@ type SyncBrevoContactInput = {
   email: string;
   firstName: string;
   attributes?: BrevoContactAttributes;
+  listIds?: number[];
 };
 
 type BrevoApiError = {
@@ -31,6 +32,10 @@ function getWaitlistId(): number | null {
   return Number.isInteger(waitlistId) ? waitlistId : null;
 }
 
+function getUniqueListIds(listIds: number[]) {
+  return Array.from(new Set(listIds.filter((listId) => Number.isInteger(listId))));
+}
+
 async function readBrevoResponse(response: Response): Promise<BrevoApiError | string> {
   const responseText = await response.text();
 
@@ -52,11 +57,11 @@ function isDuplicateContactError(error: BrevoApiError | string): boolean {
 async function postContact({
   email,
   attributes,
-  waitlistId,
+  listIds,
 }: {
   email: string;
   attributes: BrevoContactAttributes;
-  waitlistId: number;
+  listIds: number[];
 }) {
   return fetch(BREVO_CONTACTS_URL, {
     method: "POST",
@@ -68,7 +73,7 @@ async function postContact({
     body: JSON.stringify({
       email,
       attributes,
-      listIds: [waitlistId],
+      listIds,
       updateEnabled: true,
     }),
   });
@@ -78,6 +83,7 @@ export async function syncBrevoWaitlistContact({
   email,
   firstName,
   attributes = {},
+  listIds = [],
 }: SyncBrevoContactInput): Promise<BrevoContactResult> {
   if (!process.env.BREVO_API_KEY) {
     return {
@@ -96,6 +102,7 @@ export async function syncBrevoWaitlistContact({
       error: "BREVO_WAITLIST_LIST_ID is missing or invalid",
     };
   }
+  const contactListIds = getUniqueListIds([waitlistId, ...listIds]);
 
   const baseAttributes: BrevoContactAttributes = {
     FIRSTNAME: firstName,
@@ -108,7 +115,7 @@ export async function syncBrevoWaitlistContact({
   const response = await postContact({
     email,
     attributes: fullAttributes,
-    waitlistId,
+    listIds: contactListIds,
   });
 
   if (response.ok) {
@@ -130,7 +137,7 @@ export async function syncBrevoWaitlistContact({
     const fallbackResponse = await postContact({
       email,
       attributes: baseAttributes,
-      waitlistId,
+      listIds: contactListIds,
     });
 
     if (fallbackResponse.ok) {

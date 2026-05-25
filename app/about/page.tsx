@@ -8,6 +8,16 @@ export const metadata: Metadata = {
   title: "About Just Summit",
   description:
     "Learn about the Just Summit project, the founder, and the principles behind the AI headphones presale.",
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: "About Just Summit",
+    description:
+      "The story, founder principles, and build-in-public approach behind Just Summit Headphones.",
+    url: "/about",
+    images: ["/hero-headphones-clean.png"],
+  },
 };
 
 const principles = [
@@ -115,6 +125,35 @@ export default function AboutPage() {
                 <article key={principle.title} className="rounded-lg border border-gray-200 bg-white p-6">
                   <h3 className="text-lg font-semibold text-gray-950">{principle.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-gray-600">{principle.body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-gray-100 bg-white py-20 sm:py-24">
+          <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.22em] text-teal-700">
+                Product credibility
+              </p>
+              <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+                Early hardware, stated carefully.
+              </h2>
+              <p className="mt-5 text-base leading-7 text-gray-700">
+                Just Summit Headphones are in presale, not sitting in a warehouse. The current work is focused on proving the capture workflow, the privacy-first architecture, and the first-batch manufacturing path before final specifications are locked.
+              </p>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {[
+                ["Company", "Just Summit Ltd is registered in England under company number 15449136."],
+                ["Payment handling", "Preorders are processed by Stripe, and Just Summit does not store complete card details."],
+                ["Build status", "Prototype work, production decisions, and delivery updates are shared as the project develops."],
+                ["Support route", "Questions about presale terms, refunds, delivery, or address changes go to hello@justsummit.co."],
+              ].map(([title, body]) => (
+                <article key={title} className="rounded-lg border border-gray-200 bg-gray-50 p-5">
+                  <h3 className="font-semibold text-gray-950">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-gray-600">{body}</p>
                 </article>
               ))}
             </div>

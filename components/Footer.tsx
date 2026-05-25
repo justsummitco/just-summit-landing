@@ -20,11 +20,11 @@ export default function Footer() {
                 aria-hidden="true"
               />
               <span className="text-xl font-semibold tracking-tight text-white">
-                Summit
+                Just Summit
               </span>
             </Link>
             <p className="mt-5 max-w-md text-sm leading-6 text-white/62">
-              Headphones built to save the ideas worth keeping. Preorders are secured by Stripe and covered by a 30-day money-back guarantee.
+              ADHD-friendly audio recall for busy workdays. Preorders are secured by Stripe and covered by a 30-day money-back guarantee.
             </p>
             <p className="mt-3 text-xs leading-5 text-white/42">
               Just Summit Ltd · Registered in England · Company no. 15449136
@@ -50,6 +50,31 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/adhd-meeting-notes" className="transition hover:text-white">
+                  ADHD meeting notes
+                </Link>
+              </li>
+              <li>
+                <Link href="/ai-meeting-recorder" className="transition hover:text-white">
+                  AI meeting recorder
+                </Link>
+              </li>
+              <li>
+                <Link href="/ai-headphones" className="transition hover:text-white">
+                  AI headphones
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-first-ai-notetaker" className="transition hover:text-white">
+                  Privacy-first AI notetaker
+                </Link>
+              </li>
+              <li>
+                <Link href="/on-device-transcription" className="transition hover:text-white">
+                  On-device transcription
+                </Link>
+              </li>
+              <li>
                 <Link href="/blog" className="transition hover:text-white">
                   Blog
                 </Link>
@@ -63,6 +88,16 @@ export default function Footer() {
               <li>
                 <Link href="/about" className="transition hover:text-white">
                   About
+                </Link>
+              </li>
+              <li>
+                <Link href="/build-log" className="transition hover:text-white">
+                  Build log
+                </Link>
+              </li>
+              <li>
+                <Link href="/press" className="transition hover:text-white">
+                  Press
                 </Link>
               </li>
               <li>

@@ -7,19 +7,16 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.justsummit.co";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Just Summit AI Headphones | Presale Now Open",
+    default: "Just Summit Headphones | ADHD-Friendly Audio Recall",
     template: "%s | Just Summit",
   },
   description:
-    "Preorder Just Summit AI Headphones: privacy-first AI listening hardware that turns audio into searchable recall. Full payment and deposit options available.",
+    "Reserve Just Summit Headphones for £49. ADHD-friendly audio recall for busy workdays, private meeting notes, and searchable action items.",
   keywords:
-    "AI headphones, audio summaries, transcription headphones, knowledge recall, privacy-first AI, preorder headphones",
+    "ADHD meeting notes, meeting notes for ADHD, AI note taker for ADHD, AI meeting recorder, AI headphones, private AI transcription, Just Summit Headphones",
   authors: [{ name: "Just Summit" }],
   creator: "Just Summit",
   publisher: "Just Summit",
-  alternates: {
-    canonical: "/",
-  },
   icons: {
     icon: [
       { url: "/Summit-Icon.svg", type: "image/svg+xml" },
@@ -28,9 +25,9 @@ export const metadata: Metadata = {
     apple: [{ url: "/Summit-800.png", sizes: "800x800", type: "image/png" }],
   },
   openGraph: {
-    title: "Just Summit AI Headphones | Presale Now Open",
+    title: "Just Summit Headphones | ADHD-Friendly Audio Recall",
     description:
-      "AI headphones for people who listen to learn. Preorder for £249 or reserve with a £49 deposit.",
+      "ADHD-friendly audio recall for busy workdays, meeting notes, voice recall, and searchable action items.",
     url: siteUrl,
     siteName: "Just Summit",
     images: [
@@ -38,7 +35,7 @@ export const metadata: Metadata = {
         url: "/hero-headphones-clean.png",
         width: 1672,
         height: 941,
-        alt: "Just Summit AI Headphones",
+        alt: "Just Summit Headphones",
       },
     ],
     locale: "en_GB",
@@ -46,9 +43,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Just Summit AI Headphones | Presale Now Open",
+    title: "Just Summit Headphones | ADHD-Friendly Audio Recall",
     description:
-      "Preorder for £249 or reserve with a £49 deposit. Estimated delivery Q4 2026.",
+      "Reserve for £49 with secure Stripe checkout. Estimated first-batch delivery Q4 2026.",
     images: ["/hero-headphones-clean.png"],
   },
   robots: {

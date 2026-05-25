@@ -3,6 +3,7 @@
  */
 
 const mockCheckoutCreate = jest.fn();
+const mockTrackCheckoutStart = jest.fn();
 
 jest.mock("stripe", () => {
   return {
@@ -16,6 +17,10 @@ jest.mock("stripe", () => {
     })),
   };
 });
+
+jest.mock("@/lib/presales-sheets", () => ({
+  trackCheckoutStart: mockTrackCheckoutStart,
+}));
 
 const StripeMock = require("stripe").default;
 const { POST } = require("@/app/api/create-checkout-session/route");
@@ -34,6 +39,11 @@ describe("create checkout session API", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockTrackCheckoutStart.mockResolvedValue({
+      ok: false,
+      skipped: true,
+      error: "Google Sheets is not configured",
+    });
     process.env = {
       ...originalEnv,
       STRIPE_SECRET_KEY: "sk_test_123",
@@ -72,13 +82,13 @@ describe("create checkout session API", () => {
         customer_creation: "always",
         metadata: expect.objectContaining({
           product_type: "headphones",
-          product_name: "Just Summit AI Headphones",
+          product_name: "Just Summit Headphones",
           offer_id: "headphones-full",
           payment_type: "full",
           amount_due_now: "24900",
           full_price: "24900",
           balance_due: "0",
-          balance_due_timing: "60 days pre-ship",
+          balance_due_timing: "60 days before shipping",
           shipping_date: "Q4 2026",
           source: "test",
         }),
@@ -94,6 +104,16 @@ describe("create checkout session API", () => {
         },
       })
     );
+    expect(mockTrackCheckoutStart).toHaveBeenCalledWith({
+      session: expect.objectContaining({
+        url: "https://checkout.stripe.com/session",
+      }),
+      metadata: expect.objectContaining({
+        offer_id: "headphones-full",
+        payment_type: "full",
+        source: "test",
+      }),
+    });
   });
 
   test("creates a deposit checkout session with balance metadata", async () => {
@@ -117,7 +137,7 @@ describe("create checkout session API", () => {
           amount_due_now: "4900",
           full_price: "29900",
           balance_due: "25000",
-          balance_due_timing: "60 days pre-ship",
+          balance_due_timing: "60 days before shipping",
           shipping_date: "Q4 2026",
           source: "website",
         }),
@@ -172,6 +192,28 @@ describe("create checkout session API", () => {
         },
       })
     );
+  });
+
+  test("does not fail checkout when presales sheet tracking fails", async () => {
+    mockCheckoutCreate.mockResolvedValueOnce({
+      url: "https://checkout.stripe.com/session",
+    });
+    mockTrackCheckoutStart.mockResolvedValueOnce({
+      ok: false,
+      error: "Sheets API failed",
+    });
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+
+    const response = await POST(makeRequest({ offerId: "headphones-full" }));
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json.url).toBe("https://checkout.stripe.com/session");
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Google Sheets checkout-start tracking failed:",
+      "Sheets API failed"
+    );
+    consoleSpy.mockRestore();
   });
 
   test("returns an error when Stripe is not configured", async () => {

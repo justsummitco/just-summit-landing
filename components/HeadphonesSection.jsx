@@ -11,21 +11,21 @@ export default function HeadphonesSection() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center bg-blue-100 text-blue-800 text-sm font-medium px-4 py-2 rounded-full mb-6">
-            🚀 Ships Q2 2026
+            Estimated first-batch delivery Q4 2026
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            AI Headphones
+            Just Summit Headphones
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            Privacy-first AI transcription and summaries. Process everything on-device. 
-            Never send your conversations to the cloud.
+            Privacy-first AI transcription and summaries, designed around
+            on-device-first processing principles and controlled sync.
           </p>
           
           {/* Hero Image */}
           <div className="relative max-w-2xl mx-auto">
             <img 
               src="/headphones-hero.png" 
-              alt="Just Summit AI Headphones"
+              alt="Just Summit Headphones"
               className="w-full h-auto rounded-2xl shadow-2xl"
             />
           </div>
@@ -70,11 +70,11 @@ export default function HeadphonesSection() {
           <div className="text-center">
             <img 
               src="/headphones-features.png" 
-              alt="AI Technology"
+              alt="AI technology"
               className="w-full h-64 object-cover rounded-xl shadow-lg mb-4"
             />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">AI Technology</h3>
-            <p className="text-gray-600">Advanced on-device AI processing ensures your conversations stay private and secure.</p>
+            <p className="text-gray-600">Planned on-device-first processing is intended to keep sensitive listening under your control.</p>
           </div>
         </div>
 
@@ -86,8 +86,8 @@ export default function HeadphonesSection() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Real-time AI Transcription</h3>
-            <p className="text-gray-600">Instantly convert speech to text with 95%+ accuracy</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Planned AI transcription</h3>
+            <p className="text-gray-600">Product direction includes speech capture, summaries, and search</p>
           </div>
           <div className="text-center p-6">
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
@@ -95,8 +95,8 @@ export default function HeadphonesSection() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Privacy-First Processing</h3>
-            <p className="text-gray-600">All AI processing happens on-device, never in the cloud</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Privacy-first processing</h3>
+            <p className="text-gray-600">On-device-first architecture and controlled sync are product goals</p>
           </div>
           <div className="text-center p-6">
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
@@ -104,15 +104,15 @@ export default function HeadphonesSection() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">30-Hour Battery Life</h3>
-            <p className="text-gray-600">All-day usage with fast charging capabilities</p>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">All-day battery target</h3>
+            <p className="text-gray-600">Battery and charging targets will be confirmed as hardware testing progresses</p>
           </div>
         </div>
 
         {/* Pricing Section */}
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Pre-Order Now
+            Preorder Now
           </h2>
           
           <div className="bg-white rounded-2xl shadow-xl p-8 border-2 border-blue-200">
@@ -120,8 +120,8 @@ export default function HeadphonesSection() {
               <div className="inline-flex items-center bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full mb-4">
                 Recommended
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">AI Headphones</h3>
-              <p className="text-gray-600 mb-6">Complete hardware package with all AI features</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Just Summit Headphones</h3>
+              <p className="text-gray-600 mb-6">Early hardware package with planned AI features</p>
               
               <div className="text-center mb-6">
                 <span className="text-4xl font-bold text-gray-900">£299</span>
@@ -135,41 +135,41 @@ export default function HeadphonesSection() {
                 <svg className="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-gray-700">Real-time AI transcription</span>
+                <span className="text-gray-700">Planned AI transcription and summaries</span>
               </div>
               <div className="flex items-center">
                 <svg className="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-gray-700">Premium noise cancellation</span>
+                <span className="text-gray-700">Noise cancellation target</span>
               </div>
               <div className="flex items-center">
                 <svg className="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-gray-700">30-hour battery life</span>
+                <span className="text-gray-700">All-day battery target</span>
               </div>
               <div className="flex items-center">
                 <svg className="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-gray-700">Bluetooth 5.3 connectivity</span>
+                <span className="text-gray-700">Bluetooth 5.3 connectivity target</span>
               </div>
               <div className="flex items-center">
                 <svg className="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-gray-700">Mobile app included</span>
+                <span className="text-gray-700">Planned companion app</span>
               </div>
               <div className="flex items-center">
                 <svg className="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <span className="text-gray-700">Privacy-first, on-device processing</span>
+                <span className="text-gray-700">Privacy-first, on-device-first processing direction</span>
               </div>
             </div>
 
-            {/* Pre-Order Button */}
+            {/* Preorder Button */}
             <StripeCheckout 
               productType="headphones"
               tier="standard"
@@ -182,7 +182,7 @@ export default function HeadphonesSection() {
         {/* Deposit Information */}
         <div className="max-w-4xl mx-auto mt-12">
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-blue-900 mb-4">How Pre-Orders Work</h3>
+            <h3 className="text-lg font-semibold text-blue-900 mb-4">How Preorders Work</h3>
             <div className="grid md:grid-cols-3 gap-6 text-sm">
               <div>
                 <div className="font-medium text-blue-900 mb-2">1. Secure Your Spot</div>
@@ -194,12 +194,12 @@ export default function HeadphonesSection() {
               </div>
               <div>
                 <div className="font-medium text-blue-900 mb-2">3. Final Payment</div>
-                <p className="text-blue-700">We'll charge the remaining balance 30 days before shipping in Q2 2026</p>
+                <p className="text-blue-700">We will request the remaining balance 60 days before shipping. Estimated first-batch delivery: Q4 2026.</p>
               </div>
             </div>
             <div className="mt-4 pt-4 border-t border-blue-200">
               <p className="text-blue-700 text-sm">
-                <strong>Full refund available</strong> anytime before production begins. No questions asked.
+                <strong>30-day money-back guarantee.</strong> Refund requests are available within 30 days of purchase.
               </p>
             </div>
           </div>

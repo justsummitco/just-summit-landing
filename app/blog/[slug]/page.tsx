@@ -4,6 +4,8 @@ import Link from "next/link";
 import { getAllPostSlugs, getPostBySlug } from "../../../lib/mdx";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import JsonLd from "@/components/JsonLd";
+import { articleJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 interface BlogPostPageProps {
   params: {
@@ -30,9 +32,13 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: {
+      canonical: `/blog/${post.slug}`,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
+      url: `/blog/${post.slug}`,
       images: ["/hero-headphones-clean.png"],
       type: "article",
       publishedTime: post.date,
@@ -62,6 +68,16 @@ function renderMarkdownContent(content: string) {
     .replace(/^(?!<[h|l|p])/gm, '<p class="mb-4 leading-relaxed text-gray-700">');
 }
 
+function stripLeadingTitle(content: string, title: string) {
+  const firstLine = content.split(/\r?\n/, 1)[0]?.trim();
+
+  if (firstLine === `# ${title}`) {
+    return content.replace(/^# .*\r?\n+/, "");
+  }
+
+  return content;
+}
+
 export default function BlogPost({ params }: BlogPostPageProps) {
   const post = getPostBySlug(params.slug);
 
@@ -69,10 +85,23 @@ export default function BlogPost({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  const htmlContent = renderMarkdownContent(post.content);
+  const htmlContent = renderMarkdownContent(
+    stripLeadingTitle(post.content, post.title)
+  );
+  const postPath = `/blog/${post.slug}`;
 
   return (
     <>
+      <JsonLd
+        data={[
+          articleJsonLd(post, postPath),
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Blog", path: "/blog" },
+            { name: post.title, path: postPath },
+          ]),
+        ]}
+      />
       <Header />
       <main className="min-h-screen bg-white">
         <nav className="bg-gray-50 py-4">
@@ -128,13 +157,13 @@ export default function BlogPost({ params }: BlogPostPageProps) {
                 Ready to retain more of what you hear?
               </h3>
               <p className="mb-6 text-white/70">
-                Just Summit AI Headphones are available for presale with full-payment and deposit options.
+                Just Summit Headphones are available for presale with full-payment and deposit options.
               </p>
               <Link
                 href="/#pricing"
                 className="inline-flex min-h-12 items-center rounded-md bg-white px-6 text-sm font-semibold text-gray-950 transition hover:bg-gray-100"
               >
-                Preorder the AI Headphones
+                Preorder Just Summit Headphones
               </Link>
             </div>
 

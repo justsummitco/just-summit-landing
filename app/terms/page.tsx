@@ -4,7 +4,10 @@ import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
-  description: "Terms and conditions for Just Summit AI Headphones presales.",
+  description: "Terms and conditions for Just Summit Headphones presales.",
+  alternates: {
+    canonical: "/terms",
+  },
 };
 
 export default function TermsPage() {
@@ -24,7 +27,7 @@ export default function TermsPage() {
 
             <h2>2. Product Presale</h2>
             <p>
-              Just Summit AI Headphones are available for presale. The product is in development, and specifications, features, production timing, and delivery timing may change before shipment.
+              Just Summit Headphones are available for presale. The product is in development, and specifications, features, production timing, and delivery timing may change before shipment.
             </p>
 
             <h2>3. Pricing and Payment</h2>
