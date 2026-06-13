@@ -61,34 +61,65 @@ describe("subscribe API", () => {
     );
 
     expect(response.status).toBe(200);
+    expect(global.fetch).toHaveBeenCalledTimes(3);
     expect(global.fetch).toHaveBeenNthCalledWith(
       1,
       "https://api.brevo.com/v3/contacts",
       expect.objectContaining({
         method: "POST",
-        body: JSON.stringify({
-          email: "tom@example.com",
-          attributes: {
-            FIRSTNAME: "Tom",
-            PRODUCT_INTEREST: "Just Summit Headphones",
-            LEAD_SOURCE: "test_source",
-            PRESALE_INTEREST: true,
-          },
-          listIds: [12],
-          updateEnabled: true,
-        }),
       })
     );
 
     expect(global.fetch).toHaveBeenNthCalledWith(
       2,
+      "https://api.brevo.com/v3/events",
+      expect.objectContaining({
+        method: "POST",
+      })
+    );
+
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      3,
       "https://api.brevo.com/v3/smtp/email",
       expect.objectContaining({
         method: "POST",
       })
     );
 
-    const emailBody = JSON.parse((global.fetch as jest.Mock).mock.calls[1][1].body);
+    const contactBody = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+    const eventBody = JSON.parse((global.fetch as jest.Mock).mock.calls[1][1].body);
+    const emailBody = JSON.parse((global.fetch as jest.Mock).mock.calls[2][1].body);
+
+    expect(contactBody).toEqual({
+      email: "tom@example.com",
+      attributes: expect.objectContaining({
+        FIRSTNAME: "Tom",
+        PRODUCT_INTEREST: "Just Summit Headphones",
+        LEAD_SOURCE: "test_source",
+        PRESALE_INTEREST: true,
+        PRESALE_CUSTOMER: false,
+        CUSTOMER_STAGE: "waitlist",
+        EMAIL_SEQUENCE: "waitlist_deposit_v1",
+        WAITLIST_JOINED_AT: expect.any(String),
+      }),
+      listIds: [12],
+      updateEnabled: true,
+    });
+    expect(eventBody).toEqual(
+      expect.objectContaining({
+        event_name: "just_summit_waitlist_joined_v1",
+        identifiers: {
+          email_id: "tom@example.com",
+        },
+        contact_properties: expect.objectContaining({
+          CUSTOMER_STAGE: "waitlist",
+          EMAIL_SEQUENCE: "waitlist_deposit_v1",
+        }),
+        event_properties: expect.objectContaining({
+          primary_cta: "deposit_preorder",
+        }),
+      })
+    );
 
     expect(emailBody.subject).toBe("You're on the Just Summit Headphones list");
     expect(emailBody.to).toEqual([
@@ -171,6 +202,10 @@ describe("subscribe API", () => {
         text: async () => JSON.stringify({ id: 123 }),
       })
       .mockResolvedValueOnce({
+        ok: true,
+        text: async () => "",
+      })
+      .mockResolvedValueOnce({
         ok: false,
         status: 401,
         text: async () => "Unauthorized",
@@ -182,7 +217,7 @@ describe("subscribe API", () => {
 
     expect(response.status).toBe(200);
     expect(json.success).toBe(true);
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenCalledTimes(3);
     consoleSpy.mockRestore();
   });
 
@@ -207,9 +242,9 @@ describe("subscribe API", () => {
 
     expect(response.status).toBe(200);
     expect(json.success).toBe(true);
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenCalledTimes(3);
     expect(global.fetch).toHaveBeenNthCalledWith(
-      2,
+      3,
       "https://api.brevo.com/v3/smtp/email",
       expect.objectContaining({
         method: "POST",
@@ -249,12 +284,12 @@ describe("subscribe API", () => {
     const retryBody = JSON.parse((global.fetch as jest.Mock).mock.calls[1][1].body);
 
     expect(response.status).toBe(200);
-    expect(global.fetch).toHaveBeenCalledTimes(3);
+    expect(global.fetch).toHaveBeenCalledTimes(4);
     expect(retryBody.attributes).toEqual({
       FIRSTNAME: "Tom",
     });
     expect(global.fetch).toHaveBeenNthCalledWith(
-      3,
+      4,
       "https://api.brevo.com/v3/smtp/email",
       expect.objectContaining({
         method: "POST",
@@ -276,8 +311,16 @@ describe("subscribe API", () => {
 
     expect(response.status).toBe(200);
     expect(json.success).toBe(true);
-    expect(global.fetch).toHaveBeenCalledTimes(1);
-    expect(global.fetch).toHaveBeenCalledWith(
+    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      1,
+      "https://api.brevo.com/v3/events",
+      expect.objectContaining({
+        method: "POST",
+      })
+    );
+    expect(global.fetch).toHaveBeenNthCalledWith(
+      2,
       "https://api.brevo.com/v3/smtp/email",
       expect.objectContaining({
         method: "POST",

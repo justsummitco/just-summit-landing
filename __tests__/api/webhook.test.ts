@@ -106,10 +106,11 @@ describe("Stripe webhook API", () => {
 
     expect(response.status).toBe(200);
     expect(json.received).toBe(true);
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenCalledTimes(3);
 
     const contactBody = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
-    const emailBody = JSON.parse((global.fetch as jest.Mock).mock.calls[1][1].body);
+    const eventBody = JSON.parse((global.fetch as jest.Mock).mock.calls[1][1].body);
+    const emailBody = JSON.parse((global.fetch as jest.Mock).mock.calls[2][1].body);
 
     expect(contactBody).toEqual(
       expect.objectContaining({
@@ -122,10 +123,26 @@ describe("Stripe webhook API", () => {
       expect.objectContaining({
         FIRSTNAME: "Tom",
         PRODUCT_INTEREST: "Just Summit Headphones",
+        PRESALE_INTEREST: true,
         PRESALE_CUSTOMER: true,
+        CUSTOMER_STAGE: "full_preorder",
+        OFFER_TYPE: "full",
+        EMAIL_SEQUENCE: "waitlist_deposit_v1",
         PRESALE_OFFER_ID: "headphones-full",
         PRESALE_PAYMENT_TYPE: "full",
         PRESALE_PURCHASE_DATE: expect.any(String),
+      })
+    );
+    expect(eventBody).toEqual(
+      expect.objectContaining({
+        event_name: "just_summit_preorder_completed_v1",
+        identifiers: {
+          email_id: "tom@example.com",
+        },
+        event_properties: expect.objectContaining({
+          customer_stage: "full_preorder",
+          payment_type: "full",
+        }),
       })
     );
     expect(emailBody.subject).toBe("Your Just Summit Headphones preorder is confirmed");
@@ -158,10 +175,17 @@ describe("Stripe webhook API", () => {
 
     expect(response.status).toBe(200);
     expect(json.received).toBe(true);
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenCalledTimes(3);
 
-    const emailBody = JSON.parse((global.fetch as jest.Mock).mock.calls[1][1].body);
+    const contactBody = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+    const emailBody = JSON.parse((global.fetch as jest.Mock).mock.calls[2][1].body);
 
+    expect(contactBody.attributes).toEqual(
+      expect.objectContaining({
+        CUSTOMER_STAGE: "deposit_preorder",
+        OFFER_TYPE: "deposit",
+      })
+    );
     expect(emailBody.subject).toBe("Your Just Summit Headphones reservation is confirmed");
     expect(emailBody.tags).toEqual(["headphones-presale", "headphones-deposit"]);
     expect(emailBody.textContent).toContain("The remaining");
@@ -267,6 +291,10 @@ describe("Stripe webhook API", () => {
         text: async () => "",
       })
       .mockResolvedValueOnce({
+        ok: true,
+        text: async () => "",
+      })
+      .mockResolvedValueOnce({
         ok: false,
         status: 401,
         text: async () => "Unauthorized",
@@ -278,7 +306,7 @@ describe("Stripe webhook API", () => {
 
     expect(response.status).toBe(200);
     expect(json.received).toBe(true);
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenCalledTimes(3);
     consoleSpy.mockRestore();
   });
 
@@ -295,7 +323,7 @@ describe("Stripe webhook API", () => {
 
     expect(response.status).toBe(200);
     expect(json.received).toBe(true);
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenCalledTimes(3);
     expect(consoleSpy).toHaveBeenCalledWith(
       "Google Sheets paid-preorder tracking failed:",
       "Sheets API failed"
@@ -332,9 +360,9 @@ describe("Stripe webhook API", () => {
 
     expect(response.status).toBe(200);
     expect(json.received).toBe(true);
-    expect(global.fetch).toHaveBeenCalledTimes(3);
+    expect(global.fetch).toHaveBeenCalledTimes(4);
     expect(global.fetch).toHaveBeenNthCalledWith(
-      3,
+      4,
       "https://api.brevo.com/v3/smtp/email",
       expect.objectContaining({
         method: "POST",
