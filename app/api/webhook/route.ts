@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { syncAttioContact } from "@/lib/attio-contacts";
 import { syncBrevoWaitlistContact } from "@/lib/brevo-contacts";
 import { sendPreorderConfirmationEmail } from "@/lib/brevo-email";
 import { isPresaleOfferId } from "@/lib/presale";
@@ -44,6 +45,22 @@ async function addHeadphonesBuyerToBrevo(session: Stripe.Checkout.Session) {
 
   if (!contactResult.ok) {
     console.error("Failed to sync presale buyer to Brevo:", contactResult.error);
+  }
+
+  const attioResult = await syncAttioContact({
+    email,
+    name: session.customer_details?.name || firstName,
+    source: "stripe_checkout",
+    stage: "presale_customer",
+    details: {
+      product_interest: "Just Summit Headphones",
+      offer_id: session.metadata?.offer_id,
+      payment_type: session.metadata?.payment_type,
+    },
+  });
+
+  if (!attioResult.ok) {
+    console.error("Failed to sync presale buyer to Attio:", attioResult.error);
   }
 }
 
