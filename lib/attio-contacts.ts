@@ -1,3 +1,5 @@
+import { CustomerStage } from "@/lib/presale";
+
 type AttioContactResult =
   | { ok: true; skipped?: boolean }
   | { ok: false; skipped?: boolean; error: string };
@@ -6,7 +8,7 @@ type SyncAttioContactInput = {
   email: string;
   name: string;
   source: string;
-  stage: "waitlist" | "presale_customer";
+  stage: CustomerStage;
   details?: Record<string, string | boolean | undefined>;
 };
 

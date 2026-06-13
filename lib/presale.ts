@@ -12,8 +12,16 @@ export type PresaleOffer = {
 };
 
 export const HEADPHONES_PRODUCT_NAME = "Just Summit Headphones";
+export const WAITLIST_SEQUENCE_ID = "waitlist_deposit_v1";
 export const SHIPPING_DATE = "Q4 2026";
 export const BALANCE_DUE_TIMING = "60 days before shipping";
+
+export type CustomerStage =
+  | "waitlist"
+  | "deposit_preorder"
+  | "full_preorder"
+  | "needs_reply"
+  | "customer";
 
 export const PRESALE_OFFERS: Record<PresaleOfferId, PresaleOffer> = {
   "headphones-full": {
@@ -40,6 +48,10 @@ export const PRESALE_OFFERS: Record<PresaleOfferId, PresaleOffer> = {
 
 export function isPresaleOfferId(value: unknown): value is PresaleOfferId {
   return value === "headphones-full" || value === "headphones-deposit";
+}
+
+export function getCustomerStageForOffer(offerId: PresaleOfferId): CustomerStage {
+  return offerId === "headphones-deposit" ? "deposit_preorder" : "full_preorder";
 }
 
 export function formatGBP(pence: number): string {

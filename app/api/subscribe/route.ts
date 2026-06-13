@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { syncAttioContact } from "@/lib/attio-contacts";
 import { syncBrevoWaitlistContact } from "@/lib/brevo-contacts";
+import { BREVO_EVENT_NAMES, trackBrevoEvent } from "@/lib/brevo-events";
 import { sendWaitlistWelcomeEmail } from "@/lib/brevo-email";
+import {
+  HEADPHONES_PRODUCT_NAME,
+  WAITLIST_SEQUENCE_ID,
+} from "@/lib/presale";
 import { PresalesAttribution, trackPresalesLead } from "@/lib/presales-sheets";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -60,25 +65,50 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const joinedAt = new Date().toISOString();
+    const customerStage = "waitlist" as const;
+    const brevoAttributes = {
+      PRODUCT_INTEREST: HEADPHONES_PRODUCT_NAME,
+      LEAD_SOURCE: source,
+      PRESALE_INTEREST: true,
+      PRESALE_CUSTOMER: false,
+      CUSTOMER_STAGE: customerStage,
+      EMAIL_SEQUENCE: WAITLIST_SEQUENCE_ID,
+      WAITLIST_JOINED_AT: joinedAt,
+    };
+
     const contactResult = await syncBrevoWaitlistContact({
       email,
       firstName,
-      attributes: {
-        PRODUCT_INTEREST: "Just Summit Headphones",
-        LEAD_SOURCE: source,
-        PRESALE_INTEREST: true,
-      },
+      attributes: brevoAttributes,
     });
     const attioResult = await syncAttioContact({
       email,
       name: firstName,
       source,
-      stage: "waitlist",
+      stage: customerStage,
       details: {
-        product_interest: "Just Summit Headphones",
+        product_interest: HEADPHONES_PRODUCT_NAME,
         presale_interest: true,
+        customer_stage: customerStage,
+        email_sequence: WAITLIST_SEQUENCE_ID,
+        primary_cta: "deposit_preorder",
         ...attribution,
       },
+    });
+    const eventResult = await trackBrevoEvent({
+      eventName: BREVO_EVENT_NAMES.waitlistJoined,
+      email,
+      contactProperties: brevoAttributes,
+      eventProperties: {
+        source,
+        product_interest: HEADPHONES_PRODUCT_NAME,
+        customer_stage: customerStage,
+        email_sequence: WAITLIST_SEQUENCE_ID,
+        primary_cta: "deposit_preorder",
+        ...attribution,
+      },
+      eventDate: joinedAt,
     });
     const emailResult = await sendWaitlistWelcomeEmail({
       email,
@@ -91,6 +121,10 @@ export async function POST(request: NextRequest) {
 
     if (!emailResult.ok) {
       console.error("Waitlist welcome email failed:", emailResult.error);
+    }
+
+    if (!eventResult.ok) {
+      console.error("Brevo waitlist automation event failed:", eventResult.error);
     }
 
     const sheetResult = await trackPresalesLead({

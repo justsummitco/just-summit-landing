@@ -2,8 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { syncAttioContact } from "@/lib/attio-contacts";
 import { syncBrevoWaitlistContact } from "@/lib/brevo-contacts";
+import { BREVO_EVENT_NAMES, trackBrevoEvent } from "@/lib/brevo-events";
 import { sendPreorderConfirmationEmail } from "@/lib/brevo-email";
-import { isPresaleOfferId } from "@/lib/presale";
+import {
+  HEADPHONES_PRODUCT_NAME,
+  WAITLIST_SEQUENCE_ID,
+  getCustomerStageForOffer,
+  isPresaleOfferId,
+} from "@/lib/presale";
 import { trackPaidPreorder } from "@/lib/presales-sheets";
 
 export const runtime = "nodejs";
@@ -29,18 +35,32 @@ async function addHeadphonesBuyerToBrevo(session: Stripe.Checkout.Session) {
 
   const firstName =
     session.customer_details?.name?.split(" ")[0] || email.split("@")[0];
+  const offerId = session.metadata?.offer_id;
+
+  if (!isPresaleOfferId(offerId)) {
+    return;
+  }
+
+  const paymentType = session.metadata?.payment_type || "";
+  const customerStage = getCustomerStageForOffer(offerId);
+  const purchasedAt = new Date().toISOString();
+  const brevoAttributes = {
+    PRODUCT_INTEREST: HEADPHONES_PRODUCT_NAME,
+    PRESALE_INTEREST: true,
+    PRESALE_CUSTOMER: true,
+    CUSTOMER_STAGE: customerStage,
+    OFFER_TYPE: paymentType,
+    EMAIL_SEQUENCE: WAITLIST_SEQUENCE_ID,
+    PRESALE_OFFER_ID: offerId,
+    PRESALE_PAYMENT_TYPE: paymentType,
+    PRESALE_PURCHASE_DATE: purchasedAt,
+  };
   const buyerListId = getBrevoBuyerListId();
   const contactResult = await syncBrevoWaitlistContact({
     email,
     firstName,
     listIds: buyerListId ? [buyerListId] : [],
-    attributes: {
-      PRODUCT_INTEREST: "Just Summit Headphones",
-      PRESALE_CUSTOMER: true,
-      PRESALE_OFFER_ID: session.metadata?.offer_id || "",
-      PRESALE_PAYMENT_TYPE: session.metadata?.payment_type || "",
-      PRESALE_PURCHASE_DATE: new Date().toISOString(),
-    },
+    attributes: brevoAttributes,
   });
 
   if (!contactResult.ok) {
@@ -51,16 +71,37 @@ async function addHeadphonesBuyerToBrevo(session: Stripe.Checkout.Session) {
     email,
     name: session.customer_details?.name || firstName,
     source: "stripe_checkout",
-    stage: "presale_customer",
+    stage: customerStage,
     details: {
-      product_interest: "Just Summit Headphones",
-      offer_id: session.metadata?.offer_id,
-      payment_type: session.metadata?.payment_type,
+      product_interest: HEADPHONES_PRODUCT_NAME,
+      offer_id: offerId,
+      payment_type: paymentType,
+      customer_stage: customerStage,
+      email_sequence: WAITLIST_SEQUENCE_ID,
     },
   });
 
   if (!attioResult.ok) {
     console.error("Failed to sync presale buyer to Attio:", attioResult.error);
+  }
+
+  const eventResult = await trackBrevoEvent({
+    eventName: BREVO_EVENT_NAMES.preorderCompleted,
+    email,
+    contactProperties: brevoAttributes,
+    eventProperties: {
+      source: "stripe_checkout",
+      product_interest: HEADPHONES_PRODUCT_NAME,
+      offer_id: offerId,
+      payment_type: paymentType,
+      customer_stage: customerStage,
+      email_sequence: WAITLIST_SEQUENCE_ID,
+    },
+    eventDate: purchasedAt,
+  });
+
+  if (!eventResult.ok) {
+    console.error("Brevo preorder automation event failed:", eventResult.error);
   }
 }
 
