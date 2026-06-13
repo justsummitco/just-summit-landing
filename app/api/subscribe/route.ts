@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { syncAttioContact } from "@/lib/attio-contacts";
 import { syncBrevoWaitlistContact } from "@/lib/brevo-contacts";
 import { sendWaitlistWelcomeEmail } from "@/lib/brevo-email";
 import { PresalesAttribution, trackPresalesLead } from "@/lib/presales-sheets";
@@ -43,6 +44,7 @@ export async function POST(request: NextRequest) {
       typeof requestBody.source === "string" && requestBody.source.trim()
         ? requestBody.source.trim()
         : "website";
+    const attribution = getAttribution(requestBody);
 
     if (!EMAIL_PATTERN.test(email)) {
       return NextResponse.json(
@@ -67,10 +69,25 @@ export async function POST(request: NextRequest) {
         PRESALE_INTEREST: true,
       },
     });
+    const attioResult = await syncAttioContact({
+      email,
+      name: firstName,
+      source,
+      stage: "waitlist",
+      details: {
+        product_interest: "Just Summit Headphones",
+        presale_interest: true,
+        ...attribution,
+      },
+    });
     const emailResult = await sendWaitlistWelcomeEmail({
       email,
       firstName,
     });
+
+    if (!attioResult.ok) {
+      console.error("Attio contact sync failed:", attioResult.error);
+    }
 
     if (!emailResult.ok) {
       console.error("Waitlist welcome email failed:", emailResult.error);
@@ -80,7 +97,7 @@ export async function POST(request: NextRequest) {
       email,
       firstName,
       source,
-      attribution: getAttribution(requestBody),
+      attribution,
     });
 
     if (!sheetResult.ok && !sheetResult.skipped) {
