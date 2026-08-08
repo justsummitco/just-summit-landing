@@ -8,7 +8,8 @@ type MarkdownArticleProps = {
 type MarkdownBlock =
   | { type: "heading"; level: 2 | 3; text: string }
   | { type: "paragraph"; text: string }
-  | { type: "unordered-list" | "ordered-list"; items: string[] }
+  | { type: "unordered-list"; items: string[] }
+  | { type: "ordered-list"; items: string[] }
   | { type: "blockquote"; text: string }
   | { type: "divider" };
 
