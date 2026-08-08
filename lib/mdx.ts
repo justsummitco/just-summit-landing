@@ -9,6 +9,8 @@ export interface BlogPost {
   slug: string
   title: string
   date: string
+  updated?: string
+  author: string
   excerpt: string
   tags: string[]
   content: string
@@ -61,6 +63,8 @@ export function getPostBySlug(slug: string): BlogPost | null {
       slug,
       title: data.title || '',
       date: data.date || '',
+      updated: data.updated || undefined,
+      author: data.author || 'Just Summit',
       excerpt: data.excerpt || '',
       tags: data.tags || [],
       content,
@@ -70,5 +74,16 @@ export function getPostBySlug(slug: string): BlogPost | null {
     console.error(`Error reading post ${slug}:`, error)
     return null
   }
+}
+
+export function stripLeadingTitle(content: string, title: string): string {
+  const lines = content.replace(/\r\n/g, '\n').split('\n')
+  const firstContentLine = lines.findIndex((line) => line.trim().length > 0)
+
+  if (firstContentLine >= 0 && lines[firstContentLine].trim() === `# ${title}`) {
+    lines.splice(firstContentLine, 1)
+  }
+
+  return lines.join('\n').trim()
 }
 

@@ -207,12 +207,12 @@ export function articleJsonLd(
     headline: post.title,
     description: post.excerpt,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.updated || post.date,
     image: absoluteUrl("/hero-headphones-clean.png"),
     mainEntityOfPage: absoluteUrl(path),
     author: {
       "@type": "Organization",
-      name: "Just Summit",
+      name: post.author,
     },
     publisher: {
       "@type": "Organization",

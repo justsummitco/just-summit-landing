@@ -1,10 +1,11 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getAllPostSlugs, getPostBySlug } from "../../../lib/mdx";
+import { getAllPostSlugs, getPostBySlug, stripLeadingTitle } from "../../../lib/mdx";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
+import MarkdownArticle from "@/components/MarkdownArticle";
 import { articleJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 interface BlogPostPageProps {
@@ -42,6 +43,7 @@ export async function generateMetadata({
       images: ["/hero-headphones-clean.png"],
       type: "article",
       publishedTime: post.date,
+      modifiedTime: post.updated || post.date,
     },
   };
 }
@@ -55,29 +57,6 @@ function formatDate(dateString: string): string {
   });
 }
 
-function renderMarkdownContent(content: string) {
-  return content
-    .replace(/^# (.*$)/gim, '<h1 class="mb-6 text-3xl font-bold text-gray-900">$1</h1>')
-    .replace(/^## (.*$)/gim, '<h2 class="mb-4 mt-8 text-2xl font-bold text-gray-900">$1</h2>')
-    .replace(/^### (.*$)/gim, '<h3 class="mb-3 mt-6 text-xl font-semibold text-gray-900">$1</h3>')
-    .replace(/^\* (.*$)/gim, '<li class="leading-relaxed">$1</li>')
-    .replace(/^\- (.*$)/gim, '<li class="leading-relaxed">$1</li>')
-    .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
-    .replace(/\*(.*?)\*/g, '<em class="italic">$1</em>')
-    .replace(/\n\n/g, '</p><p class="mb-4 leading-relaxed text-gray-700">')
-    .replace(/^(?!<[h|l|p])/gm, '<p class="mb-4 leading-relaxed text-gray-700">');
-}
-
-function stripLeadingTitle(content: string, title: string) {
-  const firstLine = content.split(/\r?\n/, 1)[0]?.trim();
-
-  if (firstLine === `# ${title}`) {
-    return content.replace(/^# .*\r?\n+/, "");
-  }
-
-  return content;
-}
-
 export default function BlogPost({ params }: BlogPostPageProps) {
   const post = getPostBySlug(params.slug);
 
@@ -85,9 +64,7 @@ export default function BlogPost({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  const htmlContent = renderMarkdownContent(
-    stripLeadingTitle(post.content, post.title)
-  );
+  const articleContent = stripLeadingTitle(post.content, post.title);
   const postPath = `/blog/${post.slug}`;
 
   return (
@@ -140,17 +117,22 @@ export default function BlogPost({ params }: BlogPostPageProps) {
                 {post.title}
               </h1>
 
-              <div className="flex items-center gap-4 text-gray-600">
-                <time dateTime={post.date}>{formatDate(post.date)}</time>
-                <span>·</span>
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-gray-600">
+                <span>By <Link className="font-medium text-teal-700 hover:text-teal-900" href="/about">{post.author}</Link></span>
+                <span aria-hidden="true">·</span>
+                <time dateTime={post.date}>Published {formatDate(post.date)}</time>
+                {post.updated && <><span aria-hidden="true">·</span><time dateTime={post.updated}>Updated {formatDate(post.updated)}</time></>}
+                <span aria-hidden="true">·</span>
                 <span>{post.readingTime}</span>
               </div>
             </header>
 
-            <div
-              className="prose prose-lg max-w-none"
-              dangerouslySetInnerHTML={{ __html: htmlContent }}
-            />
+            <MarkdownArticle content={articleContent} />
+
+            <aside className="mt-10 border-t border-gray-200 pt-6 text-sm leading-6 text-gray-600">
+              <p className="font-semibold text-gray-900">Editorial process</p>
+              <p>Just Summit may use AI-assisted research and editing. Our publishing workflow checks each article against its linked sources and the product&apos;s current public status before it goes live.</p>
+            </aside>
 
             <div className="mt-12 rounded-lg bg-gray-950 p-8 text-center">
               <h3 className="mb-4 text-2xl font-semibold text-white">
