@@ -101,7 +101,9 @@ export default function BlogIndex() {
                       </p>
 
                       <div className="mb-4 flex items-center justify-between text-sm text-gray-500">
-                        <time dateTime={post.date}>{formatDate(post.date)}</time>
+                        <time dateTime={post.updated || post.date}>
+                          {post.updated ? `Updated ${formatDate(post.updated)}` : formatDate(post.date)}
+                        </time>
                         <span>{post.readingTime}</span>
                       </div>
 
