@@ -374,7 +374,7 @@ export const seoPages: SeoPage[] = [
       {
         question: "Are Just Summit Headphones available now?",
         answer:
-          "They are available for presale. The product is being built and the first-batch delivery window is currently estimated for Q4 2026.",
+          "They are available for presale. The product is being built and Just Summit is targeting first-batch delivery in Q4 2026, subject to prototype validation, testing and manufacturing.",
       },
       {
         question: "Do AI headphones need the cloud?",
@@ -592,7 +592,7 @@ export const seoPages: SeoPage[] = [
       {
         title: "Check status before buying",
         body:
-          "Just Summit Headphones are in presale, with a £49 reservation option, a 30-day money-back guarantee, and an estimated Q4 2026 first-batch delivery window.",
+          "Just Summit Headphones are in presale, with a £49 reservation option, a 30-day money-back guarantee, and a Q4 2026 first-batch target subject to prototype validation, testing and manufacturing.",
       },
     ],
     faqs: [
@@ -637,7 +637,7 @@ export const seoPages: SeoPage[] = [
       {
         title: "Trust comes before checkout",
         body:
-          "Just Summit states the £49 deposit, £250 later balance, 30-day refund promise, and Q4 2026 estimated first-batch delivery before payment.",
+          "Just Summit states the £49 deposit, £250 later balance, 30-day refund promise, and qualified Q4 2026 first-batch target before payment.",
       },
     ],
     faqs: [

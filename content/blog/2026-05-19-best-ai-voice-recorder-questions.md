@@ -45,7 +45,7 @@ Some devices have one-time hardware pricing. Others rely on subscriptions for tr
 
 This is a practical question. If you need an AI recorder immediately, buy something already shipping. If you want to support a specific product direction, a presale can make sense, but only when the terms are clear.
 
-Just Summit Headphones are in presale. The estimated first-batch delivery window is Q4 2026.
+Just Summit Headphones are in presale. Just Summit is targeting first-batch delivery in Q4 2026, subject to prototype validation, testing and manufacturing.
 
 ## 8. What Are the Refund Terms?
 

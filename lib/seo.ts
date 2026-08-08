@@ -147,7 +147,7 @@ export function productJsonLd(): Record<string, unknown> {
         "@type": "Organization",
         name: "Just Summit Ltd",
       },
-      description: `Full preorder payment for one Just Summit Headphones unit. Estimated first-batch delivery window: ${SHIPPING_DATE}.`,
+      description: `Full preorder payment for one Just Summit Headphones unit. Targeting first-batch delivery in ${SHIPPING_DATE}, subject to prototype validation, testing and manufacturing.`,
     },
     additionalProperty: [
       {
@@ -158,8 +158,8 @@ export function productJsonLd(): Record<string, unknown> {
       },
       {
         "@type": "PropertyValue",
-        name: "Estimated delivery",
-        value: SHIPPING_DATE,
+        name: "Target delivery",
+        value: `${SHIPPING_DATE}, subject to prototype validation, testing and manufacturing`,
       },
     ],
   };

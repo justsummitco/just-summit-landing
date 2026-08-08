@@ -109,7 +109,7 @@ export async function sendWaitlistWelcomeEmail({
     toEmail: email,
     toName: firstName,
     ...emailContent,
-    tags: ["headphones-waitlist", "welcome"],
+    tags: ["founding-list", "welcome"],
   });
 }
 

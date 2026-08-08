@@ -1,5 +1,5 @@
 import React from "react";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import HomePage from "@/app/page";
 
 jest.mock("next/link", () => ({
@@ -37,7 +37,9 @@ jest.mock("next/image", () => ({
 describe("HomePage", () => {
   beforeEach(() => {
     jest.resetAllMocks();
+    window.history.replaceState({}, "", "/");
     global.fetch = jest.fn();
+    window.posthog = { capture: jest.fn() };
   });
 
   test("shows the trust-focused headphones presale offer", () => {
@@ -48,21 +50,20 @@ describe("HomePage", () => {
         name: /Don't lose the best things you only hear once/i,
       })
     ).toBeInTheDocument();
-    expect(screen.getByTestId("checkout-headphones-deposit-hero")).toHaveTextContent(
-      /Reserve for £49/i
-    );
+    expect(screen.getAllByRole("link", { name: /Join the Founding List/i }).length).toBeGreaterThan(0);
+    expect(screen.getByRole("link", { name: /Reserve a pair for £49/i })).toHaveAttribute("href", "#pricing");
     expect(screen.getAllByText(/Pay in full £249/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/£49/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText("today").length).toBeGreaterThan(0);
     expect(screen.getAllByText(/Balance due 60 days before shipping/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Estimated delivery Q4 2026/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/subject to prototype validation/i).length).toBeGreaterThan(0);
     expect(container.querySelector("#roadmap")).toHaveTextContent(/Prototype build/i);
     expect(screen.getByText(/An honest note about the funding model/i)).toBeInTheDocument();
     expect(screen.getByText(/Recommended reservation/i)).toBeInTheDocument();
     expect(screen.getByText(/Secure checkout powered by Stripe/i)).toBeInTheDocument();
     expect(screen.getByText(/Apple Pay, Link, or card where available/i)).toBeInTheDocument();
     expect(screen.getByText(/Preorder updates sent by email/i)).toBeInTheDocument();
-    expect(screen.getByText(/Limited early reservation slots/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Limited early reservation slots/i)).not.toBeInTheDocument();
     expect(screen.getByText(/When do I pay the remaining balance/i)).toBeInTheDocument();
     expect(screen.getByText(/Can I update my delivery address later/i)).toBeInTheDocument();
     expect(screen.getByText(/Is shipping included/i)).toBeInTheDocument();
@@ -72,7 +73,7 @@ describe("HomePage", () => {
     expect(screen.getAllByRole("link", { name: /About/i }).length).toBeGreaterThan(0);
     expect(screen.getByText(/Record a full meeting/i)).toBeInTheDocument();
     expect(
-      screen.getByAltText(/Studio product view of the Just Summit headphones/i)
+      screen.getByAltText(/Studio concept render of the Just Summit headphones/i)
     ).toBeInTheDocument();
     expect(
       screen.getByAltText(/Angled concept render of the Just Summit headphones/i)
@@ -82,7 +83,7 @@ describe("HomePage", () => {
     ).toBeInTheDocument();
     expect(screen.queryByText(/investor/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/brevo/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/Founding edition/i)).toBeInTheDocument();
+    expect(screen.getByText(/Prototype stage · Founding List open/i)).toBeInTheDocument();
     expect(screen.getByText(/The target spec, stated plainly\./i)).toBeInTheDocument();
 
     const pricingText = container.querySelector("#pricing")?.textContent ?? "";
@@ -105,7 +106,25 @@ describe("HomePage", () => {
     expect(mobileNav).toHaveTextContent("Blog");
   });
 
-  test("posts offer and attribution when starting deposit checkout from the hero", async () => {
+  test("tracks the hero Founding List CTA", () => {
+    const { container } = render(<HomePage />);
+    const heroLink = container.querySelector<HTMLAnchorElement>(
+      'a[href="#founding-list-roadmap"]'
+    );
+
+    expect(heroLink).not.toBeNull();
+    fireEvent.click(heroLink!);
+
+    expect(window.posthog?.capture).toHaveBeenCalledWith(
+      "founding_list_cta_clicked",
+      expect.objectContaining({
+        source: "home_hero",
+        page_url: "http://localhost/",
+      })
+    );
+  });
+
+  test("keeps deposit checkout working from the pricing section", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       json: async () => ({ error: "Stripe price is not configured" }),
@@ -113,7 +132,7 @@ describe("HomePage", () => {
     const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 
     render(<HomePage />);
-    fireEvent.click(screen.getByTestId("checkout-headphones-deposit-hero"));
+    fireEvent.click(screen.getByTestId("checkout-headphones-deposit-pricing"));
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
@@ -128,7 +147,7 @@ describe("HomePage", () => {
       expect(requestBody).toEqual(
         expect.objectContaining({
           offerId: "headphones-deposit",
-          source: "hero_primary",
+          source: "pricing_headphones-deposit",
           page_url: expect.any(String),
         })
       );
@@ -139,23 +158,26 @@ describe("HomePage", () => {
     consoleSpy.mockRestore();
   });
 
-  test("submits headphone waitlist leads to the subscribe API", async () => {
+  test("submits Founding List leads with placement attribution", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
-        message: "You're on the Just Summit updates list.",
+        message: "You're on the Just Summit Founding List. Check your inbox for a welcome email.",
       }),
     });
 
     render(<HomePage />);
-    fireEvent.change(screen.getByLabelText(/First name/i), {
+    const roadmapForm = screen.getByTestId("founding-list-form-home_roadmap");
+
+    fireEvent.focus(within(roadmapForm).getByLabelText(/First name/i));
+    fireEvent.change(within(roadmapForm).getByLabelText(/First name/i), {
       target: { value: "Tom" },
     });
-    fireEvent.change(screen.getByLabelText(/Email address/i), {
+    fireEvent.change(within(roadmapForm).getByLabelText(/Email address/i), {
       target: { value: "tom@example.com" },
     });
-    fireEvent.click(screen.getByTestId("waitlist-submit"));
+    fireEvent.click(screen.getByTestId("founding-list-submit-home_roadmap"));
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
@@ -165,14 +187,48 @@ describe("HomePage", () => {
           body: JSON.stringify({
             name: "Tom",
             email: "tom@example.com",
-            source: "homepage_waitlist",
+            source: "home_roadmap",
             page_url: "http://localhost/",
           }),
         })
       );
     });
     expect(
-      await screen.findByText(/You're on the Just Summit updates list/i)
+      await screen.findByText(/You're on the Just Summit Founding List/i)
     ).toBeInTheDocument();
+    expect(window.posthog?.capture).toHaveBeenCalledWith(
+      "founding_list_form_started",
+      expect.objectContaining({ source: "home_roadmap" })
+    );
+    expect(window.posthog?.capture).toHaveBeenCalledWith(
+      "founding_list_joined",
+      expect.objectContaining({ source: "home_roadmap" })
+    );
+  });
+
+  test("shows and tracks Founding List submission failures", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: "Email service is not configured" }),
+    });
+
+    render(<HomePage />);
+    const footerForm = screen.getByTestId("founding-list-form-home_footer");
+
+    fireEvent.change(within(footerForm).getByLabelText(/Email address/i), {
+      target: { value: "tom@example.com" },
+    });
+    fireEvent.click(screen.getByTestId("founding-list-submit-home_footer"));
+
+    expect(
+      await within(footerForm).findByRole("alert")
+    ).toHaveTextContent("Email service is not configured");
+    expect(window.posthog?.capture).toHaveBeenCalledWith(
+      "founding_list_failed",
+      expect.objectContaining({
+        source: "home_footer",
+        error_message: "Email service is not configured",
+      })
+    );
   });
 });

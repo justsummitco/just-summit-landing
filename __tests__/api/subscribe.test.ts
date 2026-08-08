@@ -116,12 +116,12 @@ describe("subscribe API", () => {
           EMAIL_SEQUENCE: "waitlist_deposit_v1",
         }),
         event_properties: expect.objectContaining({
-          primary_cta: "deposit_preorder",
+          primary_cta: "founding_list",
         }),
       })
     );
 
-    expect(emailBody.subject).toBe("You're on the Just Summit Headphones list");
+    expect(emailBody.subject).toBe("You're on the Just Summit Founding List");
     expect(emailBody.to).toEqual([
       {
         email: "tom@example.com",
@@ -136,8 +136,8 @@ describe("subscribe API", () => {
       name: "Tom at Just Summit",
       email: "hello@justsummit.co",
     });
-    expect(emailBody.tags).toEqual(["headphones-waitlist", "welcome"]);
-    expect(emailBody.textContent).toContain("Preorders are open");
+    expect(emailBody.tags).toEqual(["founding-list", "welcome"]);
+    expect(emailBody.textContent).toContain("prototype stage");
     expect(emailBody.textContent).toContain(
       "If you would rather not receive these updates"
     );
@@ -174,6 +174,29 @@ describe("subscribe API", () => {
         page_url: "https://www.justsummit.co/?utm_source=linkedin",
       },
     });
+  });
+
+  test("keeps first name genuinely optional", async () => {
+    const response = await POST(
+      makeRequest({
+        email: "tom@example.com",
+        source: "founding_list_page",
+      })
+    );
+
+    const contactBody = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+    const emailBody = JSON.parse((global.fetch as jest.Mock).mock.calls[2][1].body);
+
+    expect(response.status).toBe(200);
+    expect(contactBody.attributes).not.toHaveProperty("FIRSTNAME");
+    expect(emailBody.to).toEqual([{ email: "tom@example.com" }]);
+    expect(mockTrackPresalesLead).toHaveBeenCalledWith(
+      expect.objectContaining({
+        email: "tom@example.com",
+        firstName: "",
+        source: "founding_list_page",
+      })
+    );
   });
 
   test("does not fail signup when presales sheet tracking fails", async () => {

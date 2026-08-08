@@ -52,7 +52,7 @@ export default function HeadphonesSuccess() {
               {[
                 ["Confirmation", "You will receive payment confirmation from Stripe."],
                 ["Production updates", "We will share development and production milestones by email."],
-                ["Delivery window", `Estimated first-batch delivery window: ${SHIPPING_DATE}.`],
+                ["Delivery target", `Targeting first-batch delivery in ${SHIPPING_DATE}, subject to prototype validation, testing and manufacturing.`],
                 ["Deposit balance", `Deposit customers pay the remaining ${formatGBP(depositOffer.balanceDue)} ${BALANCE_DUE_TIMING}.`],
                 ["Address changes", `Email ${supportEmail} before dispatch if your delivery address changes.`],
                 ["Shipping and taxes", "Shipping and any applicable taxes will be confirmed before dispatch."],

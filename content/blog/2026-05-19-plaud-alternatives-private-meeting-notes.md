@@ -54,6 +54,6 @@ The current Just Summit preorder terms are:
 - £299 deposit-path total.
 - £249 full-payment option.
 - 30-day money-back guarantee.
-- Estimated Q4 2026 first-batch delivery.
+- Q4 2026 first-batch target, subject to prototype validation, testing and manufacturing.
 
 If you need a recorder immediately, choose a product that is already shipping. If you want to support a headphone-first approach to private meeting notes, Just Summit is built for that search.

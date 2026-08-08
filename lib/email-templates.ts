@@ -213,27 +213,11 @@ function renderTextEmail({
 
 export function buildWaitlistWelcomeEmail(firstName: string): EmailContent {
   const name = escapeHtml(firstName || "there");
-  const fullOffer = PRESALE_OFFERS["headphones-full"];
-  const depositOffer = PRESALE_OFFERS["headphones-deposit"];
-  const intro = `Hi ${name}, I am Tom, the founder of Just Summit. Thanks for joining the Just Summit Headphones list. You are on the list, and we will keep you close to the product as it moves toward production.`;
+  const intro = `Hi ${name}, I am Tom, the founder of Just Summit. Thanks for joining the Founding List. You are early, and I will share the meaningful steps as we move from concept renders towards a working prototype and first batch.`;
   const options: BaseEmailOptions = {
-    preheader: "You are on the Just Summit Headphones list.",
-    title: "You're on the Just Summit Headphones list",
+    preheader: "You are on the Just Summit Founding List.",
+    title: "You're on the Just Summit Founding List",
     intro,
-    summaryRows: [
-      {
-        label: "Full preorder",
-        value: `${formatGBP(fullOffer.amountDueNow)} today`,
-      },
-      {
-        label: "Deposit",
-        value: `${formatGBP(depositOffer.amountDueNow)} today + ${formatGBP(depositOffer.balanceDue)} later`,
-      },
-      {
-        label: "Estimated delivery",
-        value: SHIPPING_DATE,
-      },
-    ],
     sections: [
       {
         heading: "Why we are building them",
@@ -241,24 +225,24 @@ export function buildWaitlistWelcomeEmail(firstName: string): EmailContent {
       },
       {
         heading: "What happens next",
-        body: "We will send practical production updates, not noisy launch hype. When there is something useful to show or explain, you will hear it from us directly.",
+        body: "We will send occasional prototype updates, testing lessons and launch news, not daily hype. The product is at prototype stage, so we will distinguish clearly between what exists today and what is still a target.",
       },
       {
-        heading: "If you are ready to reserve",
-        body: `Preorders are open at ${formatGBP(fullOffer.amountDueNow)} full payment, or ${formatGBP(depositOffer.amountDueNow)} deposit with ${formatGBP(depositOffer.balanceDue)} due later. Estimated first-batch delivery window: ${SHIPPING_DATE}.`,
+        heading: "The current target",
+        body: `We are targeting first-batch delivery in ${SHIPPING_DATE}, subject to prototype validation, testing and manufacturing. You will hear about material changes rather than being left to guess.`,
       },
     ],
     cta: {
-      label: "View preorder options",
-      href: getPreorderUrl("waitlist"),
+      label: "See what we are building",
+      href: getEmailSectionUrl("product", "founding_list_welcome"),
     },
-    note: "Preorders are covered by a 30-day money-back guarantee. If you have a question before ordering, reply and it will come straight to us.",
-    reason: "You are receiving this because you joined the Just Summit Headphones updates list.",
+    note: "If you have a question or a view on what would make the product useful, reply. It will come straight to us.",
+    reason: "You are receiving this because you joined the Just Summit Founding List.",
     marketing: true,
   };
 
   return {
-    subject: "You're on the Just Summit Headphones list",
+    subject: "You're on the Just Summit Founding List",
     htmlContent: renderBaseEmail(options),
     textContent: renderTextEmail(options),
   };
@@ -277,8 +261,8 @@ export function buildFullPaymentConfirmationEmail(firstName: string): EmailConte
         value: formatGBP(offer.amountDueNow),
       },
       {
-        label: "Estimated delivery",
-        value: SHIPPING_DATE,
+        label: "Target delivery",
+        value: `${SHIPPING_DATE}, subject to validation`,
       },
       {
         label: "Refund window",
@@ -292,7 +276,7 @@ export function buildFullPaymentConfirmationEmail(firstName: string): EmailConte
       },
       {
         heading: "What happens next",
-        body: `We will send meaningful production updates as the hardware moves forward. The current estimated first-batch delivery window is ${SHIPPING_DATE}.`,
+        body: `We will send meaningful production updates as the hardware moves forward. We are targeting first-batch delivery in ${SHIPPING_DATE}, subject to prototype validation, testing and manufacturing.`,
       },
       {
         heading: "Support and guarantee",
@@ -335,8 +319,8 @@ export function buildDepositConfirmationEmail(firstName: string): EmailContent {
         value: formatGBP(offer.fullPrice),
       },
       {
-        label: "Estimated delivery",
-        value: SHIPPING_DATE,
+        label: "Target delivery",
+        value: `${SHIPPING_DATE}, subject to validation`,
       },
     ],
     sections: [
@@ -350,7 +334,7 @@ export function buildDepositConfirmationEmail(firstName: string): EmailContent {
       },
       {
         heading: "What happens next",
-        body: `We will send meaningful production updates as the hardware moves forward. The current estimated first-batch delivery window is ${SHIPPING_DATE}.`,
+        body: `We will send meaningful production updates as the hardware moves forward. We are targeting first-batch delivery in ${SHIPPING_DATE}, subject to prototype validation, testing and manufacturing.`,
       },
       {
         heading: "Support and guarantee",
@@ -401,7 +385,7 @@ export function buildShippingWindowUpdateEmail(updateBody: string): EmailContent
   const options: BaseEmailOptions = {
     preheader: "A quick update on your Just Summit Headphones delivery window.",
     title: "A quick update on your delivery window",
-    intro: `Hi, I wanted to give you a clear update on the Just Summit Headphones delivery window. The current estimated first-batch delivery window is ${SHIPPING_DATE}.`,
+    intro: `Hi, I wanted to give you a clear update on the Just Summit Headphones delivery target. We are targeting ${SHIPPING_DATE}, subject to prototype validation, testing and manufacturing.`,
     sections: [
       {
         body: escapeHtml(updateBody).replace(/\n/g, "<br>"),

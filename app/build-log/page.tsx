@@ -150,7 +150,7 @@ export default function BuildLogPage() {
               </h2>
               <p className="mt-3 text-sm leading-6 text-white/62">
                 Production updates, prototype notes, and preorder milestones go
-                to the Just Summit updates list.
+                to the Just Summit Founding List.
               </p>
             </div>
             <Link

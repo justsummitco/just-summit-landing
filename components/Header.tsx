@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import FoundingListLink from "@/components/FoundingListLink";
 
 type HeaderProps = {
   active?: "home" | "about" | "blog";
@@ -41,7 +42,7 @@ export default function Header({ active = "home", variant = "sticky" }: HeaderPr
             />
           </Link>
 
-          <nav className="hidden items-center gap-8 text-sm font-medium text-gray-600 md:flex">
+          <nav className="hidden items-center gap-6 text-sm font-medium text-gray-600 xl:flex xl:gap-8">
             {navItems.map((item) => {
               const isActive = "active" in item && item.active === active;
 
@@ -61,19 +62,19 @@ export default function Header({ active = "home", variant = "sticky" }: HeaderPr
           </nav>
 
           <div className="flex items-center gap-2">
-            <Link
-              href="/#pricing"
-              className="inline-flex min-h-10 items-center justify-center rounded-md bg-gray-950 px-4 text-sm font-semibold text-white transition hover:bg-gray-800"
+            <FoundingListLink
+              source="home_header"
+              className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-md bg-gray-950 px-4 text-sm font-semibold text-white transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2"
             >
-              Reserve for &pound;49
-            </Link>
+              Join the list
+            </FoundingListLink>
             <button
               type="button"
               aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-site-navigation"
               onClick={() => setMobileMenuOpen((open) => !open)}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 text-gray-700 transition hover:border-gray-300 hover:text-gray-950 md:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-gray-200 text-gray-700 transition hover:border-gray-300 hover:text-gray-950 xl:hidden"
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" aria-hidden="true" />
@@ -88,7 +89,7 @@ export default function Header({ active = "home", variant = "sticky" }: HeaderPr
           <nav
             id="mobile-site-navigation"
             aria-label="Mobile navigation"
-            className="grid gap-1 border-t border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 md:hidden"
+            className="grid gap-1 border-t border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 xl:hidden"
           >
             {navItems.map((item) => {
               const isActive = "active" in item && item.active === active;

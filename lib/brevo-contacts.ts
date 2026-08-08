@@ -104,9 +104,9 @@ export async function syncBrevoWaitlistContact({
   }
   const contactListIds = getUniqueListIds([waitlistId, ...listIds]);
 
-  const baseAttributes: BrevoContactAttributes = {
-    FIRSTNAME: firstName,
-  };
+  const baseAttributes: BrevoContactAttributes = firstName
+    ? { FIRSTNAME: firstName }
+    : {};
   const fullAttributes = {
     ...baseAttributes,
     ...attributes,

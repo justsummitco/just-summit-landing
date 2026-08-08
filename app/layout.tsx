@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: "%s | Just Summit",
   },
   description:
-    "Reserve Just Summit Headphones for £49. ADHD-friendly audio recall for busy workdays, private meeting notes, and searchable action items.",
+    "Join the Just Summit Founding List for honest prototype updates on local-first headphones designed for ADHD-friendly audio recall.",
   keywords:
     "ADHD meeting notes, meeting notes for ADHD, AI note taker for ADHD, AI meeting recorder, AI headphones, private AI transcription, Just Summit Headphones",
   authors: [{ name: "Just Summit" }],
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Just Summit Headphones | ADHD-Friendly Audio Recall",
     description:
-      "Reserve for £49 with secure Stripe checkout. Estimated first-batch delivery Q4 2026.",
+      "Follow the Just Summit build from prototype to first batch, with honest progress updates and first access to launch news.",
     images: ["/hero-headphones-clean.png"],
   },
   robots: {

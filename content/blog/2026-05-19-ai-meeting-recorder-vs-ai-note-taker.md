@@ -44,7 +44,7 @@ For Just Summit, this is the core product direction: headphones that are being b
 
 ## Where Just Summit Fits
 
-Just Summit Headphones are not shipping yet. They are in presale, with an estimated Q4 2026 first-batch delivery window. The goal is to build a headphone-first device for private audio capture, structured summaries, and searchable recall.
+Just Summit Headphones are not shipping yet. They are in presale, targeting first-batch delivery in Q4 2026 subject to prototype validation, testing and manufacturing. The goal is to build a headphone-first device for private audio capture, structured summaries, and searchable recall.
 
 That makes Just Summit different from a meeting bot and different from a standalone recorder. It is for people who already listen through headphones and want recall to become part of that habit.
 
