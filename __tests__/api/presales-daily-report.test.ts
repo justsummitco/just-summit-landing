@@ -195,6 +195,66 @@ describe("presales daily report cron API", () => {
     );
   });
 
+  test("does not write misleading zeroes when PostHog reporting is not configured", async () => {
+    delete process.env.POSTHOG_PROJECT_ID;
+    delete process.env.POSTHOG_PERSONAL_API_KEY;
+
+    const response = await GET(makeRequest());
+    const json = await response.json();
+
+    expect(response.status).toBe(503);
+    expect(json.error).toBe("Presales reporting sources are unavailable");
+    expect(json.sources.posthog).toEqual({
+      ok: false,
+      error: "POSTHOG_PROJECT_ID and POSTHOG_PERSONAL_API_KEY are required",
+    });
+    expect(json.sources.stripe).toEqual({ ok: true });
+    expect(mockWriteDailyScoreboardRow).not.toHaveBeenCalled();
+  });
+
+  test("does not write a row when the PostHog reporting query fails", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({ ok: false, status: 403 });
+
+    const response = await GET(makeRequest());
+    const json = await response.json();
+
+    expect(response.status).toBe(503);
+    expect(json.sources.posthog).toEqual({
+      ok: false,
+      error: "PostHog reporting query failed",
+    });
+    expect(mockWriteDailyScoreboardRow).not.toHaveBeenCalled();
+  });
+
+  test("does not write misleading zeroes when Stripe reporting is not configured", async () => {
+    delete process.env.STRIPE_SECRET_KEY;
+
+    const response = await GET(makeRequest());
+    const json = await response.json();
+
+    expect(response.status).toBe(503);
+    expect(json.sources.posthog).toEqual({ ok: true });
+    expect(json.sources.stripe).toEqual({
+      ok: false,
+      error: "STRIPE_SECRET_KEY is required",
+    });
+    expect(mockWriteDailyScoreboardRow).not.toHaveBeenCalled();
+  });
+
+  test("does not write a row when the Stripe reporting query fails", async () => {
+    mockSessionsList.mockRejectedValueOnce(new Error("Stripe unavailable"));
+
+    const response = await GET(makeRequest());
+    const json = await response.json();
+
+    expect(response.status).toBe(503);
+    expect(json.sources.stripe).toEqual({
+      ok: false,
+      error: "Stripe reporting query failed",
+    });
+    expect(mockWriteDailyScoreboardRow).not.toHaveBeenCalled();
+  });
+
   test("returns a clear error when the daily sheet write fails", async () => {
     mockWriteDailyScoreboardRow.mockResolvedValueOnce({
       ok: false,

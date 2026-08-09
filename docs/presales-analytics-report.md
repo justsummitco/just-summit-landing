@@ -12,6 +12,9 @@ Stripe remains the source of truth for paid deposit and full-price preorders.
 PostHog is the source for page, offer-view, click and checkout-start behaviour.
 
 The production cron runs at 08:00 UTC and reports the preceding UTC day.
+It refuses to write or backfill a row when either PostHog reporting or Stripe is
+unconfigured or unavailable. This prevents missing source data from being
+misreported as genuine zero traffic or zero purchases.
 
 ## Funnel definitions
 

@@ -35,6 +35,10 @@ type StripePreorderCounts = {
   fullPresales: number;
 };
 
+type ReportSourceResult<T> =
+  | { ok: true; data: T }
+  | { ok: false; error: string };
+
 function emptyPostHogCounts(): PostHogCounts {
   const emptyEventCounts = () =>
     POSTHOG_EVENTS.reduce<Record<PostHogEventName, EventCount>>((counts, eventName) => {
@@ -84,9 +88,15 @@ function getReportWindow(date: string) {
   return { start, end };
 }
 
-async function getPostHogCounts(start: Date, end: Date): Promise<PostHogCounts> {
+async function getPostHogCounts(
+  start: Date,
+  end: Date
+): Promise<ReportSourceResult<PostHogCounts>> {
   if (!process.env.POSTHOG_PROJECT_ID || !process.env.POSTHOG_PERSONAL_API_KEY) {
-    return emptyPostHogCounts();
+    return {
+      ok: false,
+      error: "POSTHOG_PROJECT_ID and POSTHOG_PERSONAL_API_KEY are required",
+    };
   }
 
   const counts = emptyPostHogCounts();
@@ -119,7 +129,7 @@ async function getPostHogCounts(start: Date, end: Date): Promise<PostHogCounts> 
     );
 
     if (!response.ok) {
-      throw new Error((await response.text()) || `PostHog returned ${response.status}`);
+      throw new Error(`PostHog returned ${response.status}`);
     }
 
     const data = (await response.json()) as {
@@ -145,17 +155,17 @@ async function getPostHogCounts(start: Date, end: Date): Promise<PostHogCounts> 
         }
       }
     });
+    return { ok: true, data: counts };
   } catch (error) {
     console.error("PostHog daily report query failed:", error);
+    return { ok: false, error: "PostHog reporting query failed" };
   }
-
-  return counts;
 }
 
 async function getStripePreorderCounts(
   start: Date,
   end: Date
-): Promise<StripePreorderCounts> {
+): Promise<ReportSourceResult<StripePreorderCounts>> {
   const counts: StripePreorderCounts = {
     paidPresales: 0,
     depositPresales: 0,
@@ -163,7 +173,7 @@ async function getStripePreorderCounts(
   };
 
   if (!process.env.STRIPE_SECRET_KEY) {
-    return counts;
+    return { ok: false, error: "STRIPE_SECRET_KEY is required" };
   }
 
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -204,11 +214,11 @@ async function getStripePreorderCounts(
 
       startingAfter = page.has_more ? page.data[page.data.length - 1]?.id : undefined;
     } while (startingAfter);
+    return { ok: true, data: counts };
   } catch (error) {
     console.error("Stripe daily preorder count failed:", error);
+    return { ok: false, error: "Stripe reporting query failed" };
   }
-
-  return counts;
 }
 
 function getNextAction(paidPresales: number) {
@@ -261,11 +271,31 @@ export async function GET(request: NextRequest) {
   const offerViewsTracked =
     request.nextUrl.searchParams.get("offer_views_tracked") !== "false";
   const { start, end } = getReportWindow(date);
-  const [postHogCounts, stripeCounts, outreachRollup] = await Promise.all([
+  const [postHogResult, stripeResult, outreachRollup] = await Promise.all([
     getPostHogCounts(start, end),
     getStripePreorderCounts(start, end),
     getOutreachPipelineRollup(),
   ]);
+
+  if (!postHogResult.ok || !stripeResult.ok) {
+    return NextResponse.json(
+      {
+        error: "Presales reporting sources are unavailable",
+        sources: {
+          posthog: postHogResult.ok
+            ? { ok: true }
+            : { ok: false, error: postHogResult.error },
+          stripe: stripeResult.ok
+            ? { ok: true }
+            : { ok: false, error: stripeResult.error },
+        },
+      },
+      { status: 503 }
+    );
+  }
+
+  const postHogCounts = postHogResult.data;
+  const stripeCounts = stripeResult.data;
   const row: DailyScoreboardInput = {
     date,
     visitors: postHogCounts.totals.$pageview.unique,
