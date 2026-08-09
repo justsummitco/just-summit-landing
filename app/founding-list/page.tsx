@@ -6,7 +6,7 @@ import FoundingListForm from "@/components/FoundingListForm";
 import Header from "@/components/Header";
 
 export const metadata: Metadata = {
-  title: "Join the Founding List | Just Summit",
+  title: "Join the Founding List",
   description:
     "Follow the Just Summit Headphones build from prototype to first batch, with honest progress updates and first access to launch news.",
   alternates: {
@@ -23,7 +23,10 @@ const benefits = [
 export default function FoundingListPage() {
   return (
     <>
-      <Header />
+      <Header
+        foundingListHref="#founding-list-form"
+        foundingListSource="founding_list_page"
+      />
       <main className="min-h-screen bg-white text-gray-950">
         <section className="border-b border-gray-200 bg-gray-950 py-16 text-white sm:py-24">
           <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
@@ -47,7 +50,10 @@ export default function FoundingListPage() {
               </ul>
             </div>
 
-            <div className="rounded-xl border border-white/15 bg-white/[0.06] p-6 sm:p-8">
+            <div
+              id="founding-list-form"
+              className="scroll-mt-24 rounded-xl border border-white/15 bg-white/[0.06] p-6 sm:p-8"
+            >
               <h2 className="text-2xl font-semibold">Join the Founding List</h2>
               <p className="mt-3 text-sm leading-6 text-white/65">
                 Occasional, useful updates from the team. No daily launch noise.

@@ -5,10 +5,13 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import FoundingListLink from "@/components/FoundingListLink";
+import type { FoundingListSource } from "@/lib/founding-list";
 
 type HeaderProps = {
   active?: "home" | "about" | "blog";
   variant?: "fixed" | "sticky";
+  foundingListHref?: string;
+  foundingListSource?: FoundingListSource;
 };
 
 const navItems = [
@@ -22,7 +25,12 @@ const navItems = [
   { label: "Blog", href: "/blog", active: "blog" },
 ] as const;
 
-export default function Header({ active = "home", variant = "sticky" }: HeaderProps) {
+export default function Header({
+  active = "home",
+  variant = "sticky",
+  foundingListHref = "/founding-list",
+  foundingListSource = "home_header",
+}: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const headerPosition =
     variant === "fixed" ? "fixed inset-x-0 top-0" : "sticky top-0";
@@ -63,7 +71,8 @@ export default function Header({ active = "home", variant = "sticky" }: HeaderPr
 
           <div className="flex items-center gap-2">
             <FoundingListLink
-              source="home_header"
+              href={foundingListHref}
+              source={foundingListSource}
               className="inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-md bg-gray-950 px-4 text-sm font-semibold text-white transition hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2"
             >
               Join the list

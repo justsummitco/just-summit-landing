@@ -4,6 +4,7 @@ export const FOUNDING_LIST_SOURCES = [
   "home_roadmap",
   "home_footer",
   "founding_list_page",
+  "blog_index",
   "blog_article",
 ] as const;
 
