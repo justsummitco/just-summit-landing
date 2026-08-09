@@ -29,16 +29,20 @@ const { GET } = require("@/app/api/cron/presales-daily-report/route");
 function makeRequest({
   authorization = "Bearer cron_test",
   date = "2026-05-18",
+  preview = false,
+  offerViewsTracked = true,
 }: {
   authorization?: string | null;
   date?: string;
+  preview?: boolean;
+  offerViewsTracked?: boolean;
 } = {}) {
   return {
     headers: {
       get: (name: string) => (name === "authorization" ? authorization : null),
     },
     nextUrl: new URL(
-      `https://www.justsummit.co/api/cron/presales-daily-report?date=${date}`
+      `https://www.justsummit.co/api/cron/presales-daily-report?date=${date}&preview=${preview}&offer_views_tracked=${offerViewsTracked}`
     ),
   } as any;
 }
@@ -60,12 +64,16 @@ describe("presales daily report cron API", () => {
       ok: true,
       json: async () => ({
         results: [
-          ["$pageview", 8, 5],
-          ["presale_checkout_clicked", 4, 3],
-          ["presale_checkout_started", 2, 2],
-          ["presale_checkout_failed", 1, 1],
-          ["presale_success_page_viewed", 1, 1],
-          ["headphones_waitlist_signup", 3, 3],
+          ["$pageview", null, 8, 5],
+          ["presale_offer_viewed", "headphones-deposit", 10, 8],
+          ["presale_offer_viewed", "headphones-full", 8, 7],
+          ["presale_checkout_clicked", "headphones-deposit", 3, 2],
+          ["presale_checkout_clicked", "headphones-full", 1, 1],
+          ["presale_checkout_started", "headphones-deposit", 2, 2],
+          ["presale_checkout_failed", "headphones-deposit", 1, 1],
+          ["presale_success_page_viewed", "headphones-deposit", 1, 1],
+          ["presale_purchase_completed", "headphones-deposit", 1, 1],
+          ["headphones_waitlist_signup", null, 3, 3],
         ],
       }),
     });
@@ -141,7 +149,38 @@ describe("presales daily report cron API", () => {
       replies: 4,
       topObjections: "too early (2)",
       nextAction: "Send founder-led outreach and follow up active replies.",
+      depositOfferViews: 10,
+      depositCheckoutClicks: 3,
+      depositCheckoutStarts: 2,
+      depositViewToClickRate: 30,
+      depositClickToCheckoutRate: 66.7,
+      depositCheckoutToPaidRate: 50,
+      depositViewToPaidRate: 10,
+      depositCheckoutAbandonmentRate: 50,
+      fullOfferViews: 8,
+      fullCheckoutClicks: 1,
+      fullCheckoutStarts: 0,
+      fullViewToClickRate: 12.5,
+      fullClickToCheckoutRate: 0,
+      fullCheckoutToPaidRate: 0,
+      fullViewToPaidRate: 0,
+      fullCheckoutAbandonmentRate: 0,
     });
+  });
+
+  test("previews historical rows without writing and marks unavailable offer views", async () => {
+    const response = await GET(
+      makeRequest({ preview: true, offerViewsTracked: false })
+    );
+    const json = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(json.preview).toBe(true);
+    expect(json.row.depositOfferViews).toBe("not_tracked");
+    expect(json.row.depositViewToClickRate).toBe("not_tracked");
+    expect(json.row.fullOfferViews).toBe("not_tracked");
+    expect(json.row.fullViewToPaidRate).toBe("not_tracked");
+    expect(mockWriteDailyScoreboardRow).not.toHaveBeenCalled();
   });
 
   test("uses the private PostHog API host when the public EU ingest host is configured", async () => {

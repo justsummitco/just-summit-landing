@@ -10,7 +10,9 @@ import {
   getCustomerStageForOffer,
   isPresaleOfferId,
 } from "@/lib/presale";
+import { captureServerPostHogEvent } from "@/lib/posthog-server";
 import { trackPaidPreorder } from "@/lib/presales-sheets";
+import { createHash } from "node:crypto";
 
 export const runtime = "nodejs";
 
@@ -134,6 +136,50 @@ function isHeadphonesPresaleSession(session: Stripe.Checkout.Session) {
   );
 }
 
+async function trackPresalePurchaseAnalytics(
+  session: Stripe.Checkout.Session,
+  stripeEventId: string,
+  stripeEventCreated: number
+) {
+  const offerId = session.metadata?.offer_id;
+
+  if (!isPresaleOfferId(offerId) || session.payment_status !== "paid") {
+    return;
+  }
+
+  const distinctId =
+    session.metadata?.posthog_distinct_id ||
+    `stripe:${createHash("sha256").update(session.id).digest("hex")}`;
+  const dedupeKey = createHash("sha256")
+    .update(`${stripeEventId}:${session.id}`)
+    .digest("hex");
+  const result = await captureServerPostHogEvent({
+    event: "presale_purchase_completed",
+    distinctId,
+    timestamp: new Date(
+      (stripeEventCreated || Math.floor(Date.now() / 1000)) * 1000
+    ).toISOString(),
+    properties: {
+      offer_id: offerId,
+      payment_type: session.metadata?.payment_type || "",
+      product_type: "headphones",
+      amount_paid: session.amount_total || 0,
+      currency: session.currency || "gbp",
+      source: session.metadata?.source || "stripe_checkout",
+      utm_source: session.metadata?.utm_source,
+      utm_medium: session.metadata?.utm_medium,
+      utm_campaign: session.metadata?.utm_campaign,
+      utm_content: session.metadata?.utm_content,
+      utm_term: session.metadata?.utm_term,
+      $insert_id: dedupeKey,
+    },
+  });
+
+  if (!result.ok && !result.skipped) {
+    console.error("PostHog purchase tracking failed:", result.error);
+  }
+}
+
 export async function POST(request: NextRequest) {
   if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_WEBHOOK_SECRET) {
     return NextResponse.json(
@@ -181,6 +227,7 @@ export async function POST(request: NextRequest) {
           console.error("Google Sheets paid-preorder tracking failed:", sheetResult.error);
         }
 
+        await trackPresalePurchaseAnalytics(session, event.id, event.created);
         await addHeadphonesBuyerToBrevo(session);
         await sendHeadphonesBuyerEmail(session);
       }

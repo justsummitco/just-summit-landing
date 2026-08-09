@@ -61,6 +61,7 @@ declare global {
   interface Window {
     posthog?: {
       capture: (eventName: string, properties?: Record<string, unknown>) => void;
+      get_distinct_id?: () => string;
     };
   }
 }

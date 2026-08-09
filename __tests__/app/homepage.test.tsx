@@ -39,7 +39,10 @@ describe("HomePage", () => {
     jest.resetAllMocks();
     window.history.replaceState({}, "", "/");
     global.fetch = jest.fn();
-    window.posthog = { capture: jest.fn() };
+    window.posthog = {
+      capture: jest.fn(),
+      get_distinct_id: jest.fn(() => "anon_123"),
+    };
   });
 
   test("shows the trust-focused headphones presale offer", () => {
@@ -148,6 +151,9 @@ describe("HomePage", () => {
         expect.objectContaining({
           offerId: "headphones-deposit",
           source: "pricing_headphones-deposit",
+          payment_type: "deposit",
+          placement: "pricing",
+          posthog_distinct_id: "anon_123",
           page_url: expect.any(String),
         })
       );

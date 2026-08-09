@@ -4,6 +4,7 @@
 
 const mockConstructEvent = jest.fn();
 const mockTrackPaidPreorder = jest.fn();
+const mockCaptureServerPostHogEvent = jest.fn();
 
 jest.mock("stripe", () => {
   const StripeMock = jest.fn().mockImplementation(() => ({
@@ -21,6 +22,10 @@ jest.mock("stripe", () => {
 
 jest.mock("@/lib/presales-sheets", () => ({
   trackPaidPreorder: mockTrackPaidPreorder,
+}));
+
+jest.mock("@/lib/posthog-server", () => ({
+  captureServerPostHogEvent: mockCaptureServerPostHogEvent,
 }));
 
 const { POST } = require("@/app/api/webhook/route");
@@ -44,6 +49,11 @@ function makeCheckoutSession({
   paymentType?: string;
 } = {}) {
   return {
+    id: "cs_test_123",
+    created: 1_778_793_600,
+    payment_status: "paid",
+    amount_total: paymentType === "deposit" ? 4900 : 24900,
+    currency: "gbp",
     customer_details: {
       email: "tom@example.com",
       name: "Tom Smith",
@@ -52,6 +62,7 @@ function makeCheckoutSession({
       product_type: productType,
       offer_id: offerId,
       payment_type: paymentType,
+      posthog_distinct_id: "anon_123",
     },
   };
 }
@@ -61,6 +72,8 @@ function makeCheckoutEvent(paymentType: "full" | "deposit") {
     paymentType === "deposit" ? "headphones-deposit" : "headphones-full";
 
   return {
+    id: `evt_${paymentType}`,
+    created: 1_778_793_900,
     type: "checkout.session.completed",
     data: {
       object: makeCheckoutSession({ offerId, paymentType }),
@@ -78,6 +91,7 @@ describe("Stripe webhook API", () => {
       skipped: true,
       error: "Google Sheets is not configured",
     });
+    mockCaptureServerPostHogEvent.mockResolvedValue({ ok: true });
     process.env = {
       ...originalEnv,
       STRIPE_SECRET_KEY: "sk_test_123",
@@ -165,6 +179,19 @@ describe("Stripe webhook API", () => {
         }),
       }),
     });
+    expect(mockCaptureServerPostHogEvent).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: "presale_purchase_completed",
+        distinctId: "anon_123",
+        properties: expect.objectContaining({
+          offer_id: "headphones-full",
+          payment_type: "full",
+          amount_paid: 24900,
+          currency: "gbp",
+          $insert_id: expect.any(String),
+        }),
+      })
+    );
   });
 
   test("sends a separate deposit reservation email", async () => {

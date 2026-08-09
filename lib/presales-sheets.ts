@@ -67,6 +67,22 @@ export type DailyScoreboardInput = {
   replies: number;
   topObjections: string;
   nextAction: string;
+  depositOfferViews: number | "not_tracked";
+  depositCheckoutClicks: number;
+  depositCheckoutStarts: number;
+  depositViewToClickRate: number | "not_tracked";
+  depositClickToCheckoutRate: number;
+  depositCheckoutToPaidRate: number;
+  depositViewToPaidRate: number | "not_tracked";
+  depositCheckoutAbandonmentRate: number;
+  fullOfferViews: number | "not_tracked";
+  fullCheckoutClicks: number;
+  fullCheckoutStarts: number;
+  fullViewToClickRate: number | "not_tracked";
+  fullClickToCheckoutRate: number;
+  fullCheckoutToPaidRate: number;
+  fullViewToPaidRate: number | "not_tracked";
+  fullCheckoutAbandonmentRate: number;
 };
 
 export type OutreachPipelineRollup = {
@@ -158,6 +174,22 @@ const DAILY_SCOREBOARD_HEADERS = [
   "replies",
   "top_objections",
   "next_action",
+  "deposit_offer_views",
+  "deposit_checkout_clicks",
+  "deposit_checkout_starts",
+  "deposit_view_to_click_rate_pct",
+  "deposit_click_to_checkout_rate_pct",
+  "deposit_checkout_to_paid_rate_pct",
+  "deposit_view_to_paid_rate_pct",
+  "deposit_checkout_abandonment_rate_pct",
+  "full_offer_views",
+  "full_checkout_clicks",
+  "full_checkout_starts",
+  "full_view_to_click_rate_pct",
+  "full_click_to_checkout_rate_pct",
+  "full_checkout_to_paid_rate_pct",
+  "full_view_to_paid_rate_pct",
+  "full_checkout_abandonment_rate_pct",
 ];
 
 const OUTREACH_PIPELINE_HEADERS = [
@@ -595,6 +627,22 @@ function dailyScoreboardRow(input: DailyScoreboardInput): CellValue[] {
     input.replies,
     input.topObjections,
     input.nextAction,
+    input.depositOfferViews,
+    input.depositCheckoutClicks,
+    input.depositCheckoutStarts,
+    input.depositViewToClickRate,
+    input.depositClickToCheckoutRate,
+    input.depositCheckoutToPaidRate,
+    input.depositViewToPaidRate,
+    input.depositCheckoutAbandonmentRate,
+    input.fullOfferViews,
+    input.fullCheckoutClicks,
+    input.fullCheckoutStarts,
+    input.fullViewToClickRate,
+    input.fullClickToCheckoutRate,
+    input.fullCheckoutToPaidRate,
+    input.fullViewToPaidRate,
+    input.fullCheckoutAbandonmentRate,
   ];
 }
 
@@ -605,6 +653,21 @@ export async function writeDailyScoreboardRow(input: DailyScoreboardInput) {
       "Daily Scoreboard",
       `A:${columnLetter(DAILY_SCOREBOARD_HEADERS.length)}`
     );
+    const currentHeaders = rows[0] || [];
+
+    if (
+      DAILY_SCOREBOARD_HEADERS.some(
+        (header, index) => currentHeaders[index] !== header
+      )
+    ) {
+      await updateRow(
+        config,
+        "Daily Scoreboard",
+        1,
+        DAILY_SCOREBOARD_HEADERS
+      );
+    }
+
     const rowIndex = rows.findIndex((row, index) => index > 0 && row[0] === input.date);
     const row = dailyScoreboardRow(input);
 

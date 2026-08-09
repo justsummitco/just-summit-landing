@@ -84,11 +84,17 @@ In PostHog Web Analytics, add these authorised URLs:
 Tracked events:
 
 - `$pageview`
+- `presale_offer_viewed`
 - `presale_checkout_clicked`
 - `presale_checkout_started`
 - `presale_checkout_failed`
 - `presale_success_page_viewed`
+- `presale_purchase_completed`
 - `headphones_waitlist_signup`
+
+See `docs/presales-analytics-report.md` for funnel definitions, the added
+deposit/full-price scoreboard columns, PostHog dashboard setup and the safe
+preview-first historical backfill command.
 
 ## Brevo lists and sequences
 

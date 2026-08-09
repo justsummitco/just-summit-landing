@@ -22,6 +22,12 @@ import Footer from "@/components/Footer";
 import FoundingListLink from "@/components/FoundingListLink";
 import FoundingListPanel from "@/components/FoundingListPanel";
 import Header from "@/components/Header";
+import PresaleOfferView from "@/components/PresaleOfferView";
+import {
+  capturePresaleEvent,
+  getPostHogDistinctId,
+  getPresaleAnalyticsProperties,
+} from "@/lib/presale-analytics";
 import {
   BALANCE_DUE_TIMING,
   PRESALE_OFFERS,
@@ -130,51 +136,6 @@ const useCaseLinks = [
   },
 ];
 
-const attributionParamNames = [
-  "utm_source",
-  "utm_medium",
-  "utm_campaign",
-  "utm_content",
-  "utm_term",
-] as const;
-
-type CheckoutAttribution = Record<string, string>;
-
-function getCheckoutAttribution(source: string): CheckoutAttribution {
-  const attribution: CheckoutAttribution = { source };
-
-  if (typeof window === "undefined") {
-    return attribution;
-  }
-
-  const searchParams = new URLSearchParams(window.location.search);
-
-  attribution.page_url = window.location.href;
-
-  if (document.referrer) {
-    attribution.referrer = document.referrer;
-  }
-
-  attributionParamNames.forEach((paramName) => {
-    const value = searchParams.get(paramName);
-
-    if (value) {
-      attribution[paramName] = value;
-    }
-  });
-
-  return attribution;
-}
-
-function capturePresaleEvent(
-  eventName: string,
-  properties: Record<string, unknown>
-) {
-  if (typeof window !== "undefined" && (window as any).posthog) {
-    (window as any).posthog.capture(eventName, properties);
-  }
-}
-
 const specs = [
   ["AI workflow", "Planned capture, transcription, and structured summaries"],
   ["Privacy", "On-device-first architecture with encrypted app sync planned"],
@@ -257,12 +218,10 @@ function CheckoutButton({
 
   const startCheckout = async () => {
     setStatus("loading");
-    const attribution = getCheckoutAttribution(source);
+    const analyticsProperties = getPresaleAnalyticsProperties(offerId, source);
+    const postHogDistinctId = getPostHogDistinctId();
 
-    capturePresaleEvent("presale_checkout_clicked", {
-      offer_id: offerId,
-      ...attribution,
-    });
+    capturePresaleEvent("presale_checkout_clicked", analyticsProperties);
 
     try {
       const response = await fetch("/api/create-checkout-session", {
@@ -270,7 +229,11 @@ function CheckoutButton({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ offerId, ...attribution }),
+        body: JSON.stringify({
+          offerId,
+          ...analyticsProperties,
+          posthog_distinct_id: postHogDistinctId,
+        }),
       });
       const data = await response.json();
 
@@ -278,10 +241,7 @@ function CheckoutButton({
         throw new Error(data.error || "Checkout is unavailable");
       }
 
-      capturePresaleEvent("presale_checkout_started", {
-        offer_id: offerId,
-        ...attribution,
-      });
+      capturePresaleEvent("presale_checkout_started", analyticsProperties);
 
       window.location.assign(data.url);
     } catch (error) {
@@ -290,7 +250,7 @@ function CheckoutButton({
         offer_id: offerId,
         error_message:
           error instanceof Error ? error.message : "Unknown checkout error",
-        ...attribution,
+        ...analyticsProperties,
       });
       setStatus("error");
     }
@@ -356,7 +316,9 @@ function PriceCard({
   const badgeText = isFull ? "Pay once option" : "Recommended reservation";
 
   return (
-    <article
+    <PresaleOfferView
+      offerId={offerId}
+      source={`pricing_${offerId}`}
       className={`relative flex h-full flex-col rounded-lg border bg-white p-6 ${
         featured
           ? "border-2 border-gray-950 shadow-lg"
@@ -426,7 +388,7 @@ function PriceCard({
       >
         {isFull ? "Pay in full £249" : "Reserve for £49"}
       </CheckoutButton>
-    </article>
+    </PresaleOfferView>
   );
 }
 

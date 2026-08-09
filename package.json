@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "audit:copy": "node scripts/audit-public-copy.mjs",
+    "report:backfill": "node scripts/backfill-presales-scoreboard.mjs",
     "postbuild": "next-sitemap",
     "test": "jest",
     "test:watch": "jest --watch",
