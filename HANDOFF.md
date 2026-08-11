@@ -201,6 +201,7 @@ Run these after any Mac-side change and before merging:
 
 ```bash
 npm test -- --runInBand
+npm run test:e2e
 npm run build
 git diff --check
 git status -sb

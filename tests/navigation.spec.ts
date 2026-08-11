@@ -17,7 +17,7 @@ test('Navigation can go to About, Blog, and back to Home', async ({ page }) => {
     page.locator('header nav').getByRole('link', { name: 'Blog' }).click(),
   ])
 
-  await page.getByRole('link', { name: 'Just Summit home' }).click()
+  await page.getByRole('banner').getByRole('link', { name: 'Just Summit home' }).click()
   await expect(page).toHaveURL(`${baseUrl}/`)
   await expect(
     page.getByRole('heading', { name: /Don't lose the best things you only hear once/i })

@@ -11,6 +11,8 @@
     "report:backfill": "node scripts/backfill-presales-scoreboard.mjs",
     "postbuild": "next-sitemap",
     "test": "jest",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
