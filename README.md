@@ -244,6 +244,21 @@ just-summit-landing/
 - [ ] Mobile Safari
 - [ ] Chrome Mobile
 
+### Playwright E2E
+
+Install Chromium once, then run the browser suite:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
+
+The default suite builds and starts the local production server automatically.
+It runs the full route and interaction coverage in desktop Chromium, plus
+focused responsive checks at 900px and 390px. Set `PLAYWRIGHT_BASE_URL` to run
+the same checks against an already-running preview without starting a local
+server.
+
 ## 🚨 Troubleshooting
 
 ### Common Issues
@@ -304,4 +319,3 @@ Copyright © 2024 Just Summit. All rights reserved.
 ---
 
 **Built with ❤️ for ADHD brains and audio learners everywhere**
-

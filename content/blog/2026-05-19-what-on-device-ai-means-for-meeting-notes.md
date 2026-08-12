@@ -47,7 +47,7 @@ The first-batch product is still being built, so the team will keep sharing clea
 
 Just Summit Headphones are being built around an on-device-first direction for wearable audio capture and summarisation. The aim is to help people keep useful spoken information without treating cloud upload as the default answer to every problem.
 
-The product is still pre-production. The current presale supports prototype and first-batch work, with estimated Q4 2026 delivery for the first batch.
+The product is still pre-production. The current presale supports prototype and first-batch work, with a Q4 2026 first-batch target subject to prototype validation, testing and manufacturing.
 
 ## What Buyers Should Ask
 

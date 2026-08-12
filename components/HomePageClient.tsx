@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { useRef, useState } from "react";
 import {
   ArrowRight,
   BatteryCharging,
@@ -19,7 +19,15 @@ import {
   Star,
 } from "lucide-react";
 import Footer from "@/components/Footer";
+import FoundingListLink from "@/components/FoundingListLink";
+import FoundingListPanel from "@/components/FoundingListPanel";
 import Header from "@/components/Header";
+import PresaleOfferView from "@/components/PresaleOfferView";
+import {
+  capturePresaleEvent,
+  getPostHogDistinctId,
+  getPresaleAnalyticsProperties,
+} from "@/lib/presale-analytics";
 import {
   BALANCE_DUE_TIMING,
   PRESALE_OFFERS,
@@ -36,8 +44,8 @@ const productFeatures = [
   },
   {
     icon: Shield,
-    title: "Private by default",
-    body: "We're building around on-device processing principles, so sensitive listening stays under your control.",
+    title: "Designed for local-first control",
+    body: "The target architecture prioritises on-device processing and encrypted app synchronisation so sensitive audio can stay under your control.",
   },
   {
     icon: BatteryCharging,
@@ -51,13 +59,13 @@ const roadmapSteps = [
   { label: "Design", detail: "Industrial design and target experience mapped.", status: "done" },
   { label: "Prototype build", detail: "We are here: turning the design into working hardware.", status: "current" },
   { label: "Testing & tooling", detail: "Refine the hardware, test the experience, and prepare manufacturing.", status: "future" },
-  { label: "First batch ships", detail: `Estimated first-batch delivery: ${SHIPPING_DATE}.`, status: "future" },
+  { label: "Target first-batch delivery", detail: `Targeting ${SHIPPING_DATE}, subject to prototype validation, testing and manufacturing.`, status: "future" },
 ] as const;
 
 const proofPoints = [
-  "30-day money-back guarantee",
-  "Secure checkout via Stripe",
-  `Estimated delivery ${SHIPPING_DATE}`,
+  "Honest build updates",
+  "Clear milestone reporting",
+  "Unsubscribe at any time",
 ];
 
 const SUPPORT_EMAIL = "hello@justsummit.co";
@@ -77,11 +85,6 @@ const checkoutTrustPoints = [
     icon: Mail,
     title: "Preorder updates sent by email",
     body: "Production milestones, balance reminders, and delivery updates go to your checkout email.",
-  },
-  {
-    icon: Clock,
-    title: "Limited early reservation slots",
-    body: "Your preorder reserves a place in the first-batch queue.",
   },
 ];
 
@@ -133,58 +136,13 @@ const useCaseLinks = [
   },
 ];
 
-const attributionParamNames = [
-  "utm_source",
-  "utm_medium",
-  "utm_campaign",
-  "utm_content",
-  "utm_term",
-] as const;
-
-type CheckoutAttribution = Record<string, string>;
-
-function getCheckoutAttribution(source: string): CheckoutAttribution {
-  const attribution: CheckoutAttribution = { source };
-
-  if (typeof window === "undefined") {
-    return attribution;
-  }
-
-  const searchParams = new URLSearchParams(window.location.search);
-
-  attribution.page_url = window.location.href;
-
-  if (document.referrer) {
-    attribution.referrer = document.referrer;
-  }
-
-  attributionParamNames.forEach((paramName) => {
-    const value = searchParams.get(paramName);
-
-    if (value) {
-      attribution[paramName] = value;
-    }
-  });
-
-  return attribution;
-}
-
-function capturePresaleEvent(
-  eventName: string,
-  properties: Record<string, unknown>
-) {
-  if (typeof window !== "undefined" && (window as any).posthog) {
-    (window as any).posthog.capture(eventName, properties);
-  }
-}
-
 const specs = [
   ["AI workflow", "Planned capture, transcription, and structured summaries"],
   ["Privacy", "On-device-first architecture with encrypted app sync planned"],
   ["Connectivity", "Targeting Bluetooth 5.3, USB-C, and 3.5mm compatibility"],
   ["Audio", "Targeting premium drivers and active noise cancellation"],
   ["Companion app", "Planned iOS and Android experience for summaries, search, and recall"],
-  ["Delivery", `Estimated first-batch delivery window: ${SHIPPING_DATE}`],
+  ["Delivery", `Targeting first-batch delivery in ${SHIPPING_DATE}, subject to prototype validation, testing and manufacturing`],
 ];
 
 const faqs = [
@@ -196,7 +154,7 @@ const faqs = [
   {
     question: "When will the headphones ship?",
     answer:
-      `Estimated first-batch delivery window: ${SHIPPING_DATE}. We will share clear updates as the hardware moves through production milestones.`,
+      `We are targeting first-batch delivery in ${SHIPPING_DATE}, subject to prototype validation, testing and manufacturing. We will share clear updates as the hardware moves through each milestone.`,
   },
   {
     question: "Can I get a refund?",
@@ -235,7 +193,7 @@ const faqs = [
   {
     question: "What happens if the hardware timeline changes?",
     answer:
-      `Hardware projects can move as prototypes, tooling, and testing reveal what needs to change. We will share meaningful updates by email, and the current first-batch delivery estimate is ${SHIPPING_DATE}.`,
+      `Hardware projects can move as prototypes, tooling and testing reveal what needs to change. We are targeting ${SHIPPING_DATE}, subject to validation and manufacturing, and will share meaningful updates by email.`,
   },
 ];
 
@@ -260,12 +218,10 @@ function CheckoutButton({
 
   const startCheckout = async () => {
     setStatus("loading");
-    const attribution = getCheckoutAttribution(source);
+    const analyticsProperties = getPresaleAnalyticsProperties(offerId, source);
+    const postHogDistinctId = getPostHogDistinctId();
 
-    capturePresaleEvent("presale_checkout_clicked", {
-      offer_id: offerId,
-      ...attribution,
-    });
+    capturePresaleEvent("presale_checkout_clicked", analyticsProperties);
 
     try {
       const response = await fetch("/api/create-checkout-session", {
@@ -273,7 +229,11 @@ function CheckoutButton({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ offerId, ...attribution }),
+        body: JSON.stringify({
+          offerId,
+          ...analyticsProperties,
+          posthog_distinct_id: postHogDistinctId,
+        }),
       });
       const data = await response.json();
 
@@ -281,10 +241,7 @@ function CheckoutButton({
         throw new Error(data.error || "Checkout is unavailable");
       }
 
-      capturePresaleEvent("presale_checkout_started", {
-        offer_id: offerId,
-        ...attribution,
-      });
+      capturePresaleEvent("presale_checkout_started", analyticsProperties);
 
       window.location.assign(data.url);
     } catch (error) {
@@ -293,7 +250,7 @@ function CheckoutButton({
         offer_id: offerId,
         error_message:
           error instanceof Error ? error.message : "Unknown checkout error",
-        ...attribution,
+        ...analyticsProperties,
       });
       setStatus("error");
     }
@@ -322,112 +279,16 @@ function CheckoutButton({
       </button>
       {status === "error" && (
         <p className="mt-3 max-w-sm text-sm text-red-700" role="alert">
-          Checkout is not available right now. Please try again or join the updates list.
+          Checkout is not available right now. Please try again or join the Founding List.
         </p>
       )}
     </div>
   );
 }
 
-function WaitlistForm() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setStatus("loading");
-
-    try {
-      const attribution = getCheckoutAttribution("homepage_waitlist");
-      const response = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          ...attribution,
-        }),
-      });
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Unable to join the updates list");
-      }
-
-      capturePresaleEvent("headphones_waitlist_signup", {
-        ...attribution,
-      });
-
-      setStatus("success");
-      setMessage(data.message || "You're on the Just Summit updates list.");
-      setName("");
-      setEmail("");
-    } catch (error) {
-      setStatus("error");
-      setMessage(
-        error instanceof Error
-          ? error.message
-          : "Unable to join the updates list"
-      );
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4" data-testid="waitlist-form">
-      <div className="grid gap-3 sm:grid-cols-[0.8fr_1.2fr_auto]">
-        <label className="sr-only" htmlFor="waitlist-name">
-          First name
-        </label>
-        <input
-          id="waitlist-name"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          placeholder="First name"
-          className="min-h-12 rounded-md border border-white/20 bg-white/10 px-4 text-white placeholder:text-white/60 outline-none transition focus:border-white focus:bg-white/15"
-          disabled={status === "loading"}
-        />
-        <label className="sr-only" htmlFor="waitlist-email">
-          Email address
-        </label>
-        <input
-          id="waitlist-email"
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          placeholder="Email address"
-          className="min-h-12 rounded-md border border-white/20 bg-white/10 px-4 text-white placeholder:text-white/60 outline-none transition focus:border-white focus:bg-white/15"
-          required
-          disabled={status === "loading"}
-        />
-        <button
-          type="submit"
-          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-gray-950 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-70"
-          disabled={status === "loading"}
-          data-testid="waitlist-submit"
-        >
-          {status === "loading" ? "Joining..." : "Get updates"}
-          <Mail className="h-4 w-4" aria-hidden="true" />
-        </button>
-      </div>
-      {status !== "idle" && (
-        <p
-          className={`text-sm ${status === "error" ? "text-red-200" : "text-emerald-200"}`}
-          role={status === "error" ? "alert" : "status"}
-        >
-          {message}
-        </p>
-      )}
-    </form>
-  );
-}
-
 function CheckoutTrustBlock() {
   return (
-    <div className="mt-10 grid gap-3 rounded-lg border border-gray-200 bg-white p-4 text-left shadow-sm sm:grid-cols-2 lg:grid-cols-4">
+    <div className="mt-10 grid gap-3 rounded-lg border border-gray-200 bg-white p-4 text-left shadow-sm sm:grid-cols-3">
       {checkoutTrustPoints.map(({ icon: Icon, title, body }) => (
         <div key={title} className="flex gap-3 rounded-md bg-gray-50 p-4">
           <div className="flex h-10 w-10 flex-none items-center justify-center rounded-md bg-teal-50 text-teal-700">
@@ -443,6 +304,62 @@ function CheckoutTrustBlock() {
   );
 }
 
+function ProductDetailVisual() {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const resetPerspective = () => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    card.style.setProperty("--product-rotate-x", "0deg");
+    card.style.setProperty("--product-rotate-y", "0deg");
+    card.style.setProperty("--product-shift-x", "0px");
+    card.style.setProperty("--product-shift-y", "0px");
+  };
+
+  const updatePerspective = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== "mouse") return;
+
+    const card = cardRef.current;
+    if (!card) return;
+
+    const bounds = card.getBoundingClientRect();
+    const horizontal = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const vertical = (event.clientY - bounds.top) / bounds.height - 0.5;
+
+    card.style.setProperty("--product-rotate-x", `${vertical * -4}deg`);
+    card.style.setProperty("--product-rotate-y", `${horizontal * 7}deg`);
+    card.style.setProperty("--product-shift-x", `${horizontal * -10}px`);
+    card.style.setProperty("--product-shift-y", `${vertical * -7}px`);
+  };
+
+  return (
+    <div className="product-detail-stage mt-5 lg:col-span-2">
+      <div
+        ref={cardRef}
+        className="product-detail-card group relative aspect-[16/9] overflow-hidden rounded-xl bg-gray-950 sm:aspect-[21/9]"
+        onPointerMove={updatePerspective}
+        onPointerLeave={resetPerspective}
+        data-testid="product-detail-visual"
+      >
+        <Image
+          src="/headphones-gallery-detail.png"
+          alt="Close-up concept render showing the Just Summit headphones ear cushion and hinge"
+          fill
+          sizes="(min-width: 1280px) 1216px, 100vw"
+          className="product-detail-image pointer-events-none object-cover"
+        />
+        <div className="absolute left-5 top-5 rounded-full border border-white/20 bg-black/45 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur-md sm:left-7 sm:top-7">
+          Material detail · concept render
+        </div>
+        <div className="absolute bottom-5 right-5 hidden rounded-full border border-white/15 bg-black/35 px-3 py-1.5 text-[11px] font-medium tracking-wide text-white/70 backdrop-blur-md lg:block">
+          Move to explore
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PriceCard({
   offerId,
   featured = false,
@@ -452,10 +369,12 @@ function PriceCard({
 }) {
   const offer = PRESALE_OFFERS[offerId];
   const isFull = offerId === "headphones-full";
-  const badgeText = isFull ? "Pay once option" : "Recommended reservation";
+  const badgeText = isFull ? "Pay once option" : "Recommended";
 
   return (
-    <article
+    <PresaleOfferView
+      offerId={offerId}
+      source={`pricing_${offerId}`}
       className={`relative flex h-full flex-col rounded-lg border bg-white p-6 ${
         featured
           ? "border-2 border-gray-950 shadow-lg"
@@ -471,10 +390,10 @@ function PriceCard({
 
       <div className="mb-8">
         <p className="text-sm font-semibold text-teal-700">
-          {isFull ? "Pay in full" : "Reserve with deposit"}
+          {isFull ? "One-payment option" : "Deposit option"}
         </p>
         <h3 className="mt-3 text-2xl font-semibold tracking-tight text-gray-950">
-          {offer.title}
+          {isFull ? "Pay £249 in full" : "Reserve with a £49 deposit"}
         </h3>
         <p className="mt-4 text-sm leading-6 text-gray-600">
           {isFull
@@ -525,7 +444,7 @@ function PriceCard({
       >
         {isFull ? "Pay in full £249" : "Reserve for £49"}
       </CheckoutButton>
-    </article>
+    </PresaleOfferView>
   );
 }
 
@@ -538,7 +457,7 @@ function RoadmapSection() {
             Where we are
           </h2>
           <p className="hidden text-sm text-gray-500 sm:block">
-            Estimated first-batch delivery · {SHIPPING_DATE}
+            Targeting first-batch delivery · {SHIPPING_DATE}
           </p>
         </div>
         <ol className="grid gap-3 sm:grid-cols-5 sm:gap-0">
@@ -752,10 +671,10 @@ function FounderSection() {
               </p>
               <div>
                 <p className="text-2xl font-semibold leading-snug">
-                  We are sharing the build as it happens, with the prototype work and first-batch decisions out in the open.
+                  We are building Just Summit from the prototype stage, one careful decision at a time.
                 </p>
                 <p className="mt-5 text-sm leading-6 text-white/70">
-                  Prototype progress, production calls, and first-batch decisions will be shared plainly as we move.
+                  We have not shared much yet. The Founding List is where we will start sharing meaningful prototype progress, testing lessons and first-batch decisions.
                 </p>
               </div>
             </div>
@@ -777,12 +696,13 @@ function FounderSection() {
               >
                 About the project <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
-              <a
+              <FoundingListLink
                 href="#updates"
+                source="home_footer"
                 className="inline-flex items-center gap-2 rounded-md border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-white"
               >
-                Follow the build
-              </a>
+                Join the Founding List
+              </FoundingListLink>
             </div>
           </div>
         </div>
@@ -796,7 +716,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-white text-gray-950">
       <Header active="home" variant="fixed" />
 
-      <section className="relative flex min-h-[84vh] items-end overflow-hidden bg-gray-950 pt-24 text-white">
+      <section className="relative flex min-h-[76vh] items-end overflow-hidden bg-gray-950 pt-24 text-white sm:min-h-[84vh]">
         <Image
           src="/hero-headphones-clean.png"
           alt="Just Summit Headphones concept render"
@@ -807,32 +727,31 @@ export default function HomePage() {
         />
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-gray-950 via-gray-950/78 to-gray-950/18" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-gray-950 via-gray-950/52 to-transparent" />
-        <div className="relative z-10 mx-auto grid w-full max-w-7xl items-end gap-10 px-4 pb-14 sm:px-6 sm:pb-16 lg:grid-cols-[1fr_0.78fr] lg:px-8 lg:pb-20">
+        <div className="relative z-10 mx-auto grid w-full max-w-7xl items-end gap-10 px-4 pb-10 sm:px-6 sm:pb-16 lg:grid-cols-[1fr_0.78fr] lg:px-8 lg:pb-20">
           <div className="max-w-3xl">
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm">
               <span className="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              Founding edition · Presale open
+              Prototype stage · Founding List open
             </p>
-            <h1 className="max-w-3xl text-5xl font-semibold leading-[0.96] tracking-tight sm:text-6xl lg:text-7xl">
+            <h1 className="max-w-3xl text-4xl font-semibold leading-[0.98] tracking-tight sm:text-6xl lg:text-7xl">
               Don't lose the best things you only hear once.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-white/78 sm:text-xl">
-              Audio recall for ADHD and busy workdays. Just Summit is a pair of headphones being built to help you save the ideas, decisions, and action items worth keeping from meetings, calls, lectures, and podcasts, then find them again later.
+              Just Summit is building headphones to help busy and ADHD minds keep the ideas, decisions and action items worth remembering. Join the Founding List for honest prototype updates and first access to preorder news.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <CheckoutButton
-                offerId="headphones-deposit"
-                source="hero_primary"
-                testId="checkout-headphones-deposit-hero"
-                variant="light"
+              <FoundingListLink
+                href="#founding-list-roadmap"
+                source="home_hero"
+                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-white px-5 py-3 text-sm font-semibold text-gray-950 transition hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-950"
               >
-                Reserve for £49
-              </CheckoutButton>
+                Join the Founding List <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </FoundingListLink>
               <a
                 href="#pricing"
                 className="inline-flex min-h-12 items-center justify-center gap-2 text-sm font-medium text-white/80 underline decoration-white/30 underline-offset-4 transition hover:text-white hover:decoration-white"
               >
-                Pay in full £249
+                Reserve a pair for £49
               </a>
             </div>
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-white/70">
@@ -850,13 +769,13 @@ export default function HomePage() {
               Where we are
             </p>
             <p className="mt-3 text-base font-semibold leading-snug">
-              An early-stage presale. The hardware is being built. You are reserving a place in the first batch.
+               Follow the meaningful milestones from working prototype to first batch.
             </p>
             <ul className="mt-5 space-y-2.5 text-sm text-white/75">
               {[
-                "30-day money-back guarantee",
-                "No card details held by Just Summit",
-                "Updates as production progresses",
+                "Working prototype is the next milestone",
+                "Local-first privacy is a design priority",
+                "Specifications stay provisional until tested",
               ].map((item) => (
                 <li key={item} className="flex gap-2.5">
                   <Check className="mt-0.5 h-4 w-4 flex-none text-emerald-300" aria-hidden="true" />
@@ -870,6 +789,11 @@ export default function HomePage() {
 
       <SearchIntentSection />
       <RoadmapSection />
+      <section id="founding-list-roadmap" className="scroll-mt-24 border-b border-gray-100 bg-white py-12 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <FoundingListPanel source="home_roadmap" />
+        </div>
+      </section>
       <HowThisWorksSection />
 
       <section id="product" className="scroll-mt-24 border-b border-gray-100 bg-white py-20 sm:py-24">
@@ -902,33 +826,23 @@ export default function HomePage() {
             <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-gray-100">
               <Image
                 src="/headphones-gallery-hero.png"
-                alt="Studio product view of the Just Summit headphones"
+                alt="Studio concept render of the Just Summit headphones"
                 fill
                 sizes="(min-width: 1024px) 55vw, 100vw"
                 className="pointer-events-none object-cover"
               />
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-gray-100">
-                <Image
-                  src="/headphones-gallery-angle.png"
-                  alt="Angled concept render of the Just Summit headphones"
-                  fill
-                  sizes="(min-width: 1024px) 27vw, 50vw"
-                  className="pointer-events-none object-cover"
-                />
-              </div>
-              <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-gray-100">
-                <Image
-                  src="/headphones-gallery-detail.png"
-                  alt="Detailed concept render of the Just Summit headphones"
-                  fill
-                  sizes="(min-width: 1024px) 27vw, 50vw"
-                  className="pointer-events-none object-cover"
-                />
-              </div>
+            <div className="relative aspect-[16/7] overflow-hidden rounded-lg bg-gray-100">
+              <Image
+                src="/headphones-gallery-angle.png"
+                alt="Angled concept render of the Just Summit headphones"
+                fill
+                sizes="(min-width: 1024px) 55vw, 100vw"
+                className="pointer-events-none object-cover object-[center_48%]"
+              />
             </div>
           </div>
+          <ProductDetailVisual />
         </div>
       </section>
 
@@ -1000,7 +914,7 @@ export default function HomePage() {
               Reserve your place in the first batch.
             </h2>
             <p className="mt-5 text-lg leading-8 text-gray-600">
-              Reserve your early unit with a £49 deposit. The remaining £250 is due 60 days before shipping, or you can pay £249 in full today.
+              Reserve with £49 today, or pay £249 in full and save £50 against the deposit route. Both options have the same 30-day guarantee.
             </p>
           </div>
           <CheckoutTrustBlock />
@@ -1055,22 +969,12 @@ export default function HomePage() {
 
       <section id="updates" className="bg-gray-950 py-20 text-white sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-            <div>
-              <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-                Follow the build.
-              </h2>
-              <p className="mt-5 text-lg leading-8 text-white/70">
-                Production milestones, prototype updates, and launch dates — straight to your inbox. Useful even if you never preorder.
-              </p>
-            </div>
-            <div className="rounded-lg border border-white/12 bg-white/[0.05] p-6">
-              <WaitlistForm />
-              <p className="mt-4 text-xs leading-5 text-white/46">
-                We will only use your email for Just Summit updates. You can unsubscribe at any time.
-              </p>
-            </div>
-          </div>
+          <FoundingListPanel
+            source="home_footer"
+            tone="dark"
+            title="Follow the build from here."
+            description="Get honest prototype milestones, testing lessons and launch news without pretending the product is further along than it is."
+          />
         </div>
       </section>
 

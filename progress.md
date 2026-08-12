@@ -6,7 +6,7 @@
 - [x] Git config complete + pushing to main
 
 ## 🔧 In Progress
-- [ ] Playwright E2E tests setup
+- [x] Playwright E2E tests setup (Chromium at 1440px, 900px, and 390px)
 - [ ] Stripe checkout flow test (via ngrok)
 - [ ] Create dev-startup.md
 

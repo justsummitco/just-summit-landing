@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import JsonLd from "@/components/JsonLd";
 import MarkdownArticle from "@/components/MarkdownArticle";
+import FoundingListPanel from "@/components/FoundingListPanel";
 import { articleJsonLd, breadcrumbJsonLd } from "@/lib/seo";
 
 interface BlogPostPageProps {
@@ -134,19 +135,23 @@ export default function BlogPost({ params }: BlogPostPageProps) {
               <p>Just Summit may use AI-assisted research and editing. Our publishing workflow checks each article against its linked sources and the product&apos;s current public status before it goes live.</p>
             </aside>
 
-            <div className="mt-12 rounded-lg bg-gray-950 p-8 text-center">
-              <h3 className="mb-4 text-2xl font-semibold text-white">
-                Ready to retain more of what you hear?
-              </h3>
-              <p className="mb-6 text-white/70">
-                Just Summit Headphones are available for presale with full-payment and deposit options.
+            <div className="mt-12 rounded-xl bg-gray-950 p-4 text-left sm:p-6">
+              <FoundingListPanel
+                source="blog_article"
+                tone="dark"
+                title="Keep following the idea."
+                description="Join the Founding List for honest prototype updates, early testing opportunities and first access to preorder news."
+              />
+              <p className="mt-5 text-center text-sm text-white/60">
+                Already ready to back the build?{" "}
+                <Link
+                  href="/#pricing"
+                  className="font-semibold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white"
+                >
+                  View the £49 reservation
+                </Link>
+                .
               </p>
-              <Link
-                href="/#pricing"
-                className="inline-flex min-h-12 items-center rounded-md bg-white px-6 text-sm font-semibold text-gray-950 transition hover:bg-gray-100"
-              >
-                Preorder Just Summit Headphones
-              </Link>
             </div>
 
             <div className="mt-8 text-center">

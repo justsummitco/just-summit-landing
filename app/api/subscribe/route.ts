@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     const firstName =
       typeof requestBody.name === "string" && requestBody.name.trim()
         ? requestBody.name.trim()
-        : email.split("@")[0];
+        : "";
     const source =
       typeof requestBody.source === "string" && requestBody.source.trim()
         ? requestBody.source.trim()
@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
         presale_interest: true,
         customer_stage: customerStage,
         email_sequence: WAITLIST_SEQUENCE_ID,
-        primary_cta: "deposit_preorder",
+        primary_cta: "founding_list",
         ...attribution,
       },
     });
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
         product_interest: HEADPHONES_PRODUCT_NAME,
         customer_stage: customerStage,
         email_sequence: WAITLIST_SEQUENCE_ID,
-        primary_cta: "deposit_preorder",
+        primary_cta: "founding_list",
         ...attribution,
       },
       eventDate: joinedAt,
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
 
       if (!emailResult.ok) {
         return NextResponse.json(
-          { error: "Unable to add you to the updates list" },
+          { error: "Unable to add you to the Founding List" },
           { status: 500 }
         );
       }
@@ -152,13 +152,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: contactResult.ok
-        ? "You're on the Just Summit updates list."
-        : "You're subscribed. We will follow up by email.",
+        ? "You're on the Just Summit Founding List. Check your inbox for a welcome email."
+        : "You're on the Founding List. We will follow up by email.",
     });
   } catch (error) {
     console.error("Subscription error:", error);
     return NextResponse.json(
-      { error: "Unable to add you to the updates list" },
+      { error: "Unable to add you to the Founding List" },
       { status: 500 }
     );
   }

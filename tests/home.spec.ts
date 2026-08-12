@@ -10,11 +10,13 @@ test('Home Page shows the trust-focused hardware presale funnel', async ({ page 
   await expect(
     page.getByRole('heading', { name: /Don't lose the best things you only hear once/i })
   ).toBeVisible()
-  await expect(page.getByTestId('checkout-headphones-deposit-hero')).toBeVisible()
-  await expect(page.getByText(/Founding edition/i)).toBeVisible()
+  await expect(
+    page.locator('main > section').first().getByRole('link', { name: /Join the Founding List/i })
+  ).toBeVisible()
+  await expect(page.getByText(/Prototype stage · Founding List open/i)).toBeVisible()
   await expect(page.locator('#roadmap')).toContainText('Prototype build')
   await expect(page.locator('#how-this-works')).toContainText('An honest note about the funding model')
-  await expect(page.getByText(/Recommended reservation/i)).toBeVisible()
+  await expect(page.getByText(/^Recommended$/i)).toBeVisible()
   await expect(page.getByText(/Secure checkout powered by Stripe/i)).toBeVisible()
   await expect(page.getByText(/Apple Pay, Link, or card where available/i)).toBeVisible()
   await expect(page.locator('#faq')).toContainText('When do I pay the remaining balance')
@@ -24,14 +26,15 @@ test('Home Page shows the trust-focused hardware presale funnel', async ({ page 
   await expect(page.locator('#pricing')).toContainText('Pay in full £249')
   await expect(page.getByTestId('checkout-headphones-deposit-pricing')).toBeVisible()
   await expect(page.getByTestId('checkout-headphones-full-pricing')).toBeVisible()
-  await expect(page.locator('#pricing')).toContainText(/Reserve with deposit[\s\S]*Pay in full/)
-  await expect(page.getByText(/Concept render/i)).toBeVisible()
+  await expect(page.locator('#pricing')).toContainText(/Reserve with a £49 deposit[\s\S]*Pay £249 in full/)
+  await expect(page.getByText('Concept render', { exact: true })).toBeVisible()
   await expect(page.getByAltText(/Angled concept render of the Just Summit headphones/i)).toBeVisible()
-  await expect(page.getByAltText(/Detailed concept render of the Just Summit headphones/i)).toBeVisible()
+  await expect(page.getByAltText(/Close-up concept render showing the Just Summit headphones ear cushion and hinge/i)).toBeVisible()
+  await expect(page.getByTestId('product-detail-visual')).toBeVisible()
   await expect(page.getByText(/Just Summit Ltd · Registered in England · Company no\. 15449136/i)).toBeVisible()
 })
 
-test('Home Page sends the expected deposit checkout payload', async ({ page }) => {
+test('Home Page sends the expected deposit checkout payload from pricing', async ({ page }) => {
   await page.route('**/api/create-checkout-session', async (route) => {
     await route.fulfill({
       status: 500,
@@ -43,12 +46,12 @@ test('Home Page sends the expected deposit checkout payload', async ({ page }) =
   await page.goto(`${baseUrl}/`)
   await page.waitForLoadState('networkidle')
   const checkoutRequest = page.waitForRequest('**/api/create-checkout-session')
-  await page.getByTestId('checkout-headphones-deposit-hero').click()
+  await page.getByTestId('checkout-headphones-deposit-pricing').click()
   const checkoutPayload = (await checkoutRequest).postDataJSON()
 
   expect(checkoutPayload).toEqual(expect.objectContaining({
     offerId: 'headphones-deposit',
-    source: 'hero_primary',
+    source: 'pricing_headphones-deposit',
     page_url: `${baseUrl}/`,
   }))
   await expect(

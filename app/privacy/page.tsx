@@ -27,7 +27,7 @@ export default function PrivacyPage() {
 
             <h2>2. Information We Collect</h2>
             <ul>
-              <li>Name and email address when you join the updates list or contact us.</li>
+              <li>Name and email address when you join the Founding List or contact us.</li>
               <li>Checkout details provided through Stripe, such as billing information and payment status.</li>
               <li>Basic website analytics, device, and usage data where analytics are enabled.</li>
               <li>Messages or support requests you send to us.</li>
@@ -54,7 +54,7 @@ export default function PrivacyPage() {
 
             <h2>6. Marketing Email</h2>
             <p>
-              If you join the updates list or preorder, we may send relevant product and production updates. You can unsubscribe from marketing emails at any time using the unsubscribe link in those emails.
+              If you join the Founding List or preorder, we may send relevant product, prototype and production updates. You can unsubscribe from marketing emails at any time using the unsubscribe link in those emails.
             </p>
 
             <h2>7. Your Rights</h2>

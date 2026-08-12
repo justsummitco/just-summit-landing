@@ -35,7 +35,7 @@ export default function HeadphonesCancel() {
             Checkout cancelled
           </h1>
           <p className="mt-4 text-lg leading-8 text-gray-600">
-            No payment was processed. You can return to the presale options or join the updates list if you want more product news first.
+            No payment was processed. You can return to the presale options or join the Founding List if you want more product news first.
           </p>
 
           <div className="mt-10 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-4">

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { isPresaleOfferId, PRESALE_OFFERS } from "@/lib/presale";
 
 function capturePostHogEvent(
   eventName: string,
@@ -15,15 +16,21 @@ function capturePostHogEvent(
 export default function PresaleSuccessTracker() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
+  const requestedOfferId = searchParams.get("offer_id");
+  const offerId = isPresaleOfferId(requestedOfferId)
+    ? requestedOfferId
+    : undefined;
 
   useEffect(() => {
     capturePostHogEvent("presale_success_page_viewed", {
       has_session_id: Boolean(sessionId),
       session_id_prefix: sessionId ? sessionId.slice(0, 12) : undefined,
+      offer_id: offerId,
+      payment_type: offerId ? PRESALE_OFFERS[offerId].paymentType : undefined,
       page_url: typeof window !== "undefined" ? window.location.href : undefined,
       referrer: typeof document !== "undefined" ? document.referrer : undefined,
     });
-  }, [sessionId]);
+  }, [offerId, sessionId]);
 
   return null;
 }

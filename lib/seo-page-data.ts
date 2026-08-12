@@ -39,7 +39,7 @@ export const comparisonPages: Record<string, ComparisonPageContent> = {
       {
         label: "Product status",
         justSummit:
-          "Pre-production presale with Q4 2026 estimated first-batch delivery.",
+          "Pre-production presale targeting Q4 2026 first-batch delivery, subject to prototype validation, testing and manufacturing.",
         competitor: "Established product line with commercially available devices.",
       },
       {
@@ -89,7 +89,7 @@ export const comparisonPages: Record<string, ComparisonPageContent> = {
       },
       {
         label: "Availability",
-        justSummit: "Presale, estimated first-batch delivery Q4 2026.",
+        justSummit: "Presale, targeting Q4 2026 first-batch delivery subject to prototype validation, testing and manufacturing.",
         competitor: "Available software product.",
       },
       {
@@ -179,7 +179,7 @@ export const comparisonPages: Record<string, ComparisonPageContent> = {
       },
       {
         label: "Product status",
-        justSummit: "Early hardware presale, Q4 2026 estimate.",
+        justSummit: "Early hardware presale targeting Q4 2026, subject to prototype validation, testing and manufacturing.",
         competitor: "Available software product.",
       },
       {

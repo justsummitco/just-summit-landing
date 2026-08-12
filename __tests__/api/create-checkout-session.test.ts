@@ -76,7 +76,7 @@ describe("create checkout session API", () => {
         payment_method_types: ["card"],
         line_items: [{ price: "price_full", quantity: 1 }],
         success_url:
-          "https://www.justsummit.co/headphones-success?session_id={CHECKOUT_SESSION_ID}",
+          "https://www.justsummit.co/headphones-success?offer_id=headphones-full&session_id={CHECKOUT_SESSION_ID}",
         cancel_url: "https://www.justsummit.co/headphones-cancel",
         billing_address_collection: "required",
         customer_creation: "always",
@@ -169,6 +169,7 @@ describe("create checkout session API", () => {
         utm_campaign: "first_10_presales",
         referrer: "https://www.linkedin.com/",
         page_url: longPageUrl,
+        posthog_distinct_id: "anon_123",
       })
     );
 
@@ -182,6 +183,7 @@ describe("create checkout session API", () => {
           utm_campaign: "first_10_presales",
           referrer: "https://www.linkedin.com/",
           page_url: longPageUrl.slice(0, 500),
+          posthog_distinct_id: "anon_123",
         }),
         payment_intent_data: {
           metadata: expect.objectContaining({

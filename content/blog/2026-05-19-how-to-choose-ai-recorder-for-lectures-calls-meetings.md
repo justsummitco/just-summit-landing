@@ -51,7 +51,7 @@ For Just Summit:
 - £250 is due 60 days before shipping.
 - £249 full payment is also available.
 - The presale has a 30-day money-back guarantee.
-- Estimated first-batch delivery is Q4 2026.
+- The first-batch target is Q4 2026, subject to prototype validation, testing and manufacturing.
 
 ## The Simple Rule
 

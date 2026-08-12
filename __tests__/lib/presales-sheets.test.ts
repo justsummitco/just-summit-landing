@@ -9,6 +9,7 @@ jest.mock("@vercel/oidc", () => ({
 import { getVercelOidcToken } from "@vercel/oidc";
 import {
   createGoogleSheetsExternalAccountOptions,
+  PRESALES_SHEET_HEADERS,
   trackPresalesLead,
 } from "@/lib/presales-sheets";
 
@@ -83,5 +84,32 @@ describe("presales Google Sheets OIDC auth", () => {
       skipped: true,
       error: "Google Sheets is not configured",
     });
+  });
+
+  test("keeps the legacy scoreboard columns and appends per-offer funnel metrics", () => {
+    expect(PRESALES_SHEET_HEADERS.dailyScoreboard.slice(0, 14)).toEqual([
+      "date",
+      "visitors",
+      "checkout_clicks",
+      "checkout_starts",
+      "checkout_failures",
+      "success_page_views",
+      "paid_presales",
+      "deposit_presales",
+      "full_presales",
+      "waitlist_signups",
+      "outreach_sent",
+      "replies",
+      "top_objections",
+      "next_action",
+    ]);
+    expect(PRESALES_SHEET_HEADERS.dailyScoreboard).toEqual(
+      expect.arrayContaining([
+        "deposit_offer_views",
+        "deposit_checkout_abandonment_rate_pct",
+        "full_offer_views",
+        "full_checkout_abandonment_rate_pct",
+      ])
+    );
   });
 });

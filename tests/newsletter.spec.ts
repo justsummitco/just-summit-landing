@@ -16,17 +16,19 @@ test('Waitlist form submits with valid data', async ({ page }) => {
 
   await page.goto(`${baseUrl}/`)
   await page.waitForLoadState('networkidle')
-  await page.getByLabel('First name').fill('Tom')
-  await page.getByLabel('Email address').fill('tom@example.com')
+  const foundingListForm = page.getByTestId('founding-list-form-home_roadmap')
+  await foundingListForm.getByRole('textbox', { name: /First name/i }).fill('Tom')
+  await foundingListForm.getByRole('textbox', { name: 'Email address' }).fill('tom@example.com')
   const subscribeRequest = page.waitForRequest('**/api/subscribe')
-  await page.getByTestId('waitlist-submit').click()
+  await page.getByTestId('founding-list-submit-home_roadmap').click()
   const subscribePayload = (await subscribeRequest).postDataJSON()
 
-  expect(subscribePayload).toEqual({
+  expect(subscribePayload).toEqual(expect.objectContaining({
     name: 'Tom',
     email: 'tom@example.com',
-    source: 'homepage_waitlist',
-  })
+    source: 'home_roadmap',
+    page_url: `${baseUrl}/`,
+  }))
   await expect(
     page.getByText(/You're on the Just Summit updates list/i)
   ).toBeVisible()

@@ -3,11 +3,12 @@ import Link from "next/link";
 import { getAllPosts } from "../../lib/mdx";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import FoundingListPanel from "@/components/FoundingListPanel";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Just Summit Blog",
+  title: "Blog",
   description:
     "Notes on AI meeting recorders, private transcription, audio recall, and the Just Summit Headphones journey.",
   alternates: {
@@ -125,19 +126,23 @@ export default function BlogIndex() {
         </section>
 
         <section className="bg-gray-950 py-16">
-          <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-            <h2 className="mb-4 text-3xl font-semibold text-white">
-              Ready to turn listening into recall?
-            </h2>
-            <p className="mb-8 text-xl text-white/70">
-              Just Summit Headphones are available for presale with full-payment and deposit options.
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <FoundingListPanel
+              source="blog_index"
+              tone="dark"
+              title="Keep following the idea."
+              description="Join the Founding List for honest prototype updates, early testing opportunities and first access to preorder news."
+            />
+            <p className="mt-6 text-center text-sm text-white/65">
+              Already ready to back the build?{" "}
+              <Link
+                href="/#pricing"
+                className="font-semibold text-white underline underline-offset-4 transition hover:text-teal-200"
+              >
+                View the £49 reservation
+              </Link>
+              .
             </p>
-            <Link
-              href="/#pricing"
-              className="inline-flex min-h-12 items-center rounded-md bg-white px-6 text-sm font-semibold text-gray-950 transition hover:bg-gray-100"
-            >
-              Preorder Just Summit Headphones
-            </Link>
           </div>
         </section>
       </main>

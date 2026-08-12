@@ -11,7 +11,7 @@ import {
 } from "@/lib/seo";
 
 const pageDescription =
-  "Reserve Just Summit Headphones for £49. ADHD-friendly audio recall for busy workdays, private meeting notes, and searchable action items.";
+  "Join the Just Summit Founding List for honest prototype updates on local-first headphones designed for ADHD-friendly audio recall.";
 
 export const metadata: Metadata = {
   title: "Just Summit Headphones | ADHD-Friendly Audio Recall",
@@ -57,7 +57,7 @@ const homepageFaqs = [
   {
     question: "When will the headphones ship?",
     answer:
-      "The current estimated first-batch delivery window is Q4 2026. Just Summit will share production updates as the hardware moves through prototype, testing, tooling, and delivery milestones.",
+      "Just Summit is targeting first-batch delivery in Q4 2026, subject to prototype validation, testing and manufacturing. The team will share meaningful updates as the hardware moves through each milestone.",
   },
   {
     question: "Is payment secure?",

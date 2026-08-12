@@ -44,7 +44,11 @@ Record these numbers once per day:
 
 - paid preorders;
 - deposit vs full-payment split;
+- deposit vs full-payment offer views;
+- deposit vs full-payment checkout clicks;
 - checkout starts;
+- view-to-click, click-to-checkout, checkout-to-paid, and view-to-paid rates;
+- checkout abandonment rate;
 - waitlist signups;
 - outreach sent;
 - replies;

@@ -40,6 +40,7 @@ const OPTIONAL_ATTRIBUTION_FIELDS = [
 ] as const;
 
 const STRIPE_METADATA_VALUE_LIMIT = 500;
+const POSTHOG_DISTINCT_ID_LIMIT = 200;
 
 function getMetadataValue(value: unknown, fallback?: string): string | undefined {
   if (typeof value !== "string") {
@@ -68,6 +69,16 @@ function getAttributionMetadata(body: Record<string, unknown>) {
     },
     {}
   );
+}
+
+function getPostHogDistinctId(value: unknown) {
+  const distinctId = getMetadataValue(value);
+
+  if (!distinctId) {
+    return undefined;
+  }
+
+  return distinctId.slice(0, POSTHOG_DISTINCT_ID_LIMIT);
 }
 
 export async function POST(request: NextRequest) {
@@ -111,6 +122,9 @@ export async function POST(request: NextRequest) {
 
     const siteUrl = getSiteUrl(request);
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    const postHogDistinctId = getPostHogDistinctId(
+      requestBody.posthog_distinct_id
+    );
     const metadata = {
       product_type: "headphones",
       product_name: HEADPHONES_PRODUCT_NAME,
@@ -123,6 +137,9 @@ export async function POST(request: NextRequest) {
       shipping_date: SHIPPING_DATE,
       source: getMetadataValue(requestBody.source, "website") || "website",
       ...getAttributionMetadata(requestBody),
+      ...(postHogDistinctId
+        ? { posthog_distinct_id: postHogDistinctId }
+        : {}),
     };
 
     const session = await stripe.checkout.sessions.create({
@@ -134,7 +151,7 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
-      success_url: `${siteUrl}/headphones-success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${siteUrl}/headphones-success?offer_id=${offer.id}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${siteUrl}/headphones-cancel`,
       billing_address_collection: "required",
       customer_creation: "always",
