@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   ArrowRight,
   BatteryCharging,
@@ -63,8 +63,8 @@ const roadmapSteps = [
 ] as const;
 
 const proofPoints = [
-  "Prototype-stage hardware",
   "Honest build updates",
+  "Clear milestone reporting",
   "Unsubscribe at any time",
 ];
 
@@ -304,6 +304,62 @@ function CheckoutTrustBlock() {
   );
 }
 
+function ProductDetailVisual() {
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const resetPerspective = () => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    card.style.setProperty("--product-rotate-x", "0deg");
+    card.style.setProperty("--product-rotate-y", "0deg");
+    card.style.setProperty("--product-shift-x", "0px");
+    card.style.setProperty("--product-shift-y", "0px");
+  };
+
+  const updatePerspective = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.pointerType !== "mouse") return;
+
+    const card = cardRef.current;
+    if (!card) return;
+
+    const bounds = card.getBoundingClientRect();
+    const horizontal = (event.clientX - bounds.left) / bounds.width - 0.5;
+    const vertical = (event.clientY - bounds.top) / bounds.height - 0.5;
+
+    card.style.setProperty("--product-rotate-x", `${vertical * -4}deg`);
+    card.style.setProperty("--product-rotate-y", `${horizontal * 7}deg`);
+    card.style.setProperty("--product-shift-x", `${horizontal * -10}px`);
+    card.style.setProperty("--product-shift-y", `${vertical * -7}px`);
+  };
+
+  return (
+    <div className="product-detail-stage mt-5 lg:col-span-2">
+      <div
+        ref={cardRef}
+        className="product-detail-card group relative aspect-[16/9] overflow-hidden rounded-xl bg-gray-950 sm:aspect-[21/9]"
+        onPointerMove={updatePerspective}
+        onPointerLeave={resetPerspective}
+        data-testid="product-detail-visual"
+      >
+        <Image
+          src="/headphones-gallery-detail.png"
+          alt="Close-up concept render showing the Just Summit headphones ear cushion and hinge"
+          fill
+          sizes="(min-width: 1280px) 1216px, 100vw"
+          className="product-detail-image pointer-events-none object-cover"
+        />
+        <div className="absolute left-5 top-5 rounded-full border border-white/20 bg-black/45 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur-md sm:left-7 sm:top-7">
+          Material detail · concept render
+        </div>
+        <div className="absolute bottom-5 right-5 hidden rounded-full border border-white/15 bg-black/35 px-3 py-1.5 text-[11px] font-medium tracking-wide text-white/70 backdrop-blur-md lg:block">
+          Move to explore
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function PriceCard({
   offerId,
   featured = false,
@@ -313,7 +369,7 @@ function PriceCard({
 }) {
   const offer = PRESALE_OFFERS[offerId];
   const isFull = offerId === "headphones-full";
-  const badgeText = isFull ? "Pay once option" : "Recommended reservation";
+  const badgeText = isFull ? "Pay once option" : "Recommended";
 
   return (
     <PresaleOfferView
@@ -334,10 +390,10 @@ function PriceCard({
 
       <div className="mb-8">
         <p className="text-sm font-semibold text-teal-700">
-          {isFull ? "Pay in full" : "Reserve with deposit"}
+          {isFull ? "One-payment option" : "Deposit option"}
         </p>
         <h3 className="mt-3 text-2xl font-semibold tracking-tight text-gray-950">
-          {offer.title}
+          {isFull ? "Pay £249 in full" : "Reserve with a £49 deposit"}
         </h3>
         <p className="mt-4 text-sm leading-6 text-gray-600">
           {isFull
@@ -713,13 +769,13 @@ export default function HomePage() {
               Where we are
             </p>
             <p className="mt-3 text-base font-semibold leading-snug">
-               Prototype-stage hardware. Join the Founding List to see the meaningful milestones before launch.
+               Follow the meaningful milestones from working prototype to first batch.
             </p>
             <ul className="mt-5 space-y-2.5 text-sm text-white/75">
               {[
                 "Working prototype is the next milestone",
                 "Local-first privacy is a design priority",
-                "Preorders remain available below",
+                "Specifications stay provisional until tested",
               ].map((item) => (
                 <li key={item} className="flex gap-2.5">
                   <Check className="mt-0.5 h-4 w-4 flex-none text-emerald-300" aria-hidden="true" />
@@ -776,27 +832,17 @@ export default function HomePage() {
                 className="pointer-events-none object-cover"
               />
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-gray-100">
-                <Image
-                  src="/headphones-gallery-angle.png"
-                  alt="Angled concept render of the Just Summit headphones"
-                  fill
-                  sizes="(min-width: 1024px) 27vw, 50vw"
-                  className="pointer-events-none object-cover"
-                />
-              </div>
-              <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-gray-100">
-                <Image
-                  src="/headphones-gallery-detail.png"
-                  alt="Detailed concept render of the Just Summit headphones"
-                  fill
-                  sizes="(min-width: 1024px) 27vw, 50vw"
-                  className="pointer-events-none object-cover"
-                />
-              </div>
+            <div className="relative aspect-[16/7] overflow-hidden rounded-lg bg-gray-100">
+              <Image
+                src="/headphones-gallery-angle.png"
+                alt="Angled concept render of the Just Summit headphones"
+                fill
+                sizes="(min-width: 1024px) 55vw, 100vw"
+                className="pointer-events-none object-cover object-[center_48%]"
+              />
             </div>
           </div>
+          <ProductDetailVisual />
         </div>
       </section>
 
@@ -868,7 +914,7 @@ export default function HomePage() {
               Reserve your place in the first batch.
             </h2>
             <p className="mt-5 text-lg leading-8 text-gray-600">
-              Reserve your early unit with a £49 deposit. The remaining £250 is due 60 days before shipping, or you can pay £249 in full today.
+              Reserve with £49 today, or pay £249 in full and save £50 against the deposit route. Both options have the same 30-day guarantee.
             </p>
           </div>
           <CheckoutTrustBlock />

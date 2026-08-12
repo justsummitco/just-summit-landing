@@ -62,7 +62,7 @@ describe("HomePage", () => {
     expect(screen.getAllByText(/subject to prototype validation/i).length).toBeGreaterThan(0);
     expect(container.querySelector("#roadmap")).toHaveTextContent(/Prototype build/i);
     expect(screen.getByText(/An honest note about the funding model/i)).toBeInTheDocument();
-    expect(screen.getByText(/Recommended reservation/i)).toBeInTheDocument();
+    expect(screen.getByText(/^Recommended$/i)).toBeInTheDocument();
     expect(screen.getByText(/Secure checkout powered by Stripe/i)).toBeInTheDocument();
     expect(screen.getByText(/Apple Pay, Link, or card where available/i)).toBeInTheDocument();
     expect(screen.getByText(/Preorder updates sent by email/i)).toBeInTheDocument();
@@ -82,7 +82,7 @@ describe("HomePage", () => {
       screen.getByAltText(/Angled concept render of the Just Summit headphones/i)
     ).toBeInTheDocument();
     expect(
-      screen.getByAltText(/Detailed concept render of the Just Summit headphones/i)
+      screen.getByAltText(/Close-up concept render showing the Just Summit headphones ear cushion and hinge/i)
     ).toBeInTheDocument();
     expect(screen.queryByText(/investor/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/brevo/i)).not.toBeInTheDocument();
