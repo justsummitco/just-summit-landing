@@ -304,58 +304,47 @@ function CheckoutTrustBlock() {
   );
 }
 
-function ProductDetailVisual() {
-  const cardRef = useRef<HTMLDivElement>(null);
+function HeroProductVisual() {
+  const visualRef = useRef<HTMLDivElement>(null);
 
-  const resetPerspective = () => {
-    const card = cardRef.current;
-    if (!card) return;
+  const resetParallax = () => {
+    const visual = visualRef.current;
+    if (!visual) return;
 
-    card.style.setProperty("--product-rotate-x", "0deg");
-    card.style.setProperty("--product-rotate-y", "0deg");
-    card.style.setProperty("--product-shift-x", "0px");
-    card.style.setProperty("--product-shift-y", "0px");
+    visual.style.setProperty("--hero-shift-x", "0px");
+    visual.style.setProperty("--hero-shift-y", "0px");
   };
 
-  const updatePerspective = (event: React.PointerEvent<HTMLDivElement>) => {
+  const updateParallax = (event: React.PointerEvent<HTMLDivElement>) => {
     if (event.pointerType !== "mouse") return;
 
-    const card = cardRef.current;
-    if (!card) return;
+    const visual = visualRef.current;
+    if (!visual) return;
 
-    const bounds = card.getBoundingClientRect();
+    const bounds = visual.getBoundingClientRect();
     const horizontal = (event.clientX - bounds.left) / bounds.width - 0.5;
     const vertical = (event.clientY - bounds.top) / bounds.height - 0.5;
 
-    card.style.setProperty("--product-rotate-x", `${vertical * -4}deg`);
-    card.style.setProperty("--product-rotate-y", `${horizontal * 7}deg`);
-    card.style.setProperty("--product-shift-x", `${horizontal * -10}px`);
-    card.style.setProperty("--product-shift-y", `${vertical * -7}px`);
+    visual.style.setProperty("--hero-shift-x", `${horizontal * -12}px`);
+    visual.style.setProperty("--hero-shift-y", `${vertical * -8}px`);
   };
 
   return (
-    <div className="product-detail-stage mt-5 lg:col-span-2">
-      <div
-        ref={cardRef}
-        className="product-detail-card group relative aspect-[16/9] overflow-hidden rounded-xl bg-gray-950 sm:aspect-[21/9]"
-        onPointerMove={updatePerspective}
-        onPointerLeave={resetPerspective}
-        data-testid="product-detail-visual"
-      >
-        <Image
-          src="/headphones-gallery-detail.png"
-          alt="Close-up concept render showing the Just Summit headphones ear cushion and hinge"
-          fill
-          sizes="(min-width: 1280px) 1216px, 100vw"
-          className="product-detail-image pointer-events-none object-cover"
-        />
-        <div className="absolute left-5 top-5 rounded-full border border-white/20 bg-black/45 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur-md sm:left-7 sm:top-7">
-          Material detail · concept render
-        </div>
-        <div className="absolute bottom-5 right-5 hidden rounded-full border border-white/15 bg-black/35 px-3 py-1.5 text-[11px] font-medium tracking-wide text-white/70 backdrop-blur-md lg:block">
-          Move to explore
-        </div>
-      </div>
+    <div
+      ref={visualRef}
+      className="hero-product-visual absolute inset-0"
+      onPointerMove={updateParallax}
+      onPointerLeave={resetParallax}
+      data-testid="hero-product-visual"
+    >
+      <Image
+        src="/headphones-gallery-detail.png"
+        alt="Close-up concept render showing the Just Summit headphones ear cushion and hinge"
+        fill
+        sizes="100vw"
+        className="hero-product-image pointer-events-none object-cover object-[70%_center] sm:object-center"
+        priority
+      />
     </div>
   );
 }
@@ -717,16 +706,15 @@ export default function HomePage() {
       <Header active="home" variant="fixed" />
 
       <section className="relative flex min-h-[76vh] items-end overflow-hidden bg-gray-950 pt-24 text-white sm:min-h-[84vh]">
-        <Image
-          src="/hero-headphones-clean.png"
-          alt="Just Summit Headphones concept render"
-          fill
-          sizes="100vw"
-          className="pointer-events-none object-cover object-[64%_center] opacity-90 sm:object-center"
-          priority
-        />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-gray-950 via-gray-950/78 to-gray-950/18" />
+        <HeroProductVisual />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-gray-950 via-gray-950/80 to-gray-950/16" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-gray-950 via-gray-950/52 to-transparent" />
+        <p className="absolute bottom-3 right-4 z-20 w-max rounded-full border border-white/20 bg-black/35 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/75 backdrop-blur-md sm:hidden">
+          Concept render
+        </p>
+        <p className="absolute left-1/2 top-28 z-20 hidden w-max -translate-x-1/2 rounded-full border border-white/20 bg-black/35 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/75 backdrop-blur-md sm:block">
+          Concept render · Product design in development
+        </p>
         <div className="relative z-10 mx-auto grid w-full max-w-7xl items-end gap-10 px-4 pb-10 sm:px-6 sm:pb-16 lg:grid-cols-[1fr_0.78fr] lg:px-8 lg:pb-20">
           <div className="max-w-3xl">
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white/85 backdrop-blur-sm">
@@ -842,7 +830,6 @@ export default function HomePage() {
               />
             </div>
           </div>
-          <ProductDetailVisual />
         </div>
       </section>
 
