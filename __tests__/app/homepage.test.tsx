@@ -84,6 +84,7 @@ describe("HomePage", () => {
     expect(
       screen.getByAltText(/Close-up concept render showing the Just Summit headphones ear cushion and hinge/i)
     ).toBeInTheDocument();
+    expect(screen.getByText(/Concept render · Product design in development/i)).toBeInTheDocument();
     expect(screen.queryByText(/investor/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/brevo/i)).not.toBeInTheDocument();
     expect(screen.getByText(/Prototype stage · Founding List open/i)).toBeInTheDocument();
